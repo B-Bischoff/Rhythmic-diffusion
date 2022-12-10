@@ -1,8 +1,12 @@
-#include <iostream>
+#ifndef STB_IMAGE_IMPLEMENTATION
+# define STB_IMAGE_IMPLEMENTATION
+#endif
+
+#include "Application.hpp"
 
 int main(void)
 {
-	std::cout << "hello world!" << std::endl;
+	Application application(800, 600);
 
 	return 0;
 }
