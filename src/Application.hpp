@@ -1,13 +1,19 @@
 #pragma once
 
-#include <iostream>
-#include <istream>
-
 #include "../inc/include.hpp"
 #include "./Shader.hpp"
 #include "./ComputeShader.hpp"
 #include "./Object.hpp"
 #include "./Texture.hpp"
+#include "./UserInterface.hpp"
+
+struct SimulationProperties {
+	float speed;
+	float diffusionRateA;
+	float diffusionRateB;
+	float feedRate;
+	float killRate;
+};
 
 class Application {
 private:

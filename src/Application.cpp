@@ -73,7 +73,13 @@ void Application::loop()
 	ComputeShader computeShader("./src/shaders/computeShader.cs");
 	Shader shader("./src/shaders/shader.vert", "./src/shaders/shader.frag");
 	Object plane(positions, textureCoords, indices);
-	Texture texture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+	Texture texture0(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+	//Texture texture1(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+
+	SimulationProperties simulationProperties;
+	memset(&simulationProperties, 0, sizeof(simulationProperties));
+
+	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 300, simulationProperties);
 
 	{ // -------------------- COMPUTE WORK GROUP INFO -----------------------
 		int work_grp_cnt[3];
@@ -99,12 +105,14 @@ void Application::loop()
 		std::cout << "Max invocations count per work group: " << work_grp_inv << "\n";
 	}
 
-
 	int fCounter = 0;
+	int currentTexture = 0;
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ui.createNewFrame();
 
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -116,16 +124,31 @@ void Application::loop()
 			fCounter++;
 		}
 
+		texture0.useTexture(0);
+		//texture1.useTexture(1);
+
+		//glClearTexImage(texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+
 		computeShader.useProgram();
 		computeShader.setFloat("t", currentFrame);
+		computeShader.setFloat("_ReactionSpeed", simulationProperties.speed);
+		computeShader.setFloat("_DiffusionRateA", simulationProperties.diffusionRateA);
+		computeShader.setFloat("_DiffusionRateB", simulationProperties.diffusionRateB);
+		computeShader.setFloat("_FeedRate", simulationProperties.feedRate);
+		computeShader.setFloat("_KillRate", simulationProperties.killRate);
 		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 		shader.useProgram();
-		texture.useTexture(0);
+		texture0.useTexture(0);
+		ui.update();
 
 		shader.setInt("screen", 0);
 		plane.render();
+
+		//currentTexture = !currentTexture;
+
+		ui.render();
 
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
