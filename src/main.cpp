@@ -6,7 +6,7 @@
 
 int main(void)
 {
-	Application application(800, 600);
+	Application application(1920, 1080);
 
 	return 0;
 }
