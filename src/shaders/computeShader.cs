@@ -30,7 +30,6 @@ void main()
 	//pixel.x = mod(existingPixel.x + 0.0001, 1);
 	//pixel.y = mod(existingPixel.y + 0.0001, 1);
 
-
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(screen, pixel_coords); // * 4;
 

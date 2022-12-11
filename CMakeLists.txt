@@ -51,6 +51,12 @@ add_executable(Rythmic-diffusion
 	src/Application.hpp
 	src/Shader.cpp
 	src/Shader.hpp
+	src/ComputeShader.cpp
+	src/ComputeShader.hpp
+	src/Object.hpp
+	src/Object.cpp
+	src/Texture.cpp
+	src/Texture.hpp
 
 	# STB IMAGE
 	src/vendor/stb/stb_image.h

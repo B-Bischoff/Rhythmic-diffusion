@@ -5,6 +5,9 @@
 
 #include "../inc/include.hpp"
 #include "./Shader.hpp"
+#include "./ComputeShader.hpp"
+#include "./Object.hpp"
+#include "./Texture.hpp"
 
 class Application {
 private:

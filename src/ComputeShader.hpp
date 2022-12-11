@@ -2,23 +2,23 @@
 
 #include "../inc/include.hpp"
 
-class Shader {
+class ComputeShader {
 private:
-	Shader();
+	ComputeShader();
 
 	GLuint _programID;
-	GLuint _vertexShaderID, _fragmentShaderID;
+	GLuint _shaderID;
 
-	std::string readShaderContent(std::string file);
-	void CompileShader(std::string shaderContent, GLuint& shaderID);
+	std::string readShaderContent(const std::string& file);
+	void CompileShader(const std::string& shaderContent);
 	void LinkProgram();
 
 public:
-	Shader(std::string vertexPathFile, std::string fragmentPathFile);
-	~Shader();
+	ComputeShader(const std::string& pathFile);
+	~ComputeShader();
 
 	GLuint getProgramID() const;
-	void useProgram();
+	void useProgram() const;
 
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;

@@ -1,15 +1,12 @@
-#version 330
+#version 460 core
 
-layout(location = 0) in vec3 vertexPosition;
-layout(location = 1) in vec3 vertexColor;
+layout (location = 0) in vec3 pos;
+layout (location = 1) in vec2 uvs;
 
-flat out vec3 fragmentColor;
+out vec2 UVs;
 
-uniform mat4 transform;
-uniform mat4 view;
-uniform mat4 projection;
-
-void main() {
-	gl_Position = projection * view * transform * vec4(vertexPosition, 1.0f);
-	fragmentColor = vertexColor;
+void main()
+{
+	gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);
+	UVs = uvs;
 }

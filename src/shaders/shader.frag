@@ -1,8 +1,11 @@
-#version 330 core
+#version 460 core
 
-flat in vec3 fragmentColor;
-out vec4 color;
+out vec4 FragColor;
+in vec2 UVs;
 
-void main(){
-	color = vec4(fragmentColor, 1.0);
+uniform sampler2D screen;
+
+void main()
+{
+	FragColor = texture(screen, UVs);
 }
