@@ -30,7 +30,7 @@ void Texture::setTextureWrapping(GLint sParam, GLint tParam) const
 void Texture::useTexture(const int& GL_TEXTURE_NB) const
 {
 	glActiveTexture(GL_TEXTURE_NB);
-	//glBindTexture(GL_TEXTURE_2D, this->_textureID);
+	glBindImageTexture(GL_TEXTURE_NB, this->_textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 	glBindTextureUnit(GL_TEXTURE_NB, this->_textureID);
 }
 

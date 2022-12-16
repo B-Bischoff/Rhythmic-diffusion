@@ -74,7 +74,7 @@ void Application::loop()
 	Shader shader("./src/shaders/shader.vert", "./src/shaders/shader.frag");
 	Object plane(positions, textureCoords, indices);
 	Texture texture0(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
-	//Texture texture1(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+	Texture texture1(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 
 	SimulationProperties simulationProperties;
 	memset(&simulationProperties, 0, sizeof(simulationProperties));
@@ -124,10 +124,19 @@ void Application::loop()
 			fCounter++;
 		}
 
-		texture0.useTexture(0);
-		//texture1.useTexture(1);
+		texture0.useTexture(currentTexture); // 0 = input texture | 1 = output texture
+		texture1.useTexture(!currentTexture);
 
-		//glClearTexImage(texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+		// Clear images (to link with UI)
+		//glClearTexImage(texture1.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+		//glClearTexImage(texture0.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+
+		// Simulation presets
+		//simulationProperties.speed = 0.5;
+		//simulationProperties.diffusionRateA = 1.1211;
+		//simulationProperties.diffusionRateB = .566;
+		//simulationProperties.feedRate = .044;
+		//simulationProperties.killRate = .061;
 
 		computeShader.useProgram();
 		computeShader.setFloat("t", currentFrame);
@@ -140,13 +149,14 @@ void Application::loop()
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 		shader.useProgram();
-		texture0.useTexture(0);
+		texture0.useTexture(!currentTexture);
+		texture1.useTexture(currentTexture);
 		ui.update();
 
-		shader.setInt("screen", 0);
+		shader.setInt("screen", GL_TEXTURE0);
 		plane.render();
 
-		//currentTexture = !currentTexture;
+		currentTexture = !currentTexture;
 
 		ui.render();
 

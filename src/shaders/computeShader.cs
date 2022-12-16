@@ -1,7 +1,7 @@
 #version 460 core
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D currentScreen;
-//layout(rgba32f, binding = 1) uniform image2D nextScreen;
+layout(rgba32f, binding = 1) uniform image2D nextScreen;
 
 layout (location = 0) uniform float t;
 layout (location = 1) uniform float _ReactionSpeed;
@@ -66,5 +66,5 @@ void main()
 	//vec4 t = vec4(a2, a2, a2, 1);
 	//pixel = mix(colorA, colorB, t);
 
-	imageStore(currentScreen, pixel_coords, pixel);
+	imageStore(nextScreen, pixel_coords, pixel);
 }
