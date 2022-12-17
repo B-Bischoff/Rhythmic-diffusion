@@ -13,6 +13,9 @@ struct SimulationProperties {
 	float diffusionRateB;
 	float feedRate;
 	float killRate;
+	bool reset;
+	glm::vec3 colorA;
+	glm::vec3 colorB;
 };
 
 class Application {

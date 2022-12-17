@@ -5,10 +5,12 @@ layout(rgba32f, binding = 1) uniform image2D nextScreen;
 
 layout (location = 0) uniform float t;
 layout (location = 1) uniform float _ReactionSpeed;
-layout (location = 2) uniform float _DiffusionRateA;
-layout (location = 3) uniform float _DiffusionRateB;
-layout (location = 4) uniform float _FeedRate;
-layout (location = 5) uniform float _KillRate;
+layout (location = 2) uniform vec4 _Properties;
+// vec 4 properties :
+// x = diffusion rate A
+// y = diffusion rate B
+// z = feed rate
+// w = kill rate
 
 vec3 laplacian(in ivec2 uv, in vec2 texelSize) {
 	vec3 rg = vec3(0, 0, 0);
@@ -26,45 +28,27 @@ vec3 laplacian(in ivec2 uv, in vec2 texelSize) {
 	return rg;
 }
 
-float invLerp(vec4 from, vec4 to, vec4 value)
-{
-	float diffX = (value.x - from.x) / (to.x - from.x);
-	float diffY = (value.y - from.y) / (to.y - from.y);
-	float diffZ = (value.z - from.z) / (to.z - from.z);
-	return (diffX + diffY + diffZ) / 3;
-}
-
 void main()
 {
-	vec4 colorB = vec4(1.0, 1.0, 1.0, 1.0);
-	vec4 colorA = vec4(0.0, 1.0, 0.0, 1.0);
-
-	vec4 pixel = vec4(0.0, 1.0, 0.0, 1.0);
+	vec4 pixel = vec4(0.0, 0.0, 0.0, 1.0);
 
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(currentScreen, pixel_coords);
 
-	if (pixel_coords.x > 350 && pixel_coords.x < 450 && pixel_coords.y > 350 && pixel_coords.y < 450)
-		existingPixel = colorB;
-	if (pixel_coords.x > 950 && pixel_coords.x < 1050 && pixel_coords.y > 950 && pixel_coords.y < 1050)
-		existingPixel = colorB;
+	float diffusionRateA = _Properties.x;
+	float diffusionRateB = _Properties.y;
+	float feedRate = _Properties.z;
+	float killRate = _Properties.w;
 
 	float a = existingPixel.r;
-	float b = existingPixel.g;
-	//float a = invLerp(colorA, colorB, existingPixel);
-	//float b = 1 - a;
+	float b = existingPixel.b;
 
 	vec2 texelSize = vec2(1.0, 1.0);
 	vec3 lp = laplacian(pixel_coords, texelSize);
-	float a2 = a + (_DiffusionRateA * lp.x - a*b*b + _FeedRate*(1 - a)) * _ReactionSpeed;
-	float b2 = b + (_DiffusionRateB * lp.y + a*b*b - (_KillRate + _FeedRate)*b) * _ReactionSpeed;
+	float a2 = a + (diffusionRateA * lp.r - a*b*b + feedRate*(1 - a)) * _ReactionSpeed;
+	float b2 = b + (diffusionRateB * lp.b + a*b*b - (killRate + feedRate)*b) * _ReactionSpeed;
 
-	pixel.x = a2;
-	pixel.y = b2;
-	//pixel.z = (a2 + b2) / 2;
-
-	//vec4 t = vec4(a2, a2, a2, 1);
-	//pixel = mix(colorA, colorB, t);
+	pixel = vec4(a2, 0, b2, 1.0);
 
 	imageStore(nextScreen, pixel_coords, pixel);
 }

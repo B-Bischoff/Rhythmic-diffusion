@@ -48,6 +48,15 @@ void UserInterface::update()
 	ImGui::SliderFloat("Diffusion rate B", &_simulationProperties.diffusionRateB, 0.01f, 2.0);
 	ImGui::SliderFloat("Feed rate", &_simulationProperties.feedRate, 0.01f, 0.15);
 	ImGui::SliderFloat("kill rate", &_simulationProperties.killRate, 0.01f, 0.15);
+	static float color1[3] = {0.0f, 0.0f, 0.0f};
+	static float color2[3] = {1.0f, 1.0f, 1.0f};
+	ImGui::ColorEdit3("Color A", color1);
+	_simulationProperties.colorA = glm::vec3(color1[0], color1[1], color1[2]);
+	ImGui::ColorEdit3("Color B", color2);
+	_simulationProperties.colorB = glm::vec3(color2[0], color2[1], color2[2]);
+	if (ImGui::Button("Reset"))
+		_simulationProperties.reset = true;
+
 
 	ImGui::End();
 }

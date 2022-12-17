@@ -71,10 +71,13 @@ void Application::loop()
 	};
 
 	ComputeShader computeShader("./src/shaders/computeShader.cs");
+	ComputeShader displayShader("./src/shaders/display.cs");
+	ComputeShader inputShader("./src/shaders/input1.cs");
 	Shader shader("./src/shaders/shader.vert", "./src/shaders/shader.frag");
 	Object plane(positions, textureCoords, indices);
 	Texture texture0(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	Texture texture1(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+	Texture outTexture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 
 	SimulationProperties simulationProperties;
 	memset(&simulationProperties, 0, sizeof(simulationProperties));
@@ -107,6 +110,7 @@ void Application::loop()
 
 	int fCounter = 0;
 	int currentTexture = 0;
+	bool init = true;
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -127,20 +131,47 @@ void Application::loop()
 		texture0.useTexture(currentTexture); // 0 = input texture | 1 = output texture
 		texture1.useTexture(!currentTexture);
 
-		// Clear images (to link with UI)
-		//glClearTexImage(texture1.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
-		//glClearTexImage(texture0.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+		if (init)
+		{
+			inputShader.useProgram();
+			inputShader.setFloat("time", glfwGetTime());
+			glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
+			glMemoryBarrier(GL_ALL_BARRIER_BITS);
+			//init = false;
+		}
 
-		// Simulation presets
+		// Clear images (to link with UI)
+		if (simulationProperties.reset)
+		{
+			glClearTexImage(texture1.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+			glClearTexImage(texture0.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+			simulationProperties.reset = false;
+			init = true;
+		}
+
+		// Simulation presets 1
 		//simulationProperties.speed = 0.5;
 		//simulationProperties.diffusionRateA = 1.1211;
 		//simulationProperties.diffusionRateB = .566;
 		//simulationProperties.feedRate = .044;
 		//simulationProperties.killRate = .061;
+		// Simulation presets 2
+		//simulationProperties.diffusionRateA = 0.933;
+		//simulationProperties.diffusionRateB = .21;
+		//simulationProperties.feedRate = .023;
+		//simulationProperties.killRate = .049;
 
 		computeShader.useProgram();
 		computeShader.setFloat("t", currentFrame);
-		computeShader.setFloat("_ReactionSpeed", simulationProperties.speed);
+
+		glm::vec4 properties = {
+			simulationProperties.diffusionRateA,
+			simulationProperties.diffusionRateB,
+			simulationProperties.feedRate,
+			simulationProperties.killRate
+		};
+
+		computeShader.setVec4("_properties", properties);
 		computeShader.setFloat("_DiffusionRateA", simulationProperties.diffusionRateA);
 		computeShader.setFloat("_DiffusionRateB", simulationProperties.diffusionRateB);
 		computeShader.setFloat("_FeedRate", simulationProperties.feedRate);
@@ -148,9 +179,23 @@ void Application::loop()
 		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
+		// Compute next diffusion rate step
+		if (currentTexture == 1)
+			texture1.useTexture(0);
+		else
+			texture0.useTexture(0);
+		outTexture.useTexture(1);
+
+		// Apply color computation to the image
+		displayShader.useProgram();
+		displayShader.setVec3("colorA", simulationProperties.colorA);
+		displayShader.setVec3("colorB", simulationProperties.colorB);
+		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+
 		shader.useProgram();
-		texture0.useTexture(!currentTexture);
-		texture1.useTexture(currentTexture);
+		outTexture.useTexture(0);
 		ui.update();
 
 		shader.setInt("screen", GL_TEXTURE0);
