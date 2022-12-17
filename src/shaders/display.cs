@@ -2,6 +2,7 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D inTexture;
 layout(rgba32f, binding = 1) uniform image2D outTexture;
+layout(rgba32f, binding = 2) uniform image2D paramTexture;
 
 layout (location = 0) uniform vec3 colorA;
 layout (location = 1) uniform vec3 colorB;
@@ -20,6 +21,7 @@ void main()
 	vec4 existingPixel = imageLoad(inTexture, pixel_coords);
 
 	existingPixel = mix(vec4(colorA, 1), vec4(colorB, 1), existingPixel.b);
+	//existingPixel = mix(existingPixel, vec4(1.0, 0.0, 0.0, 0.0), imageLoad(paramTexture, pixel_coords).w);
 
 	imageStore(outTexture, pixel_coords, existingPixel);
 }

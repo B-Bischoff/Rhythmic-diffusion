@@ -72,12 +72,15 @@ void Application::loop()
 
 	ComputeShader computeShader("./src/shaders/computeShader.cs");
 	ComputeShader displayShader("./src/shaders/display.cs");
-	ComputeShader inputShader("./src/shaders/input1.cs");
+	ComputeShader inputShader("./src/shaders/inputCircle.cs");
+	//ComputeShader inputParamShader("./src/shaders/input1.cs");
+	ComputeShader inputParamShader("./src/shaders/voronoi.cs");
 	Shader shader("./src/shaders/shader.vert", "./src/shaders/shader.frag");
 	Object plane(positions, textureCoords, indices);
 	Texture texture0(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	Texture texture1(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	Texture outTexture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+	Texture parametersTexture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 
 	SimulationProperties simulationProperties;
 	memset(&simulationProperties, 0, sizeof(simulationProperties));
@@ -128,6 +131,13 @@ void Application::loop()
 			fCounter++;
 		}
 
+		// Parameters texture
+		inputParamShader.useProgram();
+		inputParamShader.setFloat("t", glfwGetTime());
+		parametersTexture.useTexture(0);
+		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
 		texture0.useTexture(currentTexture); // 0 = input texture | 1 = output texture
 		texture1.useTexture(!currentTexture);
 
@@ -139,6 +149,7 @@ void Application::loop()
 			glMemoryBarrier(GL_ALL_BARRIER_BITS);
 			//init = false;
 		}
+
 
 		// Clear images (to link with UI)
 		if (simulationProperties.reset)
@@ -171,11 +182,9 @@ void Application::loop()
 			simulationProperties.killRate
 		};
 
-		computeShader.setVec4("_properties", properties);
-		computeShader.setFloat("_DiffusionRateA", simulationProperties.diffusionRateA);
-		computeShader.setFloat("_DiffusionRateB", simulationProperties.diffusionRateB);
-		computeShader.setFloat("_FeedRate", simulationProperties.feedRate);
-		computeShader.setFloat("_KillRate", simulationProperties.killRate);
+		parametersTexture.useTexture(2);
+		computeShader.setVec4("_Properties", properties);
+		computeShader.setFloat("_ReactionSpeed", simulationProperties.speed);
 		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 

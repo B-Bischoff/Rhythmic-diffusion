@@ -2,6 +2,7 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D currentScreen;
 layout(rgba32f, binding = 1) uniform image2D nextScreen;
+layout(rgba32f, binding = 2) uniform image2D paramScreen;
 
 layout (location = 0) uniform float t;
 layout (location = 1) uniform float _ReactionSpeed;
@@ -38,7 +39,8 @@ void main()
 	float diffusionRateA = _Properties.x;
 	float diffusionRateB = _Properties.y;
 	float feedRate = _Properties.z;
-	float killRate = _Properties.w;
+	//float killRate = _Properties.w;
+	float killRate = imageLoad(paramScreen, pixel_coords).w / 100 * 15;
 
 	float a = existingPixel.r;
 	float b = existingPixel.b;

@@ -12,6 +12,7 @@ ComputeShader::~ComputeShader()
 
 ComputeShader::ComputeShader(const std::string& pathFile)
 {
+	std::cout << "Compiling: " << pathFile << " ..." << std::endl;
 	std::string shaderContent = readShaderContent(pathFile);
 	CompileShader(shaderContent);
 	LinkProgram();
