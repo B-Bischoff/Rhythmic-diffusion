@@ -59,6 +59,9 @@ add_executable(Rythmic-diffusion
 	src/Texture.hpp
 	src/UserInterface.cpp
 	src/UserInterface.hpp
+	src/InputParameter.cpp
+	src/InputParameter.hpp
+	src/InputParameterSettings.hpp
 
 	# STB IMAGE
 	src/vendor/stb/stb_image.h

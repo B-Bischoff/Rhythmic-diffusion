@@ -6,6 +6,7 @@
 #include "./Object.hpp"
 #include "./Texture.hpp"
 #include "./UserInterface.hpp"
+#include "./InputParameter.hpp"
 
 struct SimulationProperties {
 	float speed;
@@ -25,7 +26,7 @@ private:
 
 	ComputeShader _diffusionReactionShader;
 	ComputeShader _inputShader;
-	ComputeShader _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
+	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
 	ComputeShader _colorOutputShader;
 
 	Shader _shader;

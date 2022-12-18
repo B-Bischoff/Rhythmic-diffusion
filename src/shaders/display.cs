@@ -21,7 +21,7 @@ void main()
 	vec4 existingPixel = imageLoad(inTexture, pixel_coords);
 
 	existingPixel = mix(vec4(colorA, 1), vec4(colorB, 1), existingPixel.b);
-	//existingPixel = mix(existingPixel, vec4(1.0, 0.0, 0.0, 0.0), imageLoad(paramTexture, pixel_coords).w);
+	//existingPixel = mix(existingPixel, vec4(1.0, 0.0, 0.0, 0.0), imageLoad(paramTexture, pixel_coords).r);
 
 	imageStore(outTexture, pixel_coords, existingPixel);
 }

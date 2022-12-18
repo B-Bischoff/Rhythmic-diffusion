@@ -69,21 +69,23 @@ void Application::loop()
 		0, 2, 1,
 		0, 3, 2
 	};
-	_diffusionReactionShader = ComputeShader("src/shaders/computeShader.cs");
-	_inputShader = ComputeShader("src/shaders/inputCircle.cs");
-	_colorOutputShader = ComputeShader("src/shaders/display.cs");
-	_diffusionRateAShader = ComputeShader("src/shaders/numberInput.cs");
-	_diffusionRateBShader = ComputeShader("src/shaders/numberInput.cs");
-	_feedRateShader = ComputeShader("src/shaders/numberInput.cs");
-	_killRateShader = ComputeShader("src/shaders/voronoi.cs");
-	//_killRateShader = ComputeShader("src/shaders/numberInput.cs");
-
-	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
 
 	_compute0Texture = Texture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	_compute1Texture = Texture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	_parametersTexture = Texture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
 	_finalTexture = Texture(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y);
+
+	_diffusionReactionShader = ComputeShader("src/shaders/computeShader.cs");
+	_inputShader = ComputeShader("src/shaders/inputCircle.cs");
+	_colorOutputShader = ComputeShader("src/shaders/display.cs");
+	_diffusionRateAShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
+	_diffusionRateBShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
+	_feedRateShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
+	_killRateShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
+	//_killRateShader = ComputeShader("src/shaders/numberInput.cs");
+
+	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
+
 
 	_plane = Object(positions, textureCoords, indices);
 
@@ -162,7 +164,6 @@ void Application::loop()
 
 		processDiffusionReaction();
 
-
 		printFinalTexture(currentTexture);
 
 		currentTexture = !currentTexture;
@@ -180,30 +181,19 @@ void Application::processInputParameters()
 {
 	_parametersTexture.useTexture(0);
 
-	_diffusionRateAShader.useProgram();
-	_diffusionRateAShader.setFloat("value", _simulationProperties.diffusionRateA);
-	_diffusionRateAShader.setVec4("channels", glm::vec4(1.0, 0.0, 0.0, 0.0));
-	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	NumberInput ni;
 
-	_diffusionRateBShader.useProgram();
-	_diffusionRateBShader.setFloat("value", _simulationProperties.diffusionRateB);
-	_diffusionRateBShader.setVec4("channels", glm::vec4(0.0, 1.0, 0.0, 0.0));
-	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	ni.value = _simulationProperties.diffusionRateA;
+	_diffusionRateAShader.execShader(glm::vec4(1, 0, 0, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
 
-	_feedRateShader.useProgram();
-	_feedRateShader.setFloat("value", _simulationProperties.feedRate);
-	_feedRateShader.setVec4("channels", glm::vec4(0.0, 0.0, 1.0, 0.0));
-	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	ni.value = _simulationProperties.diffusionRateB;
+	_diffusionRateBShader.execShader(glm::vec4(0, 1, 0, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
 
-	_killRateShader.useProgram();
-	_killRateShader.setFloat("t", glfwGetTime());
-	//_killRateShader.setFloat("value", _simulationProperties.killRate);
-	_killRateShader.setVec4("channels", glm::vec4(0.0, 0.0, 0.0, 1.0));
-	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	ni.value = _simulationProperties.feedRate;
+	_feedRateShader.execShader(glm::vec4(0, 0, 1, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
+
+	ni.value = _simulationProperties.killRate;
+	_killRateShader.execShader(glm::vec4(0, 0, 0, 1), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
 }
 
 void Application::processDiffusionReaction()
