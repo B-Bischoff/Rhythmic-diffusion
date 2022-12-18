@@ -96,7 +96,7 @@ void main()
 	float h = cnoise((pixel_coords * sin(t/10)) * SCALE);
 	//existingPixel.r += clamp(h * 0.5 + existingPixel.g, 0, 1);
 	//existingPixel.g += clamp(h * 0.5 + existingPixel.g, 0, 1);
-	existingPixel.b = clamp(h, 0, 1);
+	existingPixel.w = clamp(h, 0, 1);
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

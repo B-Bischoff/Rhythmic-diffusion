@@ -1,5 +1,9 @@
 #include "Object.hpp"
 
+Object::Object()
+{
+}
+
 Object::Object(std::vector<float> positions, std::vector<float> textureCoords, std::vector<unsigned int> indices)
 {
 	InitPositions(positions);

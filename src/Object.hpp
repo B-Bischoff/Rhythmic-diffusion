@@ -4,6 +4,7 @@
 
 class Object {
 public:
+	Object();
 	Object(std::vector<float> positions,
 		std::vector<float> textureCoords,
 		std::vector<unsigned int> indices);

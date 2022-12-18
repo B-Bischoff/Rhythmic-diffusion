@@ -4,7 +4,6 @@ layout(rgba32f, binding = 0) uniform image2D currentScreen;
 layout(rgba32f, binding = 1) uniform image2D nextScreen;
 layout(rgba32f, binding = 2) uniform image2D paramScreen;
 
-layout (location = 0) uniform float t;
 layout (location = 1) uniform float _ReactionSpeed;
 layout (location = 2) uniform vec4 _Properties;
 // vec 4 properties :
@@ -36,10 +35,9 @@ void main()
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(currentScreen, pixel_coords);
 
-	float diffusionRateA = _Properties.x;
-	float diffusionRateB = _Properties.y;
-	float feedRate = _Properties.z;
-	//float killRate = _Properties.w;
+	float diffusionRateA = imageLoad(paramScreen, pixel_coords).x;
+	float diffusionRateB = imageLoad(paramScreen, pixel_coords).y;
+	float feedRate = imageLoad(paramScreen, pixel_coords).z;
 	float killRate = imageLoad(paramScreen, pixel_coords).w / 100 * 15;
 
 	float a = existingPixel.r;

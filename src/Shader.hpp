@@ -4,7 +4,6 @@
 
 class Shader {
 private:
-	Shader();
 
 	GLuint _programID;
 	GLuint _vertexShaderID, _fragmentShaderID;
@@ -14,6 +13,7 @@ private:
 	void LinkProgram();
 
 public:
+	Shader();
 	Shader(std::string vertexPathFile, std::string fragmentPathFile);
 	~Shader();
 

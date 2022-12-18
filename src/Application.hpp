@@ -23,7 +23,25 @@ private:
 	const glm::vec2 SCREEN_DIMENSION;
 	GLFWwindow* _window;
 
+	ComputeShader _diffusionReactionShader;
+	ComputeShader _inputShader;
+	ComputeShader _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
+	ComputeShader _colorOutputShader;
+
+	Shader _shader;
+
+	Texture _compute0Texture, _compute1Texture;
+	Texture _parametersTexture;
+	Texture _finalTexture;
+
+	SimulationProperties _simulationProperties;
+
+	Object _plane;
+
 	void loop();
+	void processInputParameters();
+	void processDiffusionReaction();
+	void printFinalTexture(const int& currentTexture);
 
 public:
 	Application(const int& width, const int& height);

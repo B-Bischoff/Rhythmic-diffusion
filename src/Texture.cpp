@@ -1,5 +1,8 @@
 #include "Texture.hpp"
 
+Texture::Texture()
+{}
+
 Texture::Texture(const int& width, const int& height)
 	: _width(width), _height(height)
 {

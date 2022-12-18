@@ -13,6 +13,7 @@ private:
 	void setTextureFiltering(GLint sParam, GLint tParam) const;
 
 public:
+	Texture();
 	Texture(const int& width, const int& height);
 
 	void useTexture(const int& GL_TEXTURE_NB) const;

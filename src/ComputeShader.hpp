@@ -4,7 +4,6 @@
 
 class ComputeShader {
 private:
-	ComputeShader();
 
 	GLuint _programID;
 	GLuint _shaderID;
@@ -14,6 +13,7 @@ private:
 	void LinkProgram();
 
 public:
+	ComputeShader();
 	ComputeShader(const std::string& pathFile);
 	~ComputeShader();
 
