@@ -2,8 +2,8 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D texture;
 
-layout (location = 0) uniform float t;
-layout (location = 1) uniform vec4 channels;
+layout (location = 0) uniform vec4 channels;
+layout (location = 1) uniform float t;
 
 const mat2 myt = mat2(.12121212, .13131313, -.13131313, .12121212);
 const vec2 mys = vec2(1e4, 1e6);

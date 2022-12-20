@@ -44,21 +44,52 @@ void UserInterface::update()
 	ImGui::Begin("Menu", NULL, windowFlag);
 
 	ImGui::SliderFloat("Speed", &_simulationProperties.speed, 0.01f, 1.05);
-	ImGui::SliderFloat("Diffusion rate A", &_simulationProperties.diffusionRateA, 0.01f, 2.0);
-	ImGui::SliderFloat("Diffusion rate B", &_simulationProperties.diffusionRateB, 0.01f, 2.0);
-	ImGui::SliderFloat("Feed rate", &_simulationProperties.feedRate, 0.01f, 0.15);
-	ImGui::SliderFloat("kill rate", &_simulationProperties.killRate, 0.01f, 0.15);
+
 	static float color1[3] = {0.0f, 0.0f, 0.0f};
 	static float color2[3] = {1.0f, 1.0f, 1.0f};
 	ImGui::ColorEdit3("Color A", color1);
 	_simulationProperties.colorA = glm::vec3(color1[0], color1[1], color1[2]);
 	ImGui::ColorEdit3("Color B", color2);
 	_simulationProperties.colorB = glm::vec3(color2[0], color2[1], color2[2]);
+	//ImGui::Separator();
+	
+	for (int i = 0; i < 4; i++)
+		printOptionsFields(i);
+
 	if (ImGui::Button("Reset"))
 		_simulationProperties.reset = true;
 
 
 	ImGui::End();
+}
+
+void UserInterface::printOptionsFields(const int& i)
+{
+	// Combo for input type
+	int inputParameterType = _inputParameters[i]->getType();
+	ImGui::Combo(std::string("input type " + std::to_string(i)).c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0");
+	if (inputParameterType != (int)_inputParameters[i]->getType())
+		_inputParameters[i]->changeType(inputParameterType);
+
+	// Print input fields accord to input type
+	if (_inputParameters[i]->getType() == InputParameterType::Number)
+	{
+		float min = 0.0f;
+		float max = i <= 1 ? 1.0f : 0.15f;
+		printNumberTypeFields(i, min, max);
+	}
+	
+}
+
+void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
+{
+	std::vector<float>& v = _inputParameters[i]->getVectorParameters();
+	float value;
+	if (v.size())
+		value = v[0];
+	ImGui::SliderFloat(std::to_string(i).c_str(), &value, min, max);
+	v.clear();
+	v.push_back(value);
 }
 
 
@@ -73,4 +104,24 @@ void UserInterface::shutdown()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void UserInterface::setInputParameters(InputParameter* p0, InputParameter* p1, InputParameter* p2, InputParameter* p3)
+{
+	_inputParameters[0] = p0;
+	_inputParameters[1] = p1;
+	_inputParameters[2] = p2;
+	_inputParameters[3] = p3;
+}
+
+std::string UserInterface::getFieldNameFromIndex(const int& index) const
+{
+	switch (index)
+	{
+		case 0: return "Diffusion rate A";
+		case 1: return "Diffusion rate B";
+		case 2: return "Feed rate";
+		case 3: return "Kill rate";
+		default: return "";
+	}
 }

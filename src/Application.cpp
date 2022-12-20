@@ -78,11 +78,10 @@ void Application::loop()
 	_diffusionReactionShader = ComputeShader("src/shaders/computeShader.cs");
 	_inputShader = ComputeShader("src/shaders/inputCircle.cs");
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
-	_diffusionRateAShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
-	_diffusionRateBShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
-	_feedRateShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
-	_killRateShader = InputParameter(ComputeShader("src/shaders/numberInput.cs"), &_parametersTexture);
-	//_killRateShader = ComputeShader("src/shaders/numberInput.cs");
+	_diffusionRateAShader = InputParameter(&_parametersTexture);
+	_diffusionRateBShader = InputParameter(&_parametersTexture);
+	_feedRateShader = InputParameter(&_parametersTexture);
+	_killRateShader = InputParameter(&_parametersTexture);
 
 	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
 
@@ -91,7 +90,8 @@ void Application::loop()
 
 	memset(&_simulationProperties, 0, sizeof(SimulationProperties));
 
-	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 300, _simulationProperties);
+	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 500, _simulationProperties);
+	ui.setInputParameters(&_diffusionRateAShader, &_diffusionRateBShader, &_feedRateShader, &_killRateShader);
 
 	{ // -------------------- COMPUTE WORK GROUP INFO -----------------------
 		int work_grp_cnt[3];
@@ -181,34 +181,17 @@ void Application::processInputParameters()
 {
 	_parametersTexture.useTexture(0);
 
-	NumberInput ni;
-
-	ni.value = _simulationProperties.diffusionRateA;
-	_diffusionRateAShader.execShader(glm::vec4(1, 0, 0, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
-
-	ni.value = _simulationProperties.diffusionRateB;
-	_diffusionRateBShader.execShader(glm::vec4(0, 1, 0, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
-
-	ni.value = _simulationProperties.feedRate;
-	_feedRateShader.execShader(glm::vec4(0, 0, 1, 0), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
-
-	ni.value = _simulationProperties.killRate;
-	_killRateShader.execShader(glm::vec4(0, 0, 0, 1), SCREEN_DIMENSION, static_cast<InputParameterSettings*>(&ni));
+	_diffusionRateAShader.execShader(glm::vec4(1, 0, 0, 0), SCREEN_DIMENSION);
+	_diffusionRateBShader.execShader(glm::vec4(0, 1, 0, 0), SCREEN_DIMENSION);
+	_feedRateShader.execShader(glm::vec4(0, 0, 1, 0), SCREEN_DIMENSION);
+	_killRateShader.execShader(glm::vec4(0, 0, 0, 1), SCREEN_DIMENSION);
 }
 
 void Application::processDiffusionReaction()
 {
 	_diffusionReactionShader.useProgram();
 
-	glm::vec4 properties = {
-		_simulationProperties.diffusionRateA,
-		_simulationProperties.diffusionRateB,
-		_simulationProperties.feedRate,
-		_simulationProperties.killRate
-	};
-
 	_parametersTexture.useTexture(2);
-	_diffusionReactionShader.setVec4("_Properties", properties);
 	_diffusionReactionShader.setFloat("_ReactionSpeed", _simulationProperties.speed);
 	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);

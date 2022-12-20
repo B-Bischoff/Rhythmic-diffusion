@@ -2,7 +2,8 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D texture;
 
-layout (location = 0) uniform float t;
+layout (location = 0) uniform vec4 channels;
+layout (location = 1) uniform float t;
 
 float PI = 3.1415;
 
@@ -64,7 +65,7 @@ float cnoise(vec2 P){
   vec2 g10 = vec2(gx.y,gy.y);
   vec2 g01 = vec2(gx.z,gy.z);
   vec2 g11 = vec2(gx.w,gy.w);
-  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+  vec4 norm = 1.79284291400159 - 0.85373472095314 *
     vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
   g00 *= norm.x;
   g01 *= norm.y;
@@ -93,10 +94,17 @@ void main()
 
 	const float SCALE = 0.01;
 	//float h = pNoise(vec2(pixel_coords.x, pixel_coords.y) * SCALE, 4);
-	float h = cnoise((pixel_coords * sin(t/10)) * SCALE);
-	//existingPixel.r += clamp(h * 0.5 + existingPixel.g, 0, 1);
-	//existingPixel.g += clamp(h * 0.5 + existingPixel.g, 0, 1);
-	existingPixel.w = clamp(h, 0, 1);
+	float h = cnoise((pixel_coords) * SCALE);
+	h = clamp(h, 0, 1);
+
+	if (channels.x > 0)
+		existingPixel.x = h;
+	if (channels.y > 0)
+		existingPixel.y = h;
+	if (channels.z > 0)
+		existingPixel.z = h;
+	if (channels.w > 0)
+		existingPixel.w = h;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

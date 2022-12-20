@@ -5,7 +5,6 @@ layout(rgba32f, binding = 1) uniform image2D nextScreen;
 layout(rgba32f, binding = 2) uniform image2D paramScreen;
 
 layout (location = 1) uniform float _ReactionSpeed;
-layout (location = 2) uniform vec4 _Properties;
 // vec 4 properties :
 // x = diffusion rate A
 // y = diffusion rate B
