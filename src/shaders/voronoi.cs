@@ -52,7 +52,7 @@ void main()
 	if (channels.z != 0.0)
 		existingPixel.z = h;
 	if (channels.w != 0.0)
-		existingPixel.w = h;
+		existingPixel.w = h * 0.10;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }
