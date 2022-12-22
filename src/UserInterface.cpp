@@ -41,7 +41,7 @@ void UserInterface::update()
 	//windowFlag |= ImGuiWindowFlags_NoCollapse;
 	//windowFlag |= ImGuiWindowFlags_NoTitleBar;
 
-	ImGui::Begin("Menu", NULL, windowFlag);
+	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
 	ImGui::SliderFloat("Speed", &_simulationProperties.speed, 0.01f, 1.05);
 
@@ -52,7 +52,7 @@ void UserInterface::update()
 	ImGui::ColorEdit3("Color B", color2);
 	_simulationProperties.colorB = glm::vec3(color2[0], color2[1], color2[2]);
 	//ImGui::Separator();
-	
+
 	for (int i = 0; i < 4; i++)
 		printOptionsFields(i);
 
@@ -67,9 +67,13 @@ void UserInterface::printOptionsFields(const int& i)
 {
 	// Combo for input type
 	int inputParameterType = _inputParameters[i]->getType();
-	ImGui::Combo(std::string("input type " + std::to_string(i)).c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0");
+	ImGui::Combo(std::string(getFieldNameFromIndex(i) + " type").c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0");
 	if (inputParameterType != (int)_inputParameters[i]->getType())
 		_inputParameters[i]->changeType(inputParameterType);
+	ImGui::SameLine();
+	bool showParam = _simulationProperties.paramTextureVisu[i];
+	ImGui::Checkbox(std::string("Show " + std::to_string(i)).c_str(), &showParam);
+	_simulationProperties.paramTextureVisu[i] = showParam;
 
 	// Print input fields accord to input type
 	if (_inputParameters[i]->getType() == InputParameterType::Number)
@@ -78,7 +82,6 @@ void UserInterface::printOptionsFields(const int& i)
 		float max = i <= 1 ? 1.0f : 0.15f;
 		printNumberTypeFields(i, min, max);
 	}
-	
 }
 
 void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
@@ -87,7 +90,8 @@ void UserInterface::printNumberTypeFields(const int& i, const float& min, const 
 	float value;
 	if (v.size())
 		value = v[0];
-	ImGui::SliderFloat(std::to_string(i).c_str(), &value, min, max);
+	std::string fieldName = std::string("value " + std::to_string(i));
+	ImGui::SliderFloat(fieldName.c_str(), &value, min, max);
 	v.clear();
 	v.push_back(value);
 }

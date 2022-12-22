@@ -90,7 +90,7 @@ void Application::loop()
 
 	memset(&_simulationProperties, 0, sizeof(SimulationProperties));
 
-	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 500, _simulationProperties);
+	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, _simulationProperties);
 	ui.setInputParameters(&_diffusionRateAShader, &_diffusionRateBShader, &_feedRateShader, &_killRateShader);
 
 	{ // -------------------- COMPUTE WORK GROUP INFO -----------------------
@@ -210,6 +210,7 @@ void Application::printFinalTexture(const int& currentTexture)
 	_colorOutputShader.useProgram();
 	_colorOutputShader.setVec3("colorA", _simulationProperties.colorA);
 	_colorOutputShader.setVec3("colorB", _simulationProperties.colorB);
+	_colorOutputShader.setVec4("visualizeChannels", _simulationProperties.paramTextureVisu);
 	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 

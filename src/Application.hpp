@@ -13,6 +13,7 @@ struct SimulationProperties {
 	bool reset;
 	glm::vec3 colorA;
 	glm::vec3 colorB;
+	glm::vec4 paramTextureVisu;
 };
 
 class Application {

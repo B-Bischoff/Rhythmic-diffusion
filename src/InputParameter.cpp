@@ -22,6 +22,7 @@ void InputParameter::changeType(const InputParameterType& newType)
 
 void InputParameter::changeType(const int& newTypeIndex)
 {
+	_parameters.clear();
 	// DONT USE HARDCODED PATHS
 	switch (newTypeIndex)
 	{
@@ -77,6 +78,9 @@ void InputParameter::applyPerlinNoiseSettings()
 
 void InputParameter::applyVoronoiSettings()
 {
+	// Set voronoi scale
+	// offset
+	// moving with time
 }
 
 std::vector<float>& InputParameter::getVectorParameters()
