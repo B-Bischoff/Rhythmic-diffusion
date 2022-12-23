@@ -15,6 +15,7 @@ private:
 
 	void printOptionsFields(const int& i);
 	void printNumberTypeFields(const int& i, const float& min, const float& max);
+	void printPerlinNoiseFields(const int& i);
 
 	std::string getFieldNameFromIndex(const int& index) const;
 

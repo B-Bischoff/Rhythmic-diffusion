@@ -74,6 +74,13 @@ void InputParameter::applyNumberSettings()
 void InputParameter::applyPerlinNoiseSettings()
 {
 	_computeShader.setFloat("t", glfwGetTime());
+	if (_parameters.size() >= 3)
+	{
+		_computeShader.setFloat("scale", _parameters[0]);
+		glm::vec2 scale = glm::vec2(_parameters[1], _parameters[2]);
+		_computeShader.setVec2("offset", scale);
+		_computeShader.setFloat("strengthFactor", _parameters[3]);
+	}
 }
 
 void InputParameter::applyVoronoiSettings()

@@ -82,6 +82,8 @@ void UserInterface::printOptionsFields(const int& i)
 		float max = i <= 1 ? 1.0f : 0.15f;
 		printNumberTypeFields(i, min, max);
 	}
+	else if (_inputParameters[i]->getType() == InputParameterType::PerlinNoise)
+		printPerlinNoiseFields(i);
 }
 
 void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
@@ -96,6 +98,40 @@ void UserInterface::printNumberTypeFields(const int& i, const float& min, const 
 	v.push_back(value);
 }
 
+void UserInterface::printPerlinNoiseFields(const int& i)
+{
+	std::vector<float>& v = _inputParameters[i]->getVectorParameters();
+
+	// Scale
+	std::string fieldName = std::string("scale " + std::to_string(i));
+	float scale = 0.001;
+	if (v.size())
+		scale = v[0];
+	ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 0.5);
+
+	// Offset
+	fieldName = std::string("offset " + std::to_string(i));
+	float offset[2];
+	if (v.size() > 2)
+	{
+		offset[0] = v[1];
+		offset[1] = v[2];
+	}
+	ImGui::SliderFloat2(fieldName.c_str(), offset, -5000, 5000);
+
+	// Strength factor
+	fieldName = std::string("Strength factor " + std::to_string(i));
+	float strengthFactor = 1.0f;
+	if (v.size() > 3)
+		strengthFactor = v[3];
+	ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1);
+
+	v.clear();
+	v.push_back(scale);
+	v.push_back(offset[0]);
+	v.push_back(offset[1]);
+	v.push_back(strengthFactor);
+}
 
 void UserInterface::render()
 {
