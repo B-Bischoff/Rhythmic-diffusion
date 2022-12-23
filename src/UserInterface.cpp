@@ -124,7 +124,7 @@ void UserInterface::printPerlinNoiseFields(const int& i)
 	float strengthFactor = 1.0f;
 	if (v.size() > 3)
 		strengthFactor = v[3];
-	ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1);
+	ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1.5);
 
 	v.clear();
 	v.push_back(scale);

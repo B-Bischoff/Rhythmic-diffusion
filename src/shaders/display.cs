@@ -24,6 +24,9 @@ void main()
 	vec4 existingPixel = imageLoad(inTexture, pixel_coords);
 
 	existingPixel = mix(vec4(colorA, 1), vec4(colorB, 1), existingPixel.b);
+	if (existingPixel.b > 0.2)
+		existingPixel = mix(existingPixel, vec4(1, 0, 0, 1), imageLoad(paramTexture, pixel_coords).w * 6.66);
+
 	if (visualizeChannels != vec4(0))
 	{
 		vec4 paramPixel = visualizeParamTexture(imageLoad(paramTexture, pixel_coords));

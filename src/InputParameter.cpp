@@ -76,7 +76,8 @@ void InputParameter::applyPerlinNoiseSettings()
 	_computeShader.setFloat("t", glfwGetTime());
 	if (_parameters.size() >= 3)
 	{
-		_computeShader.setFloat("scale", _parameters[0]);
+		double tmp = sin(glfwGetTime() * 0.02 + _parameters[0]) * 0.01;
+		_computeShader.setFloat("scale", tmp);
 		glm::vec2 scale = glm::vec2(_parameters[1], _parameters[2]);
 		_computeShader.setVec2("offset", scale);
 		_computeShader.setFloat("strengthFactor", _parameters[3]);
