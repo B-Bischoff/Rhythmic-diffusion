@@ -14,14 +14,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-module
 include(CreateLaunchers)
 include(MSVCMultipleProcessCompile) # /MP
 
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
+
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/external/stk-4.6.2/CMakeLists.txt)
 
 include_directories(
 	external/glfw-3.3.8/include
 	external/glm-0.9.9.8/
 	external/glew-2.2.0/include
+	external/stk-4.6.2/
 	.
 )
 
@@ -78,6 +84,23 @@ add_executable(Rythmic-diffusion
 	src/vendor/imgui/imgui_internal.h
 	src/vendor/imgui/imgui_tables.cpp
 	src/vendor/imgui/imgui_widgets.cpp
+
+	# STK
+	src/vendor/stk/WvIn.h
+	src/vendor/stk/Stk.h
+	src/vendor/stk/Stk.cpp
+	src/vendor/stk/FileWvIn.h
+	src/vendor/stk/FileWvIn.cpp
+	src/vendor/stk/RtAudio.h
+	src/vendor/stk/RtAudio.cpp
+	src/vendor/stk/FileRead.h
+	src/vendor/stk/FileRead.cpp
+
+	# KISSFFT
+	external/kissfft/kiss_fftr.h
+	external/kissfft/kiss_fftr.c
+	external/kissfft/kiss_fft.h
+	external/kissfft/kiss_fft.c
 
 )
 target_link_libraries(Rythmic-diffusion

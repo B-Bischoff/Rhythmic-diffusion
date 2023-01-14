@@ -7,7 +7,7 @@ void main()
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(texture, pixel_coords);
 
-	int RADIUS =50;
+	int RADIUS = 50;
 	ivec2 center = ivec2(1920 / 2, 1080 / 2);
 	int x = center.x - pixel_coords.x;
 	x = x * x;
