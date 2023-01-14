@@ -25,7 +25,7 @@ UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, con
 	void setInputParameters(InputParameter* p0, InputParameter* p1, InputParameter* p2, InputParameter* p3);
 
 	void createNewFrame();
-	void update();
+	void update(const float array[600]);
 	void render();
 	void shutdown();
 

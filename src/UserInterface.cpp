@@ -24,7 +24,7 @@ void UserInterface::createNewFrame()
 	ImGui::NewFrame();
 }
 
-void UserInterface::update()
+void UserInterface::update(const float array[600])
 {
 	const int PANNEL_WIDTH = UI_WIDTH;
 	const int PANNEL_HEIGHT = WIN_HEIGHT;
@@ -59,6 +59,11 @@ void UserInterface::update()
 	if (ImGui::Button("Reset"))
 		_simulationProperties.reset = true;
 
+	// Plot as lines and plot as histogram
+	//IMGUI_DEMO_MARKER("Widgets/Plotting/PlotLines, PlotHistogram");
+	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
+	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
+	ImGui::PlotHistogram("Histogram", array, 600, 0, NULL, 0.0f, 25.0f, ImVec2(0, 80.0f));
 
 	ImGui::End();
 }
