@@ -7,6 +7,8 @@
 #include "./Texture.hpp"
 #include "./UserInterface.hpp"
 #include "./InputParameter.hpp"
+#include "./AudioPlayer.hpp"
+#include "./AudioAnalyzer.hpp"
 
 struct SimulationProperties {
 	float speed;
@@ -35,6 +37,8 @@ private:
 	SimulationProperties _simulationProperties;
 
 	Object _plane;
+
+	AudioPlayer _audioPlayer;
 
 	void loop();
 	void processInputParameters();
