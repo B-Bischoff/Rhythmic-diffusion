@@ -23,6 +23,7 @@ private:
 	void convertToLog10();
 
 public:
+	std::mutex _outputArrayMutex; // MOVE IN PRIVATE
 	AudioAnalyzer(int samplingRate = 44100,
 				int samplesNumber = 4096,
 				int outputArraySize = 600);

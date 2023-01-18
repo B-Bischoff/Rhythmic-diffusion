@@ -125,7 +125,12 @@ void Application::loop()
 	int currentTexture = 0;
 	bool init = true;
 
-	_audioPlayer.playWavFile("../../Downloads/Etherwood-Spoken.wav");
+	const std::string downloadPath = "../../Downloads/";
+	//const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
+	const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
+	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
+	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
+	_audioPlayer.playWavFile(file.c_str());
 
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
@@ -179,6 +184,7 @@ void Application::loop()
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
 	}
+	_audioPlayer.stopPlaying();
 
 	glfwTerminate();
 }

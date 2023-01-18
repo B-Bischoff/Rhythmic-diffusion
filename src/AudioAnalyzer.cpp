@@ -3,18 +3,18 @@
 AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArraySize)
 	: _samplingRate(samplingRate), _samples(samplesNumber), _outputArraySize(outputArraySize)
 {
-	_outputArray.reserve(_outputArraySize);
-	_inputArray.clear();
 	_fftIn = std::vector<kiss_fft_cpx>(_samples);
 	_fftOut = std::vector<kiss_fft_cpx>(_samples);
 	_maxFrequency = 15000;
+	_inputArray = std::vector<float>(_samples, 0.0f);
+	_outputArray = std::vector<float>(_outputArraySize, 0.0f);
 }
 
 void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 {
 	if ((int)audioData.size() < _samples) return;
-	std::cout << "analyzing" << std::endl;
 
+	std::lock_guard<std::mutex> guard(_outputArrayMutex);
 	applyWindowFunction(audioData);
 	shiftAudioData(audioData);
 	computeFFT(_inputArray);
@@ -22,20 +22,20 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 	convertToLog10();
 
 	// Display in terminal
-	system("clear");
-	const int HEIGHT = 50;
-	for (int i = HEIGHT; i >= 0; i--)
-	{
-		for (int j = 0; j < 600; j++)
-		{
-			if (i == 0) {std::cout << "-"; continue; }
-			if ((_outputArray[j]*2) > i)
-				std::cout << "O";
-			else
-				std::cout << " ";
-		}
-		std::cout << std::endl;
-	}
+	//system("clear");
+	//const int HEIGHT = 50;
+	//for (int i = HEIGHT; i >= 0; i--)
+	//{
+	//	for (int j = 0; j < 600; j++)
+	//	{
+	//		if (i == 0) {std::cout << "-"; continue; }
+	//		if ((_outputArray[j]*2) > i)
+	//			std::cout << "O";
+	//		else
+	//			std::cout << " ";
+	//	}
+	//	std::cout << std::endl;
+	//}
 }
 
 void AudioAnalyzer::applyWindowFunction(std::vector<float>& audioData)
@@ -43,14 +43,13 @@ void AudioAnalyzer::applyWindowFunction(std::vector<float>& audioData)
 	// Applying Hanning function
 	for (int i = 0; i < _samples; i++)
 	{
-		_inputArray.push_back(audioData[i] * (0.5 * (1 - cos(2 * M_PI * i / (_samples - 1)))));
+		_inputArray[i] = (audioData[i] * (0.5 * (1 - cos(2 * M_PI * i / (_samples - 1)))));
 	}
 }
 
 void AudioAnalyzer::shiftAudioData(std::vector<float>& audioData)
 {
 	audioData.erase(audioData.begin(), audioData.begin() + _samples / 2);
-	//audioData.clear();
 }
 
 void AudioAnalyzer::computeFFT(std::vector<float>& audioData)

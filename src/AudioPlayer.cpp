@@ -98,23 +98,24 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 	stk::FileWvIn* input = callbackData->input;
 	stk::StkFloat* samples = (stk::StkFloat*) outputBuffer;
 	stk::StkFrames* frames = callbackData->frames;
-	std::vector<float>* audioSamples = callbackData->audioSamples;
+	std::vector<float>& audioSamples = *callbackData->audioSamples;
 	AudioPlayer* audioPlayer = callbackData->audioPlayer;
 
+
 	input->tick(*frames);
-	//audioPlayer->_audioAnalyzer->analyzeSignal(*audioSamples);
 
 	for (unsigned int i=0; i<frames->size(); i++)
 	{
 		*samples = (*frames)[i] * (*callbackData->volume/100);
-		audioSamples->push_back((*frames)[i]);
+		audioSamples.push_back((*frames)[i]);
 		samples++;
-
 
 		if (input->channelsOut() == 1) {
 			*samples++ = (*frames)[i]; // play mono files in stereo
 		}
+	audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
 	}
+
 
 	if (input->isFinished()) {
 		*callbackData->songFinished = true;

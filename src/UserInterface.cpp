@@ -66,14 +66,17 @@ void UserInterface::update(const float array[600])
 	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
 	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
 
-	float ARRAY_2[600];
-	_audioAnalyzer.analyzeSignal(_audioPlayer.getAudioData());
+
+	const int ARRAY_SIZE = 600;
+	float ARRAY_2[ARRAY_SIZE];
+	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
 	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
-	for (int i = 0; i < 600; i++)
-		ARRAY_2[i] = outputFreq[i];
-
-	ImGui::PlotHistogram("Histogram", ARRAY_2, 600, 0, NULL, 0.0f, 25.0f, ImVec2(500, 80.0f));
-
+	if (outputFreq.size() >= ARRAY_SIZE)
+	{
+		for (int i = 0; i < ARRAY_SIZE; i++)
+			ARRAY_2[i] = outputFreq[i];
+		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 25.0f, ImVec2(500, 80.0f));
+	}
 	printAudioPlayer();
 
 	ImGui::End();
