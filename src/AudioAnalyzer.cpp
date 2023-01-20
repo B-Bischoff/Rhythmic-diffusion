@@ -14,6 +14,8 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 {
 	if ((int)audioData.size() < _samples) return;
 
+	_previousOutputArray = _outputArray;
+
 	std::lock_guard<std::mutex> guard(_outputArrayMutex);
 	applyWindowFunction(audioData);
 	shiftAudioData(audioData);
@@ -21,18 +23,45 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 	findPeakFrequencies();
 	convertToLog10();
 
-	// Display in terminal
+	//displayOutputArrayInTerminal();
+
+	//float ARRAY[(const int)_outputArraySize];
+
+	//for (int i = 0; i < _outputArraySize; i++)
+	//{
+	//	ARRAY[i] = 0;
+	//	if (_outputArray[i] <= 0) continue;
+
+	//	if (_previousOutputArray[i])
+	//		ARRAY[i] = _outputArray[i] / _previousOutputArray[i];
+	//	else
+	//		ARRAY[i] = _outputArray[i];
+	//}
+
 	//system("clear");
-	//const int HEIGHT = 50;
+	//const int HEIGHT = 5;
 	//for (int i = HEIGHT; i >= 0; i--)
 	//{
-	//	for (int j = 0; j < 600; j++)
+	//	for (int j = 0; j < _outputArraySize; j++)
 	//	{
+
+	//	float coeff = 1.1;
+	//	if (_outputArray[j] <= 5) coeff = 10;
+	//	if (_outputArray[j] <= 10) coeff = 7.5;
+	//	if (_outputArray[j] <= 7.5) coeff = 4;
+	//	if (_outputArray[j] <= 15) coeff = 2;
+	//	else if (_outputArray[j] <= 20) coeff = 1.25;
+	//	else if (_outputArray[j] <= 30) coeff = 1.15;
+
 	//		if (i == 0) {std::cout << "-"; continue; }
-	//		if ((_outputArray[j]*2) > i)
+	//		if (ARRAY[j] >= coeff)
 	//			std::cout << "O";
 	//		else
 	//			std::cout << " ";
+	//		//if ((_outputArray[j]*2) > i)
+	//		//	std::cout << "O";
+	//		//else
+	//		//	std::cout << " ";
 	//	}
 	//	std::cout << std::endl;
 	//}
@@ -103,4 +132,22 @@ void AudioAnalyzer::convertToLog10()
 const std::vector<float>& AudioAnalyzer::getFrequencies() const
 {
 	return _outputArray;
+}
+
+void AudioAnalyzer::displayOutputArrayInTerminal() const
+{
+	system("clear");
+	const int HEIGHT = 50;
+	for (int i = HEIGHT; i >= 0; i--)
+	{
+		for (int j = 0; j < _outputArraySize; j++)
+		{
+			if (i == 0) {std::cout << "-"; continue; }
+			if ((_outputArray[j]*2) > i)
+				std::cout << "O";
+			else
+				std::cout << " ";
+		}
+		std::cout << std::endl;
+	}
 }

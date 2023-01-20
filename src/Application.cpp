@@ -3,8 +3,6 @@
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-float PEAK_MAX_ARRAY[600];
-
 Application::Application(const int& width, const int& height)
 	: SCREEN_DIMENSION(glm::vec2(width, height))
 {
@@ -127,9 +125,13 @@ void Application::loop()
 
 	const std::string downloadPath = "../../Downloads/";
 	//const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
-	const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
+	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
+	const std::string file = downloadPath + "花伦HuaLun-坏孩子的天空.wav";
 	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
+	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
+	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
+	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
 	_audioPlayer.playWavFile(file.c_str());
 
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -138,7 +140,7 @@ void Application::loop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ui.createNewFrame();
-		ui.update(PEAK_MAX_ARRAY);
+		ui.update();
 
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -150,34 +152,7 @@ void Application::loop()
 			fCounter++;
 		}
 
-		processInputParameters();
-
-		_compute0Texture.useTexture(currentTexture); // 0 = input texture | 1 = output texture
-		_compute1Texture.useTexture(!currentTexture);
-
-		if (init)
-		{
-			_inputShader.useProgram();
-			_inputShader.setFloat("time", glfwGetTime());
-			glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
-			glMemoryBarrier(GL_ALL_BARRIER_BITS);
-			//init = false;
-		}
-
-		// Clear images
-		if (_simulationProperties.reset)
-		{
-			glClearTexImage(_compute0Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
-			glClearTexImage(_compute1Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
-			_simulationProperties.reset = false;
-			init = true;
-		}
-
-		processDiffusionReaction();
-
-		printFinalTexture(currentTexture);
-
-		currentTexture = !currentTexture;
+		processRendering(init, currentTexture);
 
 		ui.render();
 
@@ -187,6 +162,40 @@ void Application::loop()
 	_audioPlayer.stopPlaying();
 
 	glfwTerminate();
+}
+
+void Application::processRendering(bool& init, int& currentTexture)
+{
+	processInputParameters();
+
+	_compute0Texture.useTexture(currentTexture); // 0 = input texture | 1 = output texture
+	_compute1Texture.useTexture(!currentTexture);
+
+	// Initial conditions
+	if (init)
+	{
+		_inputShader.useProgram();
+		_inputShader.setFloat("time", glfwGetTime());
+		glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+		init = false;
+	}
+
+	// Clear images
+	if (_simulationProperties.reset)
+	{
+		glClearTexImage(_compute0Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+		glClearTexImage(_compute1Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+		_simulationProperties.reset = false;
+		init = true;
+	}
+
+	processDiffusionReaction();
+
+	printFinalTexture(currentTexture);
+
+	currentTexture = !currentTexture;
+
 }
 
 void Application::processInputParameters()

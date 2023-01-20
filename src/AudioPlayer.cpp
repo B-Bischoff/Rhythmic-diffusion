@@ -101,6 +101,7 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 	std::vector<float>& audioSamples = *callbackData->audioSamples;
 	AudioPlayer* audioPlayer = callbackData->audioPlayer;
 
+	audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
 
 	input->tick(*frames);
 
@@ -113,7 +114,6 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		if (input->channelsOut() == 1) {
 			*samples++ = (*frames)[i]; // play mono files in stereo
 		}
-	audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
 	}
 
 

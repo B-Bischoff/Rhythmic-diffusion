@@ -26,7 +26,7 @@ void UserInterface::createNewFrame()
 	ImGui::NewFrame();
 }
 
-void UserInterface::update(const float array[600])
+void UserInterface::update()
 {
 	const int PANNEL_WIDTH = UI_WIDTH;
 	const int PANNEL_HEIGHT = WIN_HEIGHT;
@@ -67,7 +67,7 @@ void UserInterface::update(const float array[600])
 	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
 
 
-	const int ARRAY_SIZE = 600;
+	const int ARRAY_SIZE = 20;
 	float ARRAY_2[ARRAY_SIZE];
 	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
 	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
@@ -75,7 +75,7 @@ void UserInterface::update(const float array[600])
 	{
 		for (int i = 0; i < ARRAY_SIZE; i++)
 			ARRAY_2[i] = outputFreq[i];
-		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 25.0f, ImVec2(500, 80.0f));
+		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 35.0f, ImVec2(500, 80.0f));
 	}
 	printAudioPlayer();
 

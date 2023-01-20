@@ -32,7 +32,7 @@ public:
 	void setInputParameters(InputParameter* p0, InputParameter* p1, InputParameter* p2, InputParameter* p3);
 
 	void createNewFrame();
-	void update(const float array[600]);
+	void update();
 	void render();
 	void shutdown();
 

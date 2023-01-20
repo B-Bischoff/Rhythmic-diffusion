@@ -2,11 +2,16 @@
 
 #include "../inc/include.hpp"
 
+struct FrequencyData {
+	const float magnitude;
+	const int index;
+};
+
 class AudioAnalyzer {
 private:
 	std::vector<float> _outputArray;
+	std::vector<float> _previousOutputArray;
 	std::vector<float> _inputArray;
-
 
 	std::vector<kiss_fft_cpx> _fftIn;
 	std::vector<kiss_fft_cpx> _fftOut;
@@ -22,21 +27,14 @@ private:
 	void findPeakFrequencies();
 	void convertToLog10();
 
+	void displayOutputArrayInTerminal() const;
+
 public:
 	std::mutex _outputArrayMutex; // MOVE IN PRIVATE
 	AudioAnalyzer(int samplingRate = 44100,
 				int samplesNumber = 4096,
-				int outputArraySize = 600);
+				int outputArraySize = 20);
 
 	void analyzeSignal(std::vector<float>& audioData);
 	const std::vector<float>& getFrequencies() const;
-
-	// ---- Methods ----
-	// Compute audio signal (const vector<float>&)
-
-	// ---- Parameters ----
-	// Sampling rate (44100)
-	// samples Nb (4096)
-	// out array size
-	// max frequency
 };
