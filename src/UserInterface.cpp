@@ -1,7 +1,9 @@
 #include "UserInterface.hpp"
+#include "vendor/imgui/imgui.h"
+#include "./AudioAnalyzer.hpp"
 
-UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, SimulationProperties& simulationProperties)
-	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _simulationProperties(simulationProperties)
+UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, SimulationProperties& simulationProperties, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
+	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _simulationProperties(simulationProperties), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	const char* glsl_version = "#version 100";
@@ -24,7 +26,7 @@ void UserInterface::createNewFrame()
 	ImGui::NewFrame();
 }
 
-void UserInterface::update(const float array[600])
+void UserInterface::update()
 {
 	const int PANNEL_WIDTH = UI_WIDTH;
 	const int PANNEL_HEIGHT = WIN_HEIGHT;
@@ -63,7 +65,19 @@ void UserInterface::update(const float array[600])
 	//IMGUI_DEMO_MARKER("Widgets/Plotting/PlotLines, PlotHistogram");
 	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
 	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
-	ImGui::PlotHistogram("Histogram", array, 600, 0, NULL, 0.0f, 25.0f, ImVec2(0, 80.0f));
+
+
+	const int ARRAY_SIZE = 20;
+	float ARRAY_2[ARRAY_SIZE];
+	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
+	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
+	if (outputFreq.size() >= ARRAY_SIZE)
+	{
+		for (int i = 0; i < ARRAY_SIZE; i++)
+			ARRAY_2[i] = outputFreq[i];
+		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 35.0f, ImVec2(500, 80.0f));
+	}
+	printAudioPlayer();
 
 	ImGui::End();
 }
@@ -169,4 +183,23 @@ std::string UserInterface::getFieldNameFromIndex(const int& index) const
 		case 3: return "Kill rate";
 		default: return "";
 	}
+}
+
+void UserInterface::printAudioPlayer()
+{
+	ImGui::Text("audio file: %s", _audioPlayer.getFileName().c_str());
+	if (ImGui::Button("Pause/Resume"))
+		_audioPlayer.togglePause();
+
+	float volume = _audioPlayer.getVolume();
+	ImGui::SliderFloat("volume", &volume, 0, 100);
+	if (volume != _audioPlayer.getVolume())
+		_audioPlayer.setVolume(volume);
+
+	float audioDuration = _audioPlayer.getWavFileDuration() / 44100.0; // In seconds
+	float currentDuration = _audioPlayer.getCurrentTimestamp() / 44100.0; // In seconds
+	float modifiedDuration = currentDuration;
+	ImGui::SliderFloat("timestamp", &modifiedDuration, 0, audioDuration);
+	if (modifiedDuration != currentDuration)
+		_audioPlayer.setTimestamp((modifiedDuration - currentDuration) * 16384);
 }

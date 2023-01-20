@@ -18,6 +18,7 @@ InputParameter::InputParameter(Texture* texture)
 void InputParameter::changeType(const InputParameterType& newType)
 {
 	changeType((int)newType);
+	_parameters.push_back(0);
 }
 
 void InputParameter::changeType(const int& newTypeIndex)
