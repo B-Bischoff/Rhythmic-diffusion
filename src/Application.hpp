@@ -1,15 +1,10 @@
 #pragma once
 
 #include "../inc/include.hpp"
-#include "./Shader.hpp"
-#include "./ComputeShader.hpp"
-#include "./Object.hpp"
-#include "./Texture.hpp"
 #include "./UserInterface.hpp"
-#include "./InputParameter.hpp"
-#include "./AudioPlayer.hpp"
-#include "./AudioAnalyzer.hpp"
-#include "./ReactionDiffusionSimulator.hpp"
+#include "./Audio/AudioPlayer.hpp"
+#include "./Audio/AudioAnalyzer.hpp"
+#include "./Graphic/ReactionDiffusionSimulator.hpp"
 
 class Application {
 private:

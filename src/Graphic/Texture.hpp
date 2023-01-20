@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../inc/include.hpp"
+#include "../../inc/include.hpp"
 
 class Texture {
 private:

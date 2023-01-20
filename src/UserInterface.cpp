@@ -1,6 +1,4 @@
 #include "UserInterface.hpp"
-#include "vendor/imgui/imgui.h"
-#include "./AudioAnalyzer.hpp"
 
 UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
 	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
@@ -47,16 +45,16 @@ void UserInterface::update()
 
 	// SPEED
 	static float speed = 0.0f;
-	ImGui::SliderFloat("Speed", &speed, 0.01f, 1.05);
-	_RDSimulator.setSimulationSpeed(speed);
+	if (ImGui::SliderFloat("Speed", &speed, 0.01f, 1.05))
+		_RDSimulator.setSimulationSpeed(speed);
 
 	// COLORS
 	static float color1[3] = {0.0f, 0.0f, 0.0f};
 	static float color2[3] = {1.0f, 1.0f, 1.0f};
-	ImGui::ColorEdit3("Color A", color1);
-	ImGui::ColorEdit3("Color B", color2);
-	_RDSimulator.setSimulationColorA(glm::vec3(color1[0], color1[1], color1[2]));
-	_RDSimulator.setSimulationColorB(glm::vec3(color2[0], color2[1], color2[2]));
+	if (ImGui::ColorEdit3("Color A", color1))
+		_RDSimulator.setSimulationColorA(glm::vec3(color1[0], color1[1], color1[2]));
+	if (ImGui::ColorEdit3("Color B", color2))
+		_RDSimulator.setSimulationColorB(glm::vec3(color2[0], color2[1], color2[2]));
 
 	//ImGui::Separator();
 

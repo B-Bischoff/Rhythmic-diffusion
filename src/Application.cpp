@@ -66,7 +66,7 @@ void Application::loop()
 	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
 	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
 
-	audioPlayer.playWavFile(file.c_str());
+	//audioPlayer.playWavFile(file.c_str());
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
