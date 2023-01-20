@@ -2,8 +2,8 @@
 #include "vendor/imgui/imgui.h"
 #include "./AudioAnalyzer.hpp"
 
-UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, SimulationProperties& simulationProperties, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
-	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _simulationProperties(simulationProperties), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
+UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
+	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	const char* glsl_version = "#version 100";
@@ -45,21 +45,26 @@ void UserInterface::update()
 
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
-	ImGui::SliderFloat("Speed", &_simulationProperties.speed, 0.01f, 1.05);
+	// SPEED
+	static float speed = 0.0f;
+	ImGui::SliderFloat("Speed", &speed, 0.01f, 1.05);
+	_RDSimulator.setSimulationSpeed(speed);
 
+	// COLORS
 	static float color1[3] = {0.0f, 0.0f, 0.0f};
 	static float color2[3] = {1.0f, 1.0f, 1.0f};
 	ImGui::ColorEdit3("Color A", color1);
-	_simulationProperties.colorA = glm::vec3(color1[0], color1[1], color1[2]);
 	ImGui::ColorEdit3("Color B", color2);
-	_simulationProperties.colorB = glm::vec3(color2[0], color2[1], color2[2]);
+	_RDSimulator.setSimulationColorA(glm::vec3(color1[0], color1[1], color1[2]));
+	_RDSimulator.setSimulationColorB(glm::vec3(color2[0], color2[1], color2[2]));
+
 	//ImGui::Separator();
 
 	for (int i = 0; i < 4; i++)
 		printOptionsFields(i);
 
 	if (ImGui::Button("Reset"))
-		_simulationProperties.reset = true;
+		_RDSimulator.resetSimulation();
 
 	// Plot as lines and plot as histogram
 	//IMGUI_DEMO_MARKER("Widgets/Plotting/PlotLines, PlotHistogram");
@@ -84,49 +89,51 @@ void UserInterface::update()
 
 void UserInterface::printOptionsFields(const int& i)
 {
-	// Combo for input type
-	int inputParameterType = _inputParameters[i]->getType();
-	ImGui::Combo(std::string(getFieldNameFromIndex(i) + " type").c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0");
-	if (inputParameterType != (int)_inputParameters[i]->getType())
-		_inputParameters[i]->changeType(inputParameterType);
-	ImGui::SameLine();
-	bool showParam = _simulationProperties.paramTextureVisu[i];
-	ImGui::Checkbox(std::string("Show " + std::to_string(i)).c_str(), &showParam);
-	_simulationProperties.paramTextureVisu[i] = showParam;
+	// Input Type ComboBox
+	int inputParameterType = _RDSimulator.getParameterType(i);
+	if (ImGui::Combo(std::string(getFieldNameFromIndex(i) + " type").c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0"))
+		_RDSimulator.setParameterType(i, static_cast<InputParameterType>(inputParameterType));
 
-	// Print input fields accord to input type
-	if (_inputParameters[i]->getType() == InputParameterType::Number)
+	// Parameter preview
+	ImGui::SameLine();
+	bool showParam = _RDSimulator.getParameterPreview(i);
+	if (ImGui::Checkbox(std::string("Show " + std::to_string(i)).c_str(), &showParam))
+		_RDSimulator.setParameterPreview(i, showParam);
+
+	// Print input fields according to input type
+	if (_RDSimulator.getParameterType(i) == InputParameterType::Number)
 	{
 		float min = 0.0f;
 		float max = i <= 1 ? 1.0f : 0.15f;
 		printNumberTypeFields(i, min, max);
 	}
-	else if (_inputParameters[i]->getType() == InputParameterType::PerlinNoise)
+	else if (_RDSimulator.getParameterType(i) == InputParameterType::PerlinNoise)
 		printPerlinNoiseFields(i);
 }
 
 void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
 {
-	std::vector<float>& v = _inputParameters[i]->getVectorParameters();
-	float value;
-	if (v.size())
-		value = v[0];
+	float value = min;
+	const std::vector<float>& inputValue = _RDSimulator.getParameterValue(i);
+	if (inputValue.size())
+		value = inputValue[0];
 	std::string fieldName = std::string("value " + std::to_string(i));
-	ImGui::SliderFloat(fieldName.c_str(), &value, min, max);
-	v.clear();
-	v.push_back(value);
+	if (ImGui::SliderFloat(fieldName.c_str(), &value, min, max))
+		_RDSimulator.setParameterValue(i, std::vector<float>(1, value));
 }
 
 void UserInterface::printPerlinNoiseFields(const int& i)
 {
-	std::vector<float>& v = _inputParameters[i]->getVectorParameters();
+	const std::vector<float>& v = _RDSimulator.getParameterValue(i);
+	bool valueChanged = false;
 
 	// Scale
 	std::string fieldName = std::string("scale " + std::to_string(i));
 	float scale = 0.001;
 	if (v.size())
 		scale = v[0];
-	ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 0.5);
+	if (ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 0.5))
+		valueChanged = true;
 
 	// Offset
 	fieldName = std::string("offset " + std::to_string(i));
@@ -136,20 +143,22 @@ void UserInterface::printPerlinNoiseFields(const int& i)
 		offset[0] = v[1];
 		offset[1] = v[2];
 	}
-	ImGui::SliderFloat2(fieldName.c_str(), offset, -5000, 5000);
+	if (ImGui::SliderFloat2(fieldName.c_str(), offset, -5000, 5000))
+		valueChanged = true;
 
 	// Strength factor
 	fieldName = std::string("Strength factor " + std::to_string(i));
 	float strengthFactor = 1.0f;
 	if (v.size() > 3)
 		strengthFactor = v[3];
-	ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1.5);
+	if (ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1.5))
+		valueChanged = true;
 
-	v.clear();
-	v.push_back(scale);
-	v.push_back(offset[0]);
-	v.push_back(offset[1]);
-	v.push_back(strengthFactor);
+	if (valueChanged)
+	{
+		std::vector<float> values = { scale, offset[0], offset[1], strengthFactor };
+		_RDSimulator.setParameterValue(i, values);
+	}
 }
 
 void UserInterface::render()
@@ -163,14 +172,6 @@ void UserInterface::shutdown()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-}
-
-void UserInterface::setInputParameters(InputParameter* p0, InputParameter* p1, InputParameter* p2, InputParameter* p3)
-{
-	_inputParameters[0] = p0;
-	_inputParameters[1] = p1;
-	_inputParameters[2] = p2;
-	_inputParameters[3] = p3;
 }
 
 std::string UserInterface::getFieldNameFromIndex(const int& index) const

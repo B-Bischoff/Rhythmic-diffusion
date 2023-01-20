@@ -71,6 +71,8 @@ add_executable(Rythmic-diffusion
 	src/AudioPlayer.cpp
 	src/AudioAnalyzer.hpp
 	src/AudioAnalyzer.cpp
+	src/ReactionDiffusionSimulator.hpp
+	src/ReactionDiffusionSimulator.cpp
 
 	# STB IMAGE
 	src/vendor/stb/stb_image.h

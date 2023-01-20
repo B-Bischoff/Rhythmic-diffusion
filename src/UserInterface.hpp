@@ -3,17 +3,16 @@
 #include "../inc/include.hpp"
 #include "./Application.hpp"
 
-struct SimulationProperties;
 class InputParameter;
 class AudioPlayer;
 class AudioAnalyzer;
+class ReactionDiffusionSimulator;
 
 class UserInterface {
 private:
 	GLFWwindow& _window;
 	const int WIN_WIDTH, WIN_HEIGHT, UI_WIDTH;
-	SimulationProperties& _simulationProperties;
-	InputParameter* _inputParameters[4];
+	ReactionDiffusionSimulator& _RDSimulator;
 
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
@@ -27,9 +26,7 @@ private:
 	std::string getFieldNameFromIndex(const int& index) const;
 
 public:
-	UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWidth, SimulationProperties& simulationProperties, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer);
-
-	void setInputParameters(InputParameter* p0, InputParameter* p1, InputParameter* p2, InputParameter* p3);
+	UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWidth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer);
 
 	void createNewFrame();
 	void update();

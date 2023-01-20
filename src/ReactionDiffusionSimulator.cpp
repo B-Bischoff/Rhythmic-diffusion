@@ -1,0 +1,219 @@
+#include "ReactionDiffusionSimulator.hpp"
+
+ReactionDiffusionSimulator::ReactionDiffusionSimulator(GLFWwindow* window, const glm::vec2& screenDimensions)
+	: _window(window), _screenDimensions(screenDimensions)
+{
+	{ // -------------------- COMPUTE WORK GROUP INFO (NO CONCRETE USE) -----------------------
+		int work_grp_cnt[3];
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+		std::cout << "Max work groups per compute shader" <<
+			" x:" << work_grp_cnt[0] <<
+			" y:" << work_grp_cnt[1] <<
+			" z:" << work_grp_cnt[2] << "\n";
+
+		int work_grp_size[3];
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
+		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
+		std::cout << "Max work group sizes" <<
+			" x:" << work_grp_size[0] <<
+			" y:" << work_grp_size[1] <<
+			" z:" << work_grp_size[2] << "\n";
+
+		int work_grp_inv;
+		glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
+		std::cout << "Max invocations count per work group: " << work_grp_inv << "\n";
+	}
+
+	_init = true;
+	_currentTexture = 0;
+
+	initPlane();
+	initTextures();
+	initShaders();
+}
+
+void ReactionDiffusionSimulator::initPlane()
+{
+	std::vector<float> positions = {
+		-1.0f, -1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f
+	};
+	std::vector<float> textureCoords = {
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f
+	};
+	std::vector<unsigned int> indices = {
+		0, 2, 1,
+		0, 3, 2
+	};
+	_plane = Object(positions, textureCoords, indices);
+}
+
+void ReactionDiffusionSimulator::initTextures()
+{
+	_compute0Texture = Texture(_screenDimensions.x, _screenDimensions.y);
+	_compute1Texture = Texture(_screenDimensions.x, _screenDimensions.y);
+	_parametersTexture = Texture(_screenDimensions.x, _screenDimensions.y);
+	_finalTexture = Texture(_screenDimensions.x, _screenDimensions.y);
+}
+
+void ReactionDiffusionSimulator::initShaders()
+{
+	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
+
+	_diffusionReactionShader = ComputeShader("src/shaders/computeShader.cs");
+	_inputShader = ComputeShader("src/shaders/inputCircle.cs");
+	_colorOutputShader = ComputeShader("src/shaders/display.cs");
+
+	_diffusionRateAShader = InputParameter(&_parametersTexture);
+	_diffusionRateBShader = InputParameter(&_parametersTexture);
+	_feedRateShader = InputParameter(&_parametersTexture);
+	_killRateShader = InputParameter(&_parametersTexture);
+}
+
+void ReactionDiffusionSimulator::processSimulation()
+{
+	processInputParameters();
+
+	_compute0Texture.useTexture(_currentTexture); // 0 = input texture | 1 = output texture
+	_compute1Texture.useTexture(!_currentTexture);
+
+	// Initial conditions
+	if (_init)
+	{
+		_inputShader.useProgram();
+		_inputShader.setFloat("time", glfwGetTime());
+		glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
+		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+		//_init = false;
+	}
+
+	processDiffusionReaction();
+
+	applyPostProcessing();
+
+	_currentTexture = !_currentTexture;
+}
+
+void ReactionDiffusionSimulator::processInputParameters()
+{
+	_parametersTexture.useTexture(0);
+
+	_diffusionRateAShader.execShader(glm::vec4(1, 0, 0, 0), _screenDimensions);
+	_diffusionRateBShader.execShader(glm::vec4(0, 1, 0, 0), _screenDimensions);
+	_feedRateShader.execShader(glm::vec4(0, 0, 1, 0), _screenDimensions);
+	_killRateShader.execShader(glm::vec4(0, 0, 0, 1), _screenDimensions);
+}
+
+void ReactionDiffusionSimulator::processDiffusionReaction()
+{
+	_diffusionReactionShader.useProgram();
+
+	_parametersTexture.useTexture(2);
+	_diffusionReactionShader.setFloat("_ReactionSpeed", _simulationSpeed);
+	glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
+	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+}
+
+void ReactionDiffusionSimulator::applyPostProcessing()
+{
+	if (_currentTexture == 1)
+		_compute1Texture.useTexture(0);
+	else
+		_compute0Texture.useTexture(0);
+	_finalTexture.useTexture(1);
+
+	// Apply color computation to the image
+	_colorOutputShader.useProgram();
+	_colorOutputShader.setVec3("colorA", _colorA);
+	_colorOutputShader.setVec3("colorB", _colorB);
+	_colorOutputShader.setVec4("visualizeChannels", _parameterTexturesPreview);
+	glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
+	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+}
+
+void ReactionDiffusionSimulator::printRendering()
+{
+	_shader.useProgram();
+	_finalTexture.useTexture(0);
+	_shader.setInt("screen", GL_TEXTURE0);
+	_plane.render();
+}
+
+void ReactionDiffusionSimulator::resetSimulation() const
+{
+	glClearTexImage(_compute0Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+	glClearTexImage(_compute1Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+}
+
+void ReactionDiffusionSimulator::setSimulationSpeed(const float& speed) { _simulationSpeed = speed; }
+
+void ReactionDiffusionSimulator::setSimulationColorA(const glm::vec3& color) { _colorA = color; }
+
+void ReactionDiffusionSimulator::setSimulationColorB(const glm::vec3& color) { _colorB = color; }
+
+void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& preview)
+{
+	if (parameterIndex < 0 || parameterIndex > 3)
+		return;
+
+	_parameterTexturesPreview[parameterIndex] = static_cast<float>(preview);
+}
+
+bool ReactionDiffusionSimulator::getParameterPreview(const int& parameterIndex) const
+{
+	if (parameterIndex < 0 || parameterIndex > 3)
+		return false;
+
+	return static_cast<bool>(_parameterTexturesPreview[parameterIndex]);
+}
+
+void ReactionDiffusionSimulator::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
+{
+	if (parameterIndex < 0 || parameterIndex > 3)
+		return;
+
+	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
+	std::vector<float>& inputValues = inputParameter.getVectorParameters();
+	inputValues = parameterValues;
+}
+
+const std::vector<float>& ReactionDiffusionSimulator::getParameterValue(const int& parameterIndex)
+{
+	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
+	return inputParameter.getVectorParameters();
+}
+
+void ReactionDiffusionSimulator::setParameterType(const int& parameterIndex, const InputParameterType& type)
+{
+	if (parameterIndex < 0 || parameterIndex > 3)
+		return;
+
+	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
+	inputParameter.changeType(type);
+}
+
+InputParameterType ReactionDiffusionSimulator::getParameterType(const int& parameterIndex)
+{
+	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
+	return inputParameter.getType();
+}
+
+InputParameter& ReactionDiffusionSimulator::getParameterFromIndex(const int& index)
+{
+	switch(index)
+	{
+		case 0: return _diffusionRateAShader;
+		case 1: return _diffusionRateBShader;
+		case 2: return _feedRateShader;
+		case 3: return _killRateShader;
+		default: throw std::invalid_argument("[ReactionDiffusionSimulator]: bad index\n");
+	}
+}
