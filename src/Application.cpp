@@ -56,17 +56,24 @@ void Application::loop()
 
 	int fCounter = 0;
 
-	const std::string downloadPath = "../../Downloads/";
-	//const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
-	const std::string file = downloadPath + "花伦HuaLun-坏孩子的天空.wav";
+	const std::string downloadPath = "../../Downloads/wav/";
+	const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
+	//const std::string file = downloadPath + "花伦HuaLun-坏孩子的天空.wav";
 	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
 	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
+	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
 	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
-
-	//audioPlayer.playWavFile(file.c_str());
+	//const std::string file = downloadPath + "BICEP-_-HAMMER-DAHLIA.wav";
+	//const std::string file = downloadPath + "UICIDEBOY_-ANTARCTICA.wav";
+	//const std::string file = downloadPath + "Sunshine.wav";
+	//const std::string file = downloadPath + "UICIDEBOY_-CHARIOT-OF-FIRE.wav";
+	//const std::string file = downloadPath + "UICIDEBOY_-I-NO-LONGER-FEAR-THE-RAZOR-GUARDING-MY-HEEL-I-_-II-_-III-_-IV.wav";
+	//const std::string file = downloadPath + "UICIDEBOY_-O-Lord_-I-Have-My-Doubts.wav";
+	//const std::string file = downloadPath + "Digital-Baptism.wav";
+	//const std::string file = downloadPath + "Xaoc.wav";
+	audioPlayer.playWavFile(file.c_str());
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 

@@ -5,7 +5,7 @@ AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArra
 {
 	_fftIn = std::vector<kiss_fft_cpx>(_samples);
 	_fftOut = std::vector<kiss_fft_cpx>(_samples);
-	_maxFrequency = 15000;
+	_maxFrequency = 11000;
 	_inputArray = std::vector<float>(_samples, 0.0f);
 	_outputArray = std::vector<float>(_outputArraySize, 0.0f);
 }
@@ -14,8 +14,7 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 {
 	if ((int)audioData.size() < _samples) return;
 
-	_previousOutputArray = _outputArray;
-
+	// Convert raw audio in frequencies
 	std::lock_guard<std::mutex> guard(_outputArrayMutex);
 	applyWindowFunction(audioData);
 	shiftAudioData(audioData);
@@ -23,48 +22,12 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 	findPeakFrequencies();
 	convertToLog10();
 
+	// Instrument / Melodic analyze
+	findBass();
+	findSnare();
+	findLead();
+
 	//displayOutputArrayInTerminal();
-
-	//float ARRAY[(const int)_outputArraySize];
-
-	//for (int i = 0; i < _outputArraySize; i++)
-	//{
-	//	ARRAY[i] = 0;
-	//	if (_outputArray[i] <= 0) continue;
-
-	//	if (_previousOutputArray[i])
-	//		ARRAY[i] = _outputArray[i] / _previousOutputArray[i];
-	//	else
-	//		ARRAY[i] = _outputArray[i];
-	//}
-
-	//system("clear");
-	//const int HEIGHT = 5;
-	//for (int i = HEIGHT; i >= 0; i--)
-	//{
-	//	for (int j = 0; j < _outputArraySize; j++)
-	//	{
-
-	//	float coeff = 1.1;
-	//	if (_outputArray[j] <= 5) coeff = 10;
-	//	if (_outputArray[j] <= 10) coeff = 7.5;
-	//	if (_outputArray[j] <= 7.5) coeff = 4;
-	//	if (_outputArray[j] <= 15) coeff = 2;
-	//	else if (_outputArray[j] <= 20) coeff = 1.25;
-	//	else if (_outputArray[j] <= 30) coeff = 1.15;
-
-	//		if (i == 0) {std::cout << "-"; continue; }
-	//		if (ARRAY[j] >= coeff)
-	//			std::cout << "O";
-	//		else
-	//			std::cout << " ";
-	//		//if ((_outputArray[j]*2) > i)
-	//		//	std::cout << "O";
-	//		//else
-	//		//	std::cout << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
 }
 
 void AudioAnalyzer::applyWindowFunction(std::vector<float>& audioData)
@@ -151,3 +114,56 @@ void AudioAnalyzer::displayOutputArrayInTerminal() const
 		std::cout << std::endl;
 	}
 }
+
+void AudioAnalyzer::findBass()
+{
+	const float threshold = 27; // To find automatically
+	const float bassDropSensitivity = -5.0;
+
+	_isBass = false;
+
+	// Change static variables to member variables
+	static float previousBassAmplitude = 0.0f;
+	static bool isAmplitudeDropping = true;
+	float currentBassAmplitude = _outputArray[0];
+
+	float delta = currentBassAmplitude - previousBassAmplitude;
+	if (delta < 0)
+		isAmplitudeDropping = true;
+	else if (delta > 0 || delta < bassDropSensitivity)
+		isAmplitudeDropping = false;
+
+	if (isAmplitudeDropping && currentBassAmplitude > threshold)
+		_isBass = true;
+
+	previousBassAmplitude = currentBassAmplitude;
+}
+
+void AudioAnalyzer::findSnare()
+{
+	const float threshold = 8; // To find automatically
+
+	_isSnare = false;
+
+	float mean = 0.0f;
+	// i starts to 1 to skip bass
+	for (int i = 1; i < _outputArraySize; i++)
+	{
+		if (fabs(_outputArray[i]) < INFINITY)
+			mean += _outputArray[i];
+	}
+	mean /= (_outputArraySize - 1);
+
+	if (mean > threshold)
+		_isSnare = true;
+}
+
+void AudioAnalyzer::findLead()
+{
+
+}
+
+bool AudioAnalyzer::isBass() const { return _isBass; };
+bool AudioAnalyzer::isSnare() const { return _isSnare; };
+bool AudioAnalyzer::isLead() const { return _isLead; };
+const int AudioAnalyzer::getOutputArraySize() const { return _outputArraySize; }

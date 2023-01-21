@@ -69,17 +69,6 @@ void UserInterface::update()
 	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
 	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
 
-
-	const int ARRAY_SIZE = 20;
-	float ARRAY_2[ARRAY_SIZE];
-	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
-	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
-	if (outputFreq.size() >= ARRAY_SIZE)
-	{
-		for (int i = 0; i < ARRAY_SIZE; i++)
-			ARRAY_2[i] = outputFreq[i];
-		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 35.0f, ImVec2(500, 80.0f));
-	}
 	printAudioPlayer();
 
 	ImGui::End();
@@ -186,19 +175,46 @@ std::string UserInterface::getFieldNameFromIndex(const int& index) const
 
 void UserInterface::printAudioPlayer()
 {
+	// PAUSE / RESUME
 	ImGui::Text("audio file: %s", _audioPlayer.getFileName().c_str());
 	if (ImGui::Button("Pause/Resume"))
 		_audioPlayer.togglePause();
 
+	// VOLUME
 	float volume = _audioPlayer.getVolume();
 	ImGui::SliderFloat("volume", &volume, 0, 100);
 	if (volume != _audioPlayer.getVolume())
 		_audioPlayer.setVolume(volume);
 
+	// TIMESTAMP
 	float audioDuration = _audioPlayer.getWavFileDuration() / 44100.0; // In seconds
 	float currentDuration = _audioPlayer.getCurrentTimestamp() / 44100.0; // In seconds
 	float modifiedDuration = currentDuration;
 	ImGui::SliderFloat("timestamp", &modifiedDuration, 0, audioDuration);
 	if (modifiedDuration != currentDuration)
 		_audioPlayer.setTimestamp((modifiedDuration - currentDuration) * 16384);
+
+	// GRAPH
+	const int ARRAY_SIZE = _audioAnalyzer.getOutputArraySize();
+	float ARRAY_2[ARRAY_SIZE];
+	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
+	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
+
+
+	if ((int)outputFreq.size() >= ARRAY_SIZE)
+	{
+		for (int i = 0; i < ARRAY_SIZE; i++)
+			ARRAY_2[i] = outputFreq[i];
+		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 30.0f, ImVec2(500, 80.0f));
+	}
+
+	if (_audioAnalyzer.isBass())
+		ImGui::Text("BASS");
+	else
+		ImGui::Text(" ");
+	if (_audioAnalyzer.isSnare())
+		ImGui::Text("SNARE");
+	else
+		ImGui::Text("   ");
+
 }
