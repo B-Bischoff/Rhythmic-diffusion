@@ -209,12 +209,34 @@ void UserInterface::printAudioPlayer()
 	}
 
 	if (_audioAnalyzer.isBass())
+	{
 		ImGui::Text("BASS");
+		_RDSimulator.setParameterValue(2, std::vector<float>(1, 0.04));
+	}
 	else
+	{
 		ImGui::Text(" ");
+		_RDSimulator.setParameterValue(2, std::vector<float>(1, 0.02));
+	}
+
 	if (_audioAnalyzer.isSnare())
+	{
 		ImGui::Text("SNARE");
+		_RDSimulator.setParameterValue(0, std::vector<float>(1, 0.2));
+	}
 	else
+	{
 		ImGui::Text("   ");
+		_RDSimulator.setParameterValue(0, std::vector<float>(1, 0.6));
+	}
+
+	if (_audioAnalyzer.isLead())
+	{
+		ImGui::Text("LEEEEEEAD");
+	}
+	else
+	{
+		ImGui::Text("     ");
+	}
 
 }

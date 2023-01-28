@@ -73,6 +73,9 @@ void Application::loop()
 	//const std::string file = downloadPath + "UICIDEBOY_-O-Lord_-I-Have-My-Doubts.wav";
 	//const std::string file = downloadPath + "Digital-Baptism.wav";
 	//const std::string file = downloadPath + "Xaoc.wav";
+	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
+	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
+
 	audioPlayer.playWavFile(file.c_str());
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
@@ -107,13 +110,13 @@ void Application::loop()
 
 void Application::printFps(float& deltaTime, float& lastFrame, int& fCounter)
 {
-		float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		if(fCounter > 500) {
-			std::cout << "FPS: " << 1 / deltaTime << std::endl;
-			fCounter = 0;
-		} else {
-			fCounter++;
-		}
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+	if(fCounter > 500) {
+		std::cout << "FPS: " << 1 / deltaTime << std::endl;
+		fCounter = 0;
+	} else {
+		fCounter++;
+	}
 }

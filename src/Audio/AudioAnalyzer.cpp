@@ -64,12 +64,13 @@ void AudioAnalyzer::computeFFT(std::vector<float>& audioData)
 
 void AudioAnalyzer::findPeakFrequencies()
 {
-	double freqBin[(const int)_outputArraySize];
+	double freqBin[(const int)_outputArraySize+1];
 	double incr = (float)_maxFrequency / (float)_outputArraySize;
-	for (int i = 0; i < _outputArraySize; i++)
+	for (int i = 0; i < _outputArraySize+1; i++)
 		freqBin[i] = incr * i;
 
-	for (int i = 0; i < _outputArraySize; i++) _outputArray[i] = 1.7e-308;
+	for (int j = 0; j < _outputArraySize+1; j++)
+		_outputArray[j] = 0;
 
 	const int HALF_SAMPLES = _samples / 2;
 	for (int i = 0; i < HALF_SAMPLES; i++)
@@ -89,7 +90,11 @@ void AudioAnalyzer::findPeakFrequencies()
 void AudioAnalyzer::convertToLog10()
 {
 	for (int i = 0; i < _outputArraySize; i++)
-		_outputArray[i] = 10 * log10(_outputArray[i]);
+	{
+		float log10value = 10 * log10(_outputArray[i]);
+		if (log10value != INFINITY && log10value != -INFINITY)
+			_outputArray[i] = log10value;
+	}
 }
 
 const std::vector<float>& AudioAnalyzer::getFrequencies() const
@@ -117,7 +122,7 @@ void AudioAnalyzer::displayOutputArrayInTerminal() const
 
 void AudioAnalyzer::findBass()
 {
-	const float threshold = 27; // To find automatically
+	const float threshold = 24; // To find automatically
 	const float bassDropSensitivity = -5.0;
 
 	_isBass = false;
@@ -141,7 +146,7 @@ void AudioAnalyzer::findBass()
 
 void AudioAnalyzer::findSnare()
 {
-	const float threshold = 8; // To find automatically
+	const float threshold = 9.5; // To find automatically
 
 	_isSnare = false;
 
@@ -160,7 +165,50 @@ void AudioAnalyzer::findSnare()
 
 void AudioAnalyzer::findLead()
 {
+	const int historySize = 128;
+	static std::vector<float> meanHistory(historySize, 0);
+	float mean = 0.0f;
 
+	_isLead = false;
+
+	for (int i = 1; i < _outputArraySize; i++)
+		if (fabs(_outputArray[i]) < INFINITY)
+			mean += _outputArray[i];
+	mean /= (_outputArraySize-1);
+
+	std::cout << "mean: " << mean << std::endl;
+
+	float historyAverage = 0;
+	for (int i = 0; i < historySize; i++)
+		historyAverage += meanHistory[i];
+	historyAverage /= historySize;
+
+	float threshold = 0.0f;
+	for (int i = 0; i < historySize; i++)
+	{
+		//std::cout << meanHistory[i] << " ";
+		float tmp = (meanHistory[i] - historyAverage);
+		threshold += (tmp * tmp);
+	}
+	//std::cout << std::endl << "------------" << std::endl;
+	threshold /= historySize;
+	threshold = (-0.0025714*threshold)+1.5142857;
+	std::cout << "treshold: " << threshold << std::endl;
+
+	//std::cout << "history average: " << historyAverage << std::endl;
+	//std::cout << "actual average: " << mean << std::endl;
+	if ((mean / historyAverage) - threshold > 0)
+	{
+		_isLead = true;
+		//std::cout << "0" << std::endl;
+	}
+	else
+	{
+		//std::cout << " " << std::endl;
+	}
+	meanHistory.erase(meanHistory.begin()+_outputArraySize);
+
+	meanHistory.push_back(mean);
 }
 
 bool AudioAnalyzer::isBass() const { return _isBass; };
