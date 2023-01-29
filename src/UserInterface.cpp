@@ -200,7 +200,6 @@ void UserInterface::printAudioPlayer()
 	std::lock_guard<std::mutex> guard(_audioAnalyzer._outputArrayMutex);
 	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
 
-
 	if ((int)outputFreq.size() >= ARRAY_SIZE)
 	{
 		for (int i = 0; i < ARRAY_SIZE; i++)
@@ -208,34 +207,50 @@ void UserInterface::printAudioPlayer()
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 30.0f, ImVec2(500, 80.0f));
 	}
 
+	static float bassA = 0.0f;
+	static float bassB = 0.0f;
+	static float snareA = 0.0f;
+	static float snareB = 0.0f;
+	static float leadA = 0.0f;
+	static float leadB = 0.0f;
+
+	ImGui::SliderFloat("bassA", &bassA, 0, 1);
+	ImGui::SliderFloat("bassB", &bassB, 0, 1);
+	ImGui::SliderFloat("snareA", &snareA, 0, 0.15);
+	ImGui::SliderFloat("snareB", &snareB, 0, 0.15);
+	ImGui::SliderFloat("leadA", &leadA, 0, 1);
+	ImGui::SliderFloat("leadB", &leadB, 0, 1);
+
 	if (_audioAnalyzer.isBass())
 	{
 		ImGui::Text("BASS");
-		_RDSimulator.setParameterValue(2, std::vector<float>(1, 0.04));
+		_RDSimulator.setParameterValue(1, std::vector<float>(1, bassA));
 	}
 	else
 	{
 		ImGui::Text(" ");
-		_RDSimulator.setParameterValue(2, std::vector<float>(1, 0.02));
+		_RDSimulator.setParameterValue(1, std::vector<float>(1, bassB));
 	}
 
 	if (_audioAnalyzer.isSnare())
 	{
 		ImGui::Text("SNARE");
-		_RDSimulator.setParameterValue(0, std::vector<float>(1, 0.2));
+		_RDSimulator.setParameterValue(2, std::vector<float>(1, snareA));
 	}
 	else
 	{
 		ImGui::Text("   ");
-		_RDSimulator.setParameterValue(0, std::vector<float>(1, 0.6));
+		_RDSimulator.setParameterValue(2, std::vector<float>(1, snareB));
 	}
 
 	if (_audioAnalyzer.isLead())
 	{
 		ImGui::Text("LEEEEEEAD");
+		_RDSimulator.setParameterValue(0, std::vector<float>(1, leadA));
 	}
 	else
 	{
+		_RDSimulator.setParameterValue(0, std::vector<float>(1, leadB));
 		ImGui::Text("     ");
 	}
 

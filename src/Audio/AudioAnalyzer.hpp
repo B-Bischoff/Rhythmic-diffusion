@@ -37,8 +37,8 @@ private:
 public:
 	std::mutex _outputArrayMutex; // MOVE IN PRIVATE
 	AudioAnalyzer(int samplingRate = 44100,
-				int samplesNumber = 4096,
-				int outputArraySize = 20);
+				int samplesNumber = 2048,
+				int outputArraySize = 40);
 
 	void analyzeSignal(std::vector<float>& audioData);
 

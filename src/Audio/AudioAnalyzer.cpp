@@ -64,6 +64,7 @@ void AudioAnalyzer::computeFFT(std::vector<float>& audioData)
 
 void AudioAnalyzer::findPeakFrequencies()
 {
+	// Peak method
 	double freqBin[(const int)_outputArraySize+1];
 	double incr = (float)_maxFrequency / (float)_outputArraySize;
 	for (int i = 0; i < _outputArraySize+1; i++)
@@ -85,6 +86,23 @@ void AudioAnalyzer::findPeakFrequencies()
 					_outputArray[j] = magnitude;
 		}
 	}
+
+	// Mean method
+	//const float frequenciesPerBand = (float)_samples / 4.0 / _outputArraySize;
+
+	//for (int i = 0; i < _outputArraySize; i++)
+	//	_outputArray[i] = 0;
+
+	//for (int i = 0; i < _samples / 4; i++)
+	//{
+	//	int index = i / frequenciesPerBand;
+	//std::cout << "---------> " << index << std::endl;
+	//	float magnitude = sqrt((_fftOut[i].i *_fftOut[i].i)+(_fftOut[i].r*_fftOut[i].r));
+	//	_outputArray[index] += magnitude;
+	//}
+
+	//for (int i = 0; i < _outputArraySize; i++)
+	//	_outputArray[i] /= frequenciesPerBand/8.0;
 }
 
 void AudioAnalyzer::convertToLog10()
@@ -94,6 +112,8 @@ void AudioAnalyzer::convertToLog10()
 		float log10value = 10 * log10(_outputArray[i]);
 		if (log10value != INFINITY && log10value != -INFINITY)
 			_outputArray[i] = log10value;
+		if (_outputArray[i] < 0)
+			_outputArray[i] = 0;
 	}
 }
 
@@ -122,26 +142,44 @@ void AudioAnalyzer::displayOutputArrayInTerminal() const
 
 void AudioAnalyzer::findBass()
 {
-	const float threshold = 24; // To find automatically
-	const float bassDropSensitivity = -5.0;
+	// calculate instant energy
+	float instantEnergy = 0;
+	// i starts to 1 to remove bass from analysis
+	for (int i = 0; i < _outputArraySize; i++)
+		instantEnergy += _outputArray[i];
+	float bassEnergy = _outputArray[0];
 
-	_isBass = false;
+	// calculate local average energy
+	static std::vector<float> history(43, 0);
+	float localAverageEnergy = 0;
+	for (int i = 0; i < 43; i++)
+		localAverageEnergy += history[i];
+	localAverageEnergy /= 43;
 
-	// Change static variables to member variables
-	static float previousBassAmplitude = 0.0f;
-	static bool isAmplitudeDropping = true;
-	float currentBassAmplitude = _outputArray[0];
+	// calculate variance
+	float variance = 0;
+	for (int i = 0; i < 43; i++)
+	{
+		float temp = (history[i] - localAverageEnergy);
+		variance += temp * temp;
+	}
+	variance /= 43;
 
-	float delta = currentBassAmplitude - previousBassAmplitude;
-	if (delta < 0)
-		isAmplitudeDropping = true;
-	else if (delta > 0 || delta < bassDropSensitivity)
-		isAmplitudeDropping = false;
+	// calculate sensitivity
+	float sensitivity = (-0.0025714 * variance) + 1.5142857; // Linear degression
+	if (sensitivity < 0.9f) sensitivity = 0.9f;
 
-	if (isAmplitudeDropping && currentBassAmplitude > threshold)
-		_isBass = true;
+	// update history
+	history.erase(history.begin());
+	history.push_back(instantEnergy);
 
-	previousBassAmplitude = currentBassAmplitude;
+	_isBass = (bassEnergy > localAverageEnergy * sensitivity);
+
+	//std::cout << ((instantEnergy > localAverageEnergy*((sensitivity > 0.9f) ? sensitivity : 0.9f)) ? "O" : " ") << " - ";
+	//std::cout << "instant energy: " << instantEnergy << " ";
+	//std::cout << "local energy: " << localAverageEnergy << " ";
+	//std::cout << "sensitivy: " << sensitivity << " ";
+	//std::cout << std::endl;
 }
 
 void AudioAnalyzer::findSnare()
@@ -165,50 +203,45 @@ void AudioAnalyzer::findSnare()
 
 void AudioAnalyzer::findLead()
 {
-	const int historySize = 128;
-	static std::vector<float> meanHistory(historySize, 0);
-	float mean = 0.0f;
+	const int batchNumber = 43;
 
-	_isLead = false;
-
+	// calculate instant energy
+	float instantEnergy = 0;
+	// i starts to 1 to remove bass from analysis
 	for (int i = 1; i < _outputArraySize; i++)
-		if (fabs(_outputArray[i]) < INFINITY)
-			mean += _outputArray[i];
-	mean /= (_outputArraySize-1);
+		instantEnergy += _outputArray[i];
 
-	std::cout << "mean: " << mean << std::endl;
+	// calculate local average energy
+	static std::vector<float> history(batchNumber, 0);
+	float localAverageEnergy = 0;
+	for (int i = 0; i < batchNumber; i++)
+		localAverageEnergy += history[i];
+	localAverageEnergy /= batchNumber;
 
-	float historyAverage = 0;
-	for (int i = 0; i < historySize; i++)
-		historyAverage += meanHistory[i];
-	historyAverage /= historySize;
-
-	float threshold = 0.0f;
-	for (int i = 0; i < historySize; i++)
+	// calculate variance
+	float variance = 0;
+	for (int i = 0; i < batchNumber; i++)
 	{
-		//std::cout << meanHistory[i] << " ";
-		float tmp = (meanHistory[i] - historyAverage);
-		threshold += (tmp * tmp);
+		float temp = (history[i] - localAverageEnergy);
+		variance += temp * temp;
 	}
-	//std::cout << std::endl << "------------" << std::endl;
-	threshold /= historySize;
-	threshold = (-0.0025714*threshold)+1.5142857;
-	std::cout << "treshold: " << threshold << std::endl;
+	variance /= batchNumber;
 
-	//std::cout << "history average: " << historyAverage << std::endl;
-	//std::cout << "actual average: " << mean << std::endl;
-	if ((mean / historyAverage) - threshold > 0)
-	{
-		_isLead = true;
-		//std::cout << "0" << std::endl;
-	}
-	else
-	{
-		//std::cout << " " << std::endl;
-	}
-	meanHistory.erase(meanHistory.begin()+_outputArraySize);
+	// calculate sensitivity
+	float sensitivity = (-0.0025714 * variance) + 1.5142857; // Linear degression
+	if (sensitivity < 1.4f) sensitivity = 1.4f;
 
-	meanHistory.push_back(mean);
+	// update history
+	history.erase(history.begin());
+	history.push_back(instantEnergy);
+
+	_isLead = (instantEnergy > localAverageEnergy * sensitivity);
+
+	std::cout << ((instantEnergy > localAverageEnergy*sensitivity) ? "O" : " ") << " - ";
+	std::cout << "instant energy: " << instantEnergy << " ";
+	std::cout << "local energy: " << localAverageEnergy << " ";
+	std::cout << "sensitivy: " << sensitivity << " ";
+	std::cout << std::endl;
 }
 
 bool AudioAnalyzer::isBass() const { return _isBass; };
