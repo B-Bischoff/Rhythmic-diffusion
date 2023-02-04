@@ -26,6 +26,7 @@ private:
 	void computeFFT(std::vector<float>& audioData);
 	void shiftAudioData(std::vector<float>& audioData);
 	void findPeakFrequencies();
+	void divideFFTOuputInSubbands();
 	void convertToLog10();
 
 	void findBass();
@@ -38,7 +39,7 @@ public:
 	std::mutex _outputArrayMutex; // MOVE IN PRIVATE
 	AudioAnalyzer(int samplingRate = 44100,
 				int samplesNumber = 2048,
-				int outputArraySize = 40);
+				int outputArraySize = 64);
 
 	void analyzeSignal(std::vector<float>& audioData);
 

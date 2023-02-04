@@ -57,7 +57,7 @@ void Application::loop()
 	int fCounter = 0;
 
 	const std::string downloadPath = "../../Downloads/wav/";
-	const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
+	//const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
 	//const std::string file = downloadPath + "花伦HuaLun-坏孩子的天空.wav";
 	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
 	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
@@ -74,9 +74,15 @@ void Application::loop()
 	//const std::string file = downloadPath + "Digital-Baptism.wav";
 	//const std::string file = downloadPath + "Xaoc.wav";
 	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
+	//const std::string file = downloadPath + "MilkyWay-_Explore_.wav";
+	//const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
 	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
-
-	audioPlayer.playWavFile(file.c_str());
+	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
+	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";
+	//const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
+	//const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
+	//const std::string file = downloadPath + "Le-Wanski-Clapotis.wav";
+	const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
@@ -84,12 +90,14 @@ void Application::loop()
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 
+	audioPlayer.playWavFile(file.c_str());
+
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		printFps(deltaTime, lastFrame, fCounter);
+		//printFps(deltaTime, lastFrame, fCounter);
 
 		ui.createNewFrame();
 		ui.update();
