@@ -7,6 +7,18 @@ struct FrequencyData {
 	const int index;
 };
 
+struct SoundGroup {
+	int bandNumber = 0;
+	float mean = 0;
+	int meanIndex = 0;
+	SoundGroup()
+		: bandNumber(0), mean(0)
+	{}
+	SoundGroup(int newBand, float newMean, int newMeanIndex)
+		: bandNumber(newBand), mean(newMean), meanIndex(newMeanIndex)
+	{}
+};
+
 class AudioAnalyzer {
 private:
 	std::vector<float> _outputArray;
@@ -20,6 +32,8 @@ private:
 	int _outputArraySize;
 	int _maxFrequency;
 
+	std::vector<int> _splitIndex;
+
 	bool _isBass, _isSnare, _isLead;
 
 	void applyWindowFunction(std::vector<float>& audioData);
@@ -29,8 +43,6 @@ private:
 	void divideFFTOuputInSubbands();
 	void convertToLog10();
 
-	void findBass();
-	void findSnare();
 	void findLead();
 
 	void displayOutputArrayInTerminal() const;
@@ -48,4 +60,6 @@ public:
 	bool isLead() const;
 	const std::vector<float>& getFrequencies() const;
 	const int getOutputArraySize() const;
+
+	std::vector<SoundGroup> _groups; // MOVE IN PRIVATE
 };

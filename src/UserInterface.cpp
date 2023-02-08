@@ -44,7 +44,7 @@ void UserInterface::update()
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
 	// SPEED
-	static float speed = 0.0f;
+	static float speed = 1.0f;
 	if (ImGui::SliderFloat("Speed", &speed, 0.01f, 1.05))
 		_RDSimulator.setSimulationSpeed(speed);
 
@@ -207,51 +207,28 @@ void UserInterface::printAudioPlayer()
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
 
-	static float bassA = 0.0f;
-	static float bassB = 0.0f;
-	static float snareA = 0.0f;
-	static float snareB = 0.0f;
-	static float leadA = 0.0f;
-	static float leadB = 0.0f;
+	// ADAPTER
+	//std::vector<SoundGroup>& groups = _audioAnalyzer._groups;
 
-	ImGui::SliderFloat("bassA", &bassA, 0, 1);
-	ImGui::SliderFloat("bassB", &bassB, 0, 1);
-	ImGui::SliderFloat("snareA", &snareA, 0, 0.15);
-	ImGui::SliderFloat("snareB", &snareB, 0, 0.15);
-	ImGui::SliderFloat("leadA", &leadA, 0, 1);
-	ImGui::SliderFloat("leadB", &leadB, 0, 1);
+	//std::cout << "groups: " << groups.size() << std::endl;
+	//for (int i = 0; i < (int)groups.size(); i++)
+	//{
+	//	std::cout << "group: " << i << " ";
+	//	std::cout << "mean value: " << groups[i].mean << " ";
+	//	std::cout << "mean index: " << groups[i].meanIndex << " ";
+	//	std::cout << "band number: " << groups[i].bandNumber << std::endl;
 
-	//if (_audioAnalyzer.isBass())
-	//{
-	//	ImGui::Text("BASS");
-	//	_RDSimulator.setParameterValue(1, std::vector<float>(1, bassA));
-	//}
-	//else
-	//{
-	//	ImGui::Text(" ");
-	//	_RDSimulator.setParameterValue(1, std::vector<float>(1, bassB));
-	//}
+	//	int index = groups[i].meanIndex;
+	//	static float val1 = _RDSimulator.getParameterValue(3)[0];
+	//	if (index <= 4)
+	//		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1 + 0.0075));
+	//	else
+	//		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1));
 
-	//if (_audioAnalyzer.isSnare())
-	//{
-	//	ImGui::Text("SNARE");
-	//	_RDSimulator.setParameterValue(2, std::vector<float>(1, snareA));
+	//	if (index > 20 && groups[i].mean > 8)
+	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.05));
+	//	else
+	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
 	//}
-	//else
-	//{
-	//	ImGui::Text("   ");
-	//	_RDSimulator.setParameterValue(2, std::vector<float>(1, snareB));
-	//}
-
-	//if (_audioAnalyzer.isLead())
-	//{
-	//	ImGui::Text("LEEEEEEAD");
-	//	_RDSimulator.setParameterValue(0, std::vector<float>(1, leadA));
-	//}
-	//else
-	//{
-	//	_RDSimulator.setParameterValue(0, std::vector<float>(1, leadB));
-	//	ImGui::Text("     ");
-	//}
-
+	//std::cout << "------------------------------" << std::endl;
 }

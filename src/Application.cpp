@@ -80,9 +80,9 @@ void Application::loop()
 	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
-	//const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
+	const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
 	//const std::string file = downloadPath + "Le-Wanski-Clapotis.wav";
-	const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
+	//const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
@@ -91,6 +91,14 @@ void Application::loop()
 	float lastFrame = 0.0f;
 
 	audioPlayer.playWavFile(file.c_str());
+
+	RDSimulator.setSimulationSpeed(1.0);
+	RDSimulator.setSimulationColorA(glm::vec3(0.015, 0.004, 0.082));
+	RDSimulator.setSimulationColorB(glm::vec3(1.0));
+	RDSimulator.setParameterValue(0, std::vector<float>(1, 0.387));
+	RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
+	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
+	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
 
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
@@ -121,10 +129,11 @@ void Application::printFps(float& deltaTime, float& lastFrame, int& fCounter)
 	float currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
-	if(fCounter > 500) {
+	if(fCounter > 500)
+	{
 		std::cout << "FPS: " << 1 / deltaTime << std::endl;
 		fCounter = 0;
-	} else {
-		fCounter++;
 	}
+	else
+		fCounter++;
 }
