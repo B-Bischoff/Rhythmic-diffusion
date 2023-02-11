@@ -208,20 +208,44 @@ void UserInterface::printAudioPlayer()
 	}
 
 	// ADAPTER
-	//std::vector<SoundGroup>& groups = _audioAnalyzer._groups;
+	std::vector<SoundGroup>& groups = _audioAnalyzer._groups;
 
-	//std::cout << "groups: " << groups.size() << std::endl;
-	//for (int i = 0; i < (int)groups.size(); i++)
-	//{
-	//	std::cout << "group: " << i << " ";
-	//	std::cout << "mean value: " << groups[i].mean << " ";
-	//	std::cout << "mean index: " << groups[i].meanIndex << " ";
-	//	std::cout << "band number: " << groups[i].bandNumber << std::endl;
+	for (int i = 0; i < (int)groups.size(); i++)
+	{
+		SoundGroup& group = groups[i];
 
+		if (group.getMeanDelta() * group.getBandNumber() < 6)
+			continue;
+
+		std::cout << "group: " << i << " ";
+		std::cout << "mean delta: " << group.getMeanDelta() << " ";
+		std::cout << "mean index: " << group.getMeanIndex() << " ";
+		std::cout << "band number: " << group.getBandNumber() << std::endl;
+
+		static float val1 = _RDSimulator.getParameterValue(3)[0];
+		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1));
+		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.1));
+
+		// Find bass
+		if (group.getMeanIndex() < 5)
+		{
+			_RDSimulator.setParameterValue(3, std::vector<float>(1, val1 + (0.000075 * group.getMeanMagnitude())));
+			//std::cout << "bass" << std::endl;
+		}
+		// Find snare
+		else if (group.getMeanIndex() > 10 && group.getBandNumber() > 7)
+		{
+			_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.1 + (0.05 * group.getMeanMagnitude())));
+			//std::cout << "snare" << std::endl;
+		}
+		// Lead
+		else if (group.getMeanDelta() > 8)
+		{
+
+		}
 	//	int index = groups[i].meanIndex;
 	//	static float val1 = _RDSimulator.getParameterValue(3)[0];
 	//	if (index <= 4)
-	//		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1 + 0.0075));
 	//	else
 	//		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1));
 
@@ -229,6 +253,6 @@ void UserInterface::printAudioPlayer()
 	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.05));
 	//	else
 	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
-	//}
-	//std::cout << "------------------------------" << std::endl;
+	}
+	std::cout << "-----------------------" << std::endl;
 }

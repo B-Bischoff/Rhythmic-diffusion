@@ -108,7 +108,8 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 	for (unsigned int i=0; i<frames->size(); i++)
 	{
 		*samples = (*frames)[i] * (*callbackData->volume/100);
-		audioSamples.push_back((*frames)[i]);
+		if (audioPlayer->isPlaying())
+			audioSamples.push_back((*frames)[i]);
 		samples++;
 
 		if (input->channelsOut() == 1) {
@@ -116,7 +117,8 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		}
 	}
 
-	audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
+	if (audioPlayer->isPlaying())
+		audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
 
 	if (input->isFinished()) {
 		*callbackData->songFinished = true;

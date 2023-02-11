@@ -63,7 +63,8 @@ void Application::loop()
 	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
+	const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
+	//const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
 	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "BICEP-_-HAMMER-DAHLIA.wav";
 	//const std::string file = downloadPath + "UICIDEBOY_-ANTARCTICA.wav";
@@ -71,7 +72,7 @@ void Application::loop()
 	//const std::string file = downloadPath + "UICIDEBOY_-CHARIOT-OF-FIRE.wav";
 	//const std::string file = downloadPath + "UICIDEBOY_-I-NO-LONGER-FEAR-THE-RAZOR-GUARDING-MY-HEEL-I-_-II-_-III-_-IV.wav";
 	//const std::string file = downloadPath + "UICIDEBOY_-O-Lord_-I-Have-My-Doubts.wav";
-	const std::string file = downloadPath + "Digital-Baptism.wav";
+	//const std::string file = downloadPath + "Digital-Baptism.wav";
 	//const std::string file = downloadPath + "Xaoc.wav";
 	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
 	//const std::string file = downloadPath + "MilkyWay-_Explore_.wav";
@@ -79,7 +80,6 @@ void Application::loop()
 	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
 	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";
-	//const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
 	//const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
 	//const std::string file = downloadPath + "Le-Wanski-Clapotis.wav";
 	//const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
@@ -100,12 +100,21 @@ void Application::loop()
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
 	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
 
+
+	bool firstFrame = true;
+
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//printFps(deltaTime, lastFrame, fCounter);
+
+		if (firstFrame)
+		{
+			firstFrame = false;
+			audioPlayer.togglePause();
+		}
 
 		ui.createNewFrame();
 		ui.update();

@@ -8,6 +8,7 @@ private:
 	float _meanMagnitude;
 	float _meanDelta;
 	int _meanIndex;
+	int _lastIndexAdded;
 
 	float calculateMagnitudeCoeff(const float& magnitude) const;
 	float calculateDistanceCoeff(const int& index) const;
@@ -17,6 +18,7 @@ public:
 	SoundGroup(int newBandNumber, float newMeanMagnitude, float newMeanDelta,int newMeanIndex);
 
 	bool canJoinGroup(const float& magnitude, const float& delta, const int& index) const;
+	void addToGroup(const float& magnitude, const float& delta, const int& index);
 
 	int getBandNumber() const;
 	float getMeanMagnitude() const;
