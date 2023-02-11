@@ -1,23 +1,7 @@
 #pragma once
 
 #include "../../inc/include.hpp"
-
-struct FrequencyData {
-	const float magnitude;
-	const int index;
-};
-
-struct SoundGroup {
-	int bandNumber = 0;
-	float mean = 0;
-	int meanIndex = 0;
-	SoundGroup()
-		: bandNumber(0), mean(0)
-	{}
-	SoundGroup(int newBand, float newMean, int newMeanIndex)
-		: bandNumber(newBand), mean(newMean), meanIndex(newMeanIndex)
-	{}
-};
+#include "SoundGroup.hpp"
 
 class AudioAnalyzer {
 private:
