@@ -18,14 +18,13 @@ private:
 
 	std::vector<int> _splitIndex;
 
+	std::vector<SoundGroup> _groups;
 	bool _isBass, _isSnare, _isLead;
 
 	void applyWindowFunction(std::vector<float>& audioData);
 	void computeFFT(std::vector<float>& audioData);
 	void shiftAudioData(std::vector<float>& audioData);
-	void findPeakFrequencies();
 	void divideFFTOuputInSubbands();
-	void convertToLog10();
 
 	void findLead();
 
@@ -39,11 +38,11 @@ public:
 
 	void analyzeSignal(std::vector<float>& audioData);
 
+
 	bool isBass() const;
 	bool isSnare() const;
 	bool isLead() const;
 	const std::vector<float>& getFrequencies() const;
 	const int getOutputArraySize() const;
-
-	std::vector<SoundGroup> _groups; // MOVE IN PRIVATE
+	std::vector<SoundGroup>& getGroups();
 };

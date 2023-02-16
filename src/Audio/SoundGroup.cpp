@@ -49,7 +49,7 @@ void SoundGroup::addToGroup(const float &magnitude, const float &delta, const in
 
 	// Updating group's mean index
 	temp = _bandNumber * _meanIndex;
-	_meanIndex = (double)(temp + index) / (double)(_bandNumber + 1);
+	_meanIndex = (double)(temp + index) / (double)(_bandNumber + 1.0);
 
 	// Updating group's mean Delta
 	temp = _bandNumber * _meanDelta;

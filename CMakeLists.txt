@@ -57,6 +57,8 @@ add_executable(Rythmic-diffusion
 	src/Application.hpp
 	src/UserInterface.cpp
 	src/UserInterface.hpp
+	src/Adapter.hpp
+	src/Adapter.cpp
 
 	src/Graphic/ReactionDiffusionSimulator.hpp
 	src/Graphic/ReactionDiffusionSimulator.cpp

@@ -13,10 +13,9 @@ void main()
 	x = x * x;
 	int y = center.y - pixel_coords.y;
 	y = y * y;
+
 	if (x + y < RADIUS * RADIUS)
-	{
 		existingPixel.b = 1;
-	}
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

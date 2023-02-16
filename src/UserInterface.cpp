@@ -45,7 +45,7 @@ void UserInterface::update()
 
 	// SPEED
 	static float speed = 1.0f;
-	if (ImGui::SliderFloat("Speed", &speed, 0.01f, 1.05))
+	if (ImGui::SliderFloat("Speed", &speed, 0.01f, 2.05))
 		_RDSimulator.setSimulationSpeed(speed);
 
 	// COLORS
@@ -206,53 +206,4 @@ void UserInterface::printAudioPlayer()
 			ARRAY_2[i] = outputFreq[i];
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
-
-	// ADAPTER
-	std::vector<SoundGroup>& groups = _audioAnalyzer._groups;
-
-	for (int i = 0; i < (int)groups.size(); i++)
-	{
-		SoundGroup& group = groups[i];
-
-		if (group.getMeanDelta() * group.getBandNumber() < 6)
-			continue;
-
-		std::cout << "group: " << i << " ";
-		std::cout << "mean delta: " << group.getMeanDelta() << " ";
-		std::cout << "mean index: " << group.getMeanIndex() << " ";
-		std::cout << "band number: " << group.getBandNumber() << std::endl;
-
-		static float val1 = _RDSimulator.getParameterValue(3)[0];
-		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1));
-		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.1));
-
-		// Find bass
-		if (group.getMeanIndex() < 5)
-		{
-			_RDSimulator.setParameterValue(3, std::vector<float>(1, val1 + (0.000075 * group.getMeanMagnitude())));
-			//std::cout << "bass" << std::endl;
-		}
-		// Find snare
-		else if (group.getMeanIndex() > 10 && group.getBandNumber() > 7)
-		{
-			_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.1 + (0.05 * group.getMeanMagnitude())));
-			//std::cout << "snare" << std::endl;
-		}
-		// Lead
-		else if (group.getMeanDelta() > 8)
-		{
-
-		}
-	//	int index = groups[i].meanIndex;
-	//	static float val1 = _RDSimulator.getParameterValue(3)[0];
-	//	if (index <= 4)
-	//	else
-	//		_RDSimulator.setParameterValue(3, std::vector<float>(1, val1));
-
-	//	if (index > 20 && groups[i].mean > 8)
-	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.05));
-	//	else
-	//		_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
-	}
-	std::cout << "-----------------------" << std::endl;
 }

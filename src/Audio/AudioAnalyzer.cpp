@@ -35,9 +35,7 @@ void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 	applyWindowFunction(audioData);
 	shiftAudioData(audioData);
 	computeFFT(_inputArray);
-	//findPeakFrequencies();
 	divideFFTOuputInSubbands();
-	//convertToLog10();
 
 	// Instrument / Melodic analyze
 	findLead();
@@ -78,32 +76,6 @@ void AudioAnalyzer::computeFFT(std::vector<float>& audioData)
 	free(cfg);
 }
 
-void AudioAnalyzer::findPeakFrequencies()
-{
-	double freqBin[(const int)_outputArraySize+1];
-	double incr = (float)_maxFrequency / (float)_outputArraySize;
-	for (int i = 0; i < _outputArraySize+1; i++)
-		freqBin[i] = incr * i;
-
-	for (int j = 0; j < _outputArraySize+1; j++)
-		_outputArray[j] = 0;
-
-	const int HALF_SAMPLES = _samples / 2;
-	for (int i = 0; i < HALF_SAMPLES; i++)
-	{
-		float magnitude = sqrt((_fftOut[i].i *_fftOut[i].i)+(_fftOut[i].r*_fftOut[i].r));
-		//float magnitude = ((_fftOut[i].i *_fftOut[i].i)+(_fftOut[i].r*_fftOut[i].r));
-		float freq = i * (double)_samplingRate / (float)HALF_SAMPLES;
-
-		for (int j = 0; j < _outputArraySize; j++)
-		{
-			if((freq>freqBin[j]) && (freq <=freqBin[j+1]))
-				if (magnitude > _outputArray[j])
-					_outputArray[j] = magnitude;
-		}
-	}
-}
-
 void AudioAnalyzer::divideFFTOuputInSubbands()
 {
 	// clear outputArray existing values
@@ -124,18 +96,6 @@ void AudioAnalyzer::divideFFTOuputInSubbands()
 			fftIndex++;
 		}
 		//_outputArray[i] *= (sampleNumber * 0.05);
-	}
-}
-
-void AudioAnalyzer::convertToLog10()
-{
-	for (int i = 0; i < _outputArraySize; i++)
-	{
-		float log10value = 10 * log10(_outputArray[i]);
-		if (log10value != INFINITY && log10value != -INFINITY)
-			_outputArray[i] = log10value;
-		if (_outputArray[i] < 0)
-			_outputArray[i] = 0;
 	}
 }
 
@@ -211,9 +171,7 @@ void AudioAnalyzer::findLead()
 		sensitivity[i] = (sensCoeff * variance[i]) + 1.5142857; // Linear degression
 	}
 
-	// grouping beats
 	_groups.clear();
-	//system("clear");
 
 	for (int i = 0; i < bandNumber; i++)
 	{
@@ -221,20 +179,20 @@ void AudioAnalyzer::findLead()
 		float delta = instantEnergy[i] - history[i][batchNumber - 1];
 		float ratio = instantEnergy[i] / history[i][batchNumber - 1];
 
+		// Noise filters
 		if (beat && (ratio < 1.5 || instantEnergy[i] < 1.5)) // Noise filter
 			beat = false;
 		if (instantEnergy[i] - history[i][batchNumber-1] < 1)
 			beat = false;
 
-		//const std::string white = "\033[39m";
-		//const std::string red = "\033[31m";
+		const std::string white = "\033[39m";
+		const std::string red = "\033[31m";
 		//const std::string green = "\033[32m";
 		//const std::string blue = "\033[34m";
 		//const std::string orange = "\033[33m";
 
 
-		// Group finding algo
-
+		// Group dispatch
 		int grpIndex = -1;
 		if (beat)
 		{
@@ -260,20 +218,11 @@ void AudioAnalyzer::findLead()
 		}
 
 		//std::string color = white.c_str();
-		//switch(grpIndex)
-		//{
-		//	case 0: color = red.c_str(); break;
-		//	case 1: color = blue.c_str(); break;
-		//	case 2: color = green.c_str(); break;
-		//	case 3: color = orange.c_str(); break;
-		//	default: color = white.c_str();
-		//}
-
 		//if (beat) color = red.c_str();
 		//	std::cout << color;
 
 		//std::cout << "[" << (i < 10 ? " " : "") << i << "]: " << (beat ? "0 " : "  ");
-		//std::cout << std::fixed << std::setprecision(2) << (instantEnergy[i] - history[i][batchNumber-1]) << " ";
+		//std::cout << std::fixed << std::setprecision(2) << ((instantEnergy[i] - history[i][batchNumber-1])) << " ";
 		//std::cout << std::fixed << std::setprecision(2) << instantEnergy[i] << " ";
 		//std::cout << std::fixed << std::setprecision(2) << grpIndex << " ";
 		//std::cout << std::fixed << std::setprecision(2) << (instantEnergy[i] / history[i][batchNumber-1]) << " ";
@@ -287,34 +236,6 @@ void AudioAnalyzer::findLead()
 		//	std::cout << std::endl;
 	}
 
-	//bool bass = false;
-	//bool kick = false;
-	//bool snare = false;
-
-	//for (int i = 0; i < _groups.size(); i++)
-	//{
-		//std::cout << "group[" << i << "]" << " ";
-		//std::cout << "meanIndex: " << _groups[i].getMeanIndex() << " | ";
-		//std::cout << "meanDelta: " << _groups[i].getMeanDelta() << " | ";
-		//std::cout << "bandNumber: " << _groups[i].getBandNumber() << " | ";
-		//std::cout << std::endl;
-		//if (_groups[i].getMeanIndex() < 7 && _groups[i].getMeanDelta() > 50)\
-		//	bass = true;
-	//}
-	//std::cout << bass << std::endl;
-	//std::cout << std::endl;
-
-	//float globalVariance = 0;
-	//for (int i = 0; i < bandNumber; i++)
-	//{
-	//	for (int j = 0; j < batchNumber; j++)
-	//	{
-	//		float temp = (history[i][j] - localAverageEnergy[i]);
-	//		globalVariance += temp * temp;
-	//	}
-	//	globalVariance /= batchNumber;
-	//}
-
 	// update history
 	for (int i = 0; i < bandNumber; i++)
 	{
@@ -323,9 +244,9 @@ void AudioAnalyzer::findLead()
 	}
 
 	//std::cout << std::endl << "-------------------------------------" << std::endl;
-	//std::cout << ((instantEnergy > localAverageEnergy*sensitivity) ? "O" : " ") << " - ";
 }
 
+std::vector<SoundGroup>& AudioAnalyzer::getGroups() { return _groups; }
 bool AudioAnalyzer::isBass() const { return _isBass; };
 bool AudioAnalyzer::isSnare() const { return _isSnare; };
 bool AudioAnalyzer::isLead() const { return _isLead; };
