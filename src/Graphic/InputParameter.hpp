@@ -31,7 +31,7 @@ public:
 
 	void changeType(const InputParameterType& newType);
 	void changeType(const int& newTypeIndex);
-	void execShader(const glm::vec4& channels, const glm::vec2& SCREEN_DIMENSION);
+	void execShader(const int& channel, const glm::vec2& SCREEN_DIMENSION);
 	std::vector<float>& getVectorParameters();
 	const InputParameterType& getType() const;
 };

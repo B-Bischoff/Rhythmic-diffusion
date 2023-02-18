@@ -44,10 +44,10 @@ void InputParameter::changeType(const int& newTypeIndex)
 	}
 }
 
-void InputParameter::execShader(const glm::vec4& channels, const glm::vec2& SCREEN_DIMENSION)
+void InputParameter::execShader(const int& channel, const glm::vec2& SCREEN_DIMENSION)
 {
 	_computeShader.useProgram();
-	_computeShader.setVec4("channels", channels);
+	_computeShader.setInt("channel", channel);
 
 	applyParameterSettings();
 

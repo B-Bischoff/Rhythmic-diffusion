@@ -9,6 +9,12 @@ private:
 	ReactionDiffusionSimulator& _RDSimulator;
 	AudioAnalyzer& _audioAnalyzer;
 
+	float _bassRatio;
+	std::vector<float> _bassRatioHistory;
+
+	void normalizeGroupsOutputs();
+	void modifyReactionDiffusion();
+
 public:
 	Adapter(ReactionDiffusionSimulator& RDSimulator, AudioAnalyzer& audioAnalyzer);
 
