@@ -6,7 +6,7 @@ AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArra
 {
 	_fftIn = std::vector<kiss_fft_cpx>(_samples);
 	_fftOut = std::vector<kiss_fft_cpx>(_samples);
-	_maxFrequency = 11000;
+	_maxFrequency = 8000;
 	_inputArray = std::vector<float>(_samples, 0.0f);
 	_outputArray = std::vector<float>(_outputArraySize, 0.0f);
 
@@ -16,7 +16,7 @@ AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArra
 
 	// fftOutSize can be less than _samples to exclude frequencies from the analysis
 	// when fftOutSize = _samples, analyse range: [0 - 44100]Hz
-	const int fftOutSize = _samples/5.5;
+	const int fftOutSize = _samples / (_samplingRate / _maxFrequency);
 	const int firstSubbandWidth = 2;
 
 	// Find slope coefficient
