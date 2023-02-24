@@ -10,7 +10,7 @@ private:
 	AudioAnalyzer& _audioAnalyzer;
 
 	float _bassRatio;
-	std::vector<float> _bassRatioHistory;
+	float _leadRatio;
 
 	void normalizeGroupsOutputs();
 	void modifyReactionDiffusion();

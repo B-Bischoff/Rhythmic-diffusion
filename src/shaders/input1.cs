@@ -2,7 +2,7 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D texture;
 
-layout (location = 0) uniform vec4 channels;
+layout (location = 0) uniform int channel;
 layout (location = 1) uniform float t;
 layout (location = 2) uniform float scale;
 layout (location = 3) uniform vec2 offset;
@@ -54,14 +54,7 @@ void main()
 	h = clamp(h, 0, 1);
 	h = h * strengthFactor;
 
-	if (channels.x > 0)
-		existingPixel.x = h;
-	if (channels.y > 0)
-		existingPixel.y = h;
-	if (channels.z > 0)
-		existingPixel.z = h;
-	if (channels.w > 0)
-		existingPixel.w = h;
+	existingPixel[channel] = h;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

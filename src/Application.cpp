@@ -62,7 +62,7 @@ void Application::loop()
 	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
 	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
+	const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
 	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
 	//const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
 	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
@@ -76,7 +76,7 @@ void Application::loop()
 	//const std::string file = downloadPath + "Xaoc.wav";
 	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
 	//const std::string file = downloadPath + "MilkyWay-_Explore_.wav";
-	const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
+	//const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
 	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
 	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";

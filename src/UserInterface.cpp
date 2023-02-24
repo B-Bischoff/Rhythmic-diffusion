@@ -45,7 +45,7 @@ void UserInterface::update()
 
 	// SPEED
 	static float speed = 1.0f;
-	if (ImGui::SliderFloat("Speed", &speed, 0.01f, 2.05))
+	if (ImGui::SliderFloat("Speed", &speed, 0.00f, 2.0))
 		_RDSimulator.setSimulationSpeed(speed);
 
 	// COLORS
