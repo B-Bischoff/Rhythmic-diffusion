@@ -76,14 +76,14 @@ void Application::loop()
 	//const std::string file = downloadPath + "Xaoc.wav";
 	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
 	//const std::string file = downloadPath + "MilkyWay-_Explore_.wav";
-	//const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
+	const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
 	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
 	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";
 	//const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
 	//const std::string file = downloadPath + "Le-Wanski-Clapotis.wav";
 	//const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
-	const std::string file = downloadPath + "Caravel-HÖR-Nov-29-2022.wav";
+	//const std::string file = downloadPath + "Caravel-HÖR-Nov-29-2022.wav";
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
@@ -101,7 +101,7 @@ void Application::loop()
 	RDSimulator.setParameterValue(0, std::vector<float>(1, 0.387));
 	RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
-	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.048));
+	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
 
 	bool firstFrame = true;
 
