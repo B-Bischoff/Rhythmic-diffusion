@@ -23,7 +23,7 @@ bool SoundGroup::canJoinGroup(const float& magnitude, const float& delta, const 
 
 float SoundGroup::calculateMagnitudeCoeff(const float& magnitude) const
 {
-	if (_meanMagnitude >= 0.4)
+	if (_meanMagnitude >= 40)
 		return 0.66;
 
 	return .00063709 * (_meanMagnitude*_meanMagnitude) - .0608768 * _meanMagnitude + 2.10166;

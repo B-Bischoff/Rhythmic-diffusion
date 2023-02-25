@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../inc/include.hpp"
 #include "./Graphic/ReactionDiffusionSimulator.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
 
@@ -10,7 +9,7 @@ private:
 	AudioAnalyzer& _audioAnalyzer;
 
 	float _bassRatio;
-	float _leadRatio;
+	float _snareRatio;
 
 	void normalizeGroupsOutputs();
 	void modifyReactionDiffusion();

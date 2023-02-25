@@ -16,10 +16,14 @@ void Adapter::normalizeGroupsOutputs()
 {
 	std::vector<SoundGroup>& groups = _audioAnalyzer.getGroups();
 
-	const int minBassMagnitude = 50;
-	const int maxBassMagnitude = 150;
-	float bassValue = 0;
+	const float minBassMagnitude = 50;
+	const float maxBassMagnitude = 150;
+	float bassMagnitude = 0;
 	float bassDelta = 0;
+
+	const float maxSnareMagnitude = 10;
+	const float minSnareMagnitude = 2;
+	float snareMagnitude = 0;
 
 	for (int i = 0; i < (int)groups.size(); i++)
 	{
@@ -31,13 +35,23 @@ void Adapter::normalizeGroupsOutputs()
 			if (group.getMeanDelta() > bassDelta)
 			{
 				bassDelta = group.getMeanDelta();
-				bassValue = group.getMeanMagnitude();
+				bassMagnitude = group.getMeanMagnitude();
 			}
+		}
+
+		// Snare
+		if (group.getBandNumber() > 6 && group.getMeanIndex() > 20 && group.getMeanMagnitude() > minSnareMagnitude)
+		{
+			if (group.getMeanMagnitude() > snareMagnitude)
+				snareMagnitude = group.getMeanMagnitude();
 		}
 	}
 
-	_bassRatio = bassValue / maxBassMagnitude;
+	_bassRatio = bassMagnitude / (maxBassMagnitude - minBassMagnitude);
 	if (_bassRatio > 1.0) _bassRatio = 1.0;
+
+	_snareRatio = snareMagnitude / (maxSnareMagnitude - minSnareMagnitude);
+	if (_snareRatio > 1.0) _snareRatio = 1.0;
 }
 
 void Adapter::modifyReactionDiffusion()
@@ -47,27 +61,8 @@ void Adapter::modifyReactionDiffusion()
 	// magnitude * delta * cst
 	// bandNb & meanIndex -> select rds propertie
 
-	float bassValue = 0;
-	float bassDelta = 0;
-	float snareValue = 0;
-
 	for (int i = 0; i < (int)groups.size(); i++)
 	{
-		SoundGroup& group = groups[i];
-
-		// snare
-		if (group.getMeanIndex() > 10 && group.getBandNumber() > 7)
-		{
-			float temp = group.getMeanDelta() / group.getMeanMagnitude();
-			if (temp > snareValue)
-				snareValue = temp;
-		}
-
-		//// Find snare
-		//else if (group.getMeanIndex() > 10 && group.getBandNumber() > 7)
-		//{
-		//	//std::cout << "snare" << std::endl;
-		//}
 		//// to name accordingly ...
 		//else if (group.getBandNumber() <= 3 && group.getMeanDelta() > 10)
 		//{
@@ -75,8 +70,9 @@ void Adapter::modifyReactionDiffusion()
 		//}
 	}
 
-	static float val1 = _RDSimulator.getParameterValue(3)[0];
+	static float initialKillRate = _RDSimulator.getParameterValue(3)[0];
+	static float initalDiffusionRateB = _RDSimulator.getParameterValue(1)[0];
 
-	//std::cout << ratio << std::endl;
-	_RDSimulator.setParameterValue(3, std::vector<float>(1, val1 - (0.02 * _bassRatio)));
+	_RDSimulator.setParameterValue(1, std::vector<float>(1, initalDiffusionRateB + (0.45 * _snareRatio)));
+	_RDSimulator.setParameterValue(3, std::vector<float>(1, initialKillRate - (0.03 * _bassRatio)));
 }

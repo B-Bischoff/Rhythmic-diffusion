@@ -170,6 +170,8 @@ void AudioAnalyzer::findBeats()
 		float ratio = instantEnergy[i] / _instantEnergyHistory[i][_historySize - 1];
 
 		// Noise filters
+		if (delta < 0)
+			beat = false;
 		if (beat && (ratio < 1.5 || instantEnergy[i] < 1.5)) // Noise filter
 			beat = false;
 		if (instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1] < 1)
