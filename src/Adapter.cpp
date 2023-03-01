@@ -29,11 +29,23 @@ void Adapter::normalizeGroupsOutputs()
 	for (int i = 0; i < (int)groups.size(); i++)
 	{
 		SoundGroup& group = groups[i];
+		if (group.getMeanDelta() < 0)
+			continue;
+
+		std::cout << "[" << i << "]: ";
+		std::cout << "mag: " << group.getMeanMagnitude();
+		std::cout << " delta: " << group.getMeanDelta();
+		std::cout << " index: " << group.getMeanIndex();
+		std::cout << " num: " << group.getBandNumber();
+		std::cout << " =======================" << (group.getMeanMagnitude()/group.getMeanDelta());
+		std::cout << std::endl;
 
 		findBassRatioFromGroup(group, bassMagnitude, bassDelta);
 		findSnareRatioFromGroup(group, snareMagnitude);
 		findLeadRatioFromGroup(group, leadMagnitude);
 	}
+
+	std::cout << "----------------------------" << std::endl;
 }
 
 void Adapter::findBassRatioFromGroup(SoundGroup& group, float& bassMagnitude, float& bassDelta)
@@ -60,7 +72,7 @@ void Adapter::findSnareRatioFromGroup(SoundGroup& group, float& snareMagnitude)
 	const float maxSnareMagnitude = 10;
 	const float minSnareMagnitude = 2;
 
-	if (group.getBandNumber() > 6 && group.getMeanIndex() > 20)
+	if (group.getBandNumber() > 6 && group.getMeanIndex() > 20 && group.getMeanMagnitude() > minSnareMagnitude)
 	{
 		if (group.getMeanMagnitude() > snareMagnitude)
 			snareMagnitude = group.getMeanMagnitude();
@@ -73,40 +85,42 @@ void Adapter::findSnareRatioFromGroup(SoundGroup& group, float& snareMagnitude)
 
 void Adapter::findLeadRatioFromGroup(SoundGroup& group, float& leadMagnitude)
 {
-	const float maxLeadMagnitude = 40;
+	const float maxLeadMagnitude = 25;
 	const float minLeadMagnitude = 10;
+	const float minLeadDelta = 3.5;
 
-	if (group.getMeanIndex() > 3 && group.getBandNumber() < 8 && group.getMeanDelta() > 5)
+	if (group.getMeanIndex() < 5 || group.getMeanIndex() > 35)
+		return;
+
+	if ( (group.getMeanDelta() > 6 && group.getMeanMagnitude() > 30) || group.getMeanMagnitude() > 50)
 	{
-		if (group.getMeanMagnitude() > leadMagnitude)
-			leadMagnitude = group.getMeanMagnitude();
+		_leadRatio = 1.0;
+		return;
+	}
 
-		_leadRatio = leadMagnitude / (maxLeadMagnitude - minLeadMagnitude);
-		if (_leadRatio > 1.0)
-			_leadRatio = 1.0;
+	if ((group.getMeanMagnitude() / group.getMeanDelta()) < 4.5 && group.getMeanDelta() > minLeadDelta && group.getMeanMagnitude() > minLeadMagnitude)
+	{
+		if (group.getMeanDelta() > leadMagnitude)
+		{
+			leadMagnitude = group.getMeanDelta() / 10.0;
+			if (leadMagnitude > 1.0)
+				leadMagnitude = 1.0;
+
+			//_leadRatio = leadMagnitude / (maxLeadMagnitude - minLeadMagnitude);
+			if (leadMagnitude > _leadRatio)
+				_leadRatio = leadMagnitude;
+		}
 	}
 }
 
 void Adapter::modifyReactionDiffusion()
 {
-	std::vector<SoundGroup>& groups = _audioAnalyzer.getGroups();
-
-	// magnitude * delta * cst
-	// bandNb & meanIndex -> select rds propertie
-
-	for (int i = 0; i < (int)groups.size(); i++)
-	{
-		//// to name accordingly ...
-		//else if (group.getBandNumber() <= 3 && group.getMeanDelta() > 10)
-		//{
-		//	//_RDSimulator.setParameterValue(1, std::vector<float>(1, 0.1 + (0.025 * group.getMeanMagnitude())));
-		//}
-	}
-
 	static float initialKillRate = _RDSimulator.getParameterValue(3)[0];
 	static float initalDiffusionRateB = _RDSimulator.getParameterValue(1)[0];
 
 	//_RDSimulator.setParameterValue(1, std::vector<float>(1, initalDiffusionRateB + (0.85 * _snareRatio)));
 	//_RDSimulator.setParameterValue(3, std::vector<float>(1, initialKillRate - (0.02 * _bassRatio)));
-	_RDSimulator.setParameterValue(3, std::vector<float>(1, initialKillRate - (0.03 * _leadRatio)));
+	float tmp = initialKillRate - (0.04 * _leadRatio);
+	if (tmp < 0) tmp = 0.0;
+	_RDSimulator.setParameterValue(3, std::vector<float>(1, tmp));
 }

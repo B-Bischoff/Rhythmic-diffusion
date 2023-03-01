@@ -108,6 +108,7 @@ void ReactionDiffusionSimulator::processInputParameters()
 {
 	_parametersTexture.useTexture(0);
 
+	// Thread input shaders ?
 	_diffusionRateAShader.execShader(0, _screenDimensions);
 	_diffusionRateBShader.execShader(1, _screenDimensions);
 	_feedRateShader.execShader(2, _screenDimensions);
