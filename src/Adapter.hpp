@@ -15,7 +15,7 @@ private:
 	void normalizeGroupsOutputs();
 	void findBassRatioFromGroup(SoundGroup& group, float& bassMagnitude, float& bassDelta);
 	void findSnareRatioFromGroup(SoundGroup& group, float& snareMagnitude);
-	void findLeadRatioFromGroup(SoundGroup& group, float& leadMagnitude);
+	void findLeadRatioFromGroup(SoundGroup& group);
 
 	void modifyReactionDiffusion();
 
