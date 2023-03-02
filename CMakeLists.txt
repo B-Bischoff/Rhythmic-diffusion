@@ -3,7 +3,7 @@ project(Rythmic-diffusion)
 
 find_package(OpenGL REQUIRED)
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 # Compile external dependencies
 add_subdirectory (external)
@@ -57,6 +57,8 @@ add_executable(Rythmic-diffusion
 	src/Application.hpp
 	src/UserInterface.cpp
 	src/UserInterface.hpp
+	src/Adapter.hpp
+	src/Adapter.cpp
 
 	src/Graphic/ReactionDiffusionSimulator.hpp
 	src/Graphic/ReactionDiffusionSimulator.cpp
@@ -75,6 +77,8 @@ add_executable(Rythmic-diffusion
 	src/Audio/AudioPlayer.cpp
 	src/Audio/AudioAnalyzer.hpp
 	src/Audio/AudioAnalyzer.cpp
+	src/Audio/SoundGroup.hpp
+	src/Audio/SoundGroup.cpp
 
 	# STB IMAGE
 	src/vendor/stb/stb_image.h

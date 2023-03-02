@@ -15,7 +15,7 @@ vec3 laplacian(in ivec2 uv, in vec2 texelSize) {
 	vec3 rg = vec3(0, 0, 0);
 
 	rg += imageLoad(currentScreen, uv + ivec2(-1, -1)).rgb * 0.05;
-	rg += imageLoad(currentScreen, uv + ivec2(-0, -1)).rgb * 0.2;
+	rg += imageLoad(currentScreen, uv + ivec2(0, -1)).rgb * 0.2;
 	rg += imageLoad(currentScreen, uv + ivec2(1, -1)).rgb * 0.05;
 	rg += imageLoad(currentScreen, uv + ivec2(-1, 0)).rgb * 0.2;
 	rg += imageLoad(currentScreen, uv + ivec2(0, 0)).rgb * -1;
@@ -34,21 +34,22 @@ void main()
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(currentScreen, pixel_coords);
 
-	float diffusionRateA = imageLoad(paramScreen, pixel_coords).x;
-	float diffusionRateB = imageLoad(paramScreen, pixel_coords).y;
-	float feedRate = imageLoad(paramScreen, pixel_coords).z;
-	float killRate = imageLoad(paramScreen, pixel_coords).w;// / 100 * 15;
+	vec4 parameters = imageLoad(paramScreen, pixel_coords);
+	float diffusionRateA = parameters.x;
+	float diffusionRateB = parameters.y;
+	float feedRate = parameters.z;
+	float killRate = parameters.w;
 
 	float a = existingPixel.r;
 	float b = existingPixel.b;
 
 	vec2 texelSize = vec2(1.0, 1.0);
 	vec3 lp = laplacian(pixel_coords, texelSize);
-	float a2 = a + (diffusionRateA * lp.r - a*b*b + feedRate*(1 - a)) * _ReactionSpeed;
+	float a2 = a + (diffusionRateA * lp.r - a*b*b + feedRate*(1.0 - a)) * _ReactionSpeed;
 	float b2 = b + (diffusionRateB * lp.b + a*b*b - (killRate + feedRate)*b) * _ReactionSpeed;
 
-	a2 = clamp(a2, 0, 1);
-	b2 = clamp(b2, 0, 1);
+	a2 = clamp(a2, 0.01, 1.0);
+	b2 = clamp(b2, 0.01, 1.0);
 
 	pixel = vec4(a2, 0, b2, 1.0);
 

@@ -42,6 +42,7 @@ public:
 	unsigned long getWavFileDuration();
 	std::string getFileName() const;
 	double getVolume() const;
+	bool isPlaying() const;
 
 	AudioAnalyzer* _audioAnalyzer; // TO PASS IN PRIVATE
 };

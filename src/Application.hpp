@@ -5,6 +5,7 @@
 #include "./Audio/AudioPlayer.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
 #include "./Graphic/ReactionDiffusionSimulator.hpp"
+#include "./Adapter.hpp"
 
 class Application {
 private:

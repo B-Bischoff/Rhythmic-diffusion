@@ -8,8 +8,10 @@ AudioPlayer::AudioPlayer()
 
 	// Set the global sample rate before creating class instances.
 	stk::Stk::setSampleRate((stk::StkFloat)44100.0);
+	input.setRate((stk::StkFloat)0.0);
 
-	_volume = 25.0;
+	_volume = 10.0;
+	_isPlaying = false;
 }
 
 AudioPlayer::~AudioPlayer()
@@ -101,14 +103,13 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 	std::vector<float>& audioSamples = *callbackData->audioSamples;
 	AudioPlayer* audioPlayer = callbackData->audioPlayer;
 
-	audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
-
 	input->tick(*frames);
 
 	for (unsigned int i=0; i<frames->size(); i++)
 	{
 		*samples = (*frames)[i] * (*callbackData->volume/100);
-		audioSamples.push_back((*frames)[i]);
+		if (audioPlayer->isPlaying())
+			audioSamples.push_back((*frames)[i]);
 		samples++;
 
 		if (input->channelsOut() == 1) {
@@ -116,6 +117,8 @@ int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		}
 	}
 
+	if (audioPlayer->isPlaying())
+		audioPlayer->_audioAnalyzer->analyzeSignal(audioSamples);
 
 	if (input->isFinished()) {
 		*callbackData->songFinished = true;
@@ -188,4 +191,9 @@ void AudioPlayer::setVolume(const double& newVolume)
 double AudioPlayer::getVolume() const
 {
 	return _volume;
+}
+
+bool AudioPlayer::isPlaying() const
+{
+	return _isPlaying;
 }

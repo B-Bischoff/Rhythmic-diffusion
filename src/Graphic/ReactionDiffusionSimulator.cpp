@@ -108,10 +108,11 @@ void ReactionDiffusionSimulator::processInputParameters()
 {
 	_parametersTexture.useTexture(0);
 
-	_diffusionRateAShader.execShader(glm::vec4(1, 0, 0, 0), _screenDimensions);
-	_diffusionRateBShader.execShader(glm::vec4(0, 1, 0, 0), _screenDimensions);
-	_feedRateShader.execShader(glm::vec4(0, 0, 1, 0), _screenDimensions);
-	_killRateShader.execShader(glm::vec4(0, 0, 0, 1), _screenDimensions);
+	// Thread input shaders ?
+	_diffusionRateAShader.execShader(0, _screenDimensions);
+	_diffusionRateBShader.execShader(1, _screenDimensions);
+	_feedRateShader.execShader(2, _screenDimensions);
+	_killRateShader.execShader(3, _screenDimensions);
 }
 
 void ReactionDiffusionSimulator::processDiffusionReaction()
