@@ -4,6 +4,7 @@
 Adapter::Adapter(ReactionDiffusionSimulator& RDSimulator, AudioAnalyzer& audioAnalyzer)
 	: _RDSimulator(RDSimulator), _audioAnalyzer(audioAnalyzer)
 {
+	createHook(bass, 3, 0, add, 0.038, 0.02);
 }
 
 void Adapter::update()
@@ -24,7 +25,6 @@ void Adapter::normalizeGroupsOutputs()
 	float bassMagnitude = 0;
 	float bassDelta = 0;
 	float snareMagnitude = 0;
-	float leadMagnitude = 0;
 
 	for (int i = 0; i < (int)groups.size(); i++)
 	{
@@ -97,6 +97,22 @@ void Adapter::findLeadRatioFromGroup(SoundGroup& group)
 	}
 }
 
+void Adapter::createHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value)
+{
+	try {
+		const std::vector<float>& vector = _RDSimulator.getParameterValue(reactionPropertie);
+		(void)vector.at(propertieIndex);
+	} catch (std::invalid_argument& e) {
+		std::cerr << "[Adapter]: could not create hook, invalid reaction propertie" << std::endl;
+		return;
+	} catch (std::out_of_range& e) {
+		std::cerr << "[Adapter]: could not create hook, invalid reaction propertie index" << std::endl;
+		return;
+	}
+
+	_hooks.push_back(AdapterHook(audioTrigger, reactionPropertie, propertieIndex, actionMode, simulationInitialValue, value));
+}
+
 void Adapter::modifyReactionDiffusion()
 {
 	static float initialKillRate = _RDSimulator.getParameterValue(3)[0];
@@ -104,7 +120,39 @@ void Adapter::modifyReactionDiffusion()
 
 	//_RDSimulator.setParameterValue(1, std::vector<float>(1, initalDiffusionRateB + (0.85 * _snareRatio)));
 	//_RDSimulator.setParameterValue(3, std::vector<float>(1, initialKillRate - (0.02 * _bassRatio)));
-	float tmp = initialKillRate - (0.04 * _leadRatio);
-	if (tmp < 0) tmp = 0.0;
-	_RDSimulator.setParameterValue(3, std::vector<float>(1, tmp));
+	//float tmp = initialKillRate - (0.04 * _leadRatio);
+	//if (tmp < 0) tmp = 0.0;
+	//_RDSimulator.setParameterValue(3, std::vector<float>(1, tmp));
+
+	for (int i = 0; i < (int)_hooks.size(); i++)
+		applyHook(_hooks[i]);
+}
+
+void Adapter::applyHook(const AdapterHook& hook)
+{
+	const float& ratio = getRatioReferenceFromAudioTrigger(hook.audioTrigger);
+
+	float newValue;
+	if (hook.actionMode == add)
+		newValue = hook.simulationInitialValue + (ratio * hook.value);
+	else if (hook.actionMode == subtract)
+		newValue = hook.simulationInitialValue - (ratio * hook.value);
+	else if (hook.actionMode == multiply)
+		newValue = hook.simulationInitialValue * (ratio * hook.value);
+	else
+		newValue = hook.simulationInitialValue / (ratio * hook.value);
+
+	std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
+	newVector[hook.propertieIndex] = newValue;
+	_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
+}
+
+const float& Adapter::getRatioReferenceFromAudioTrigger(const AudioTrigger& audioTrigger) const
+{
+	if (audioTrigger == AudioTrigger::bass)
+		return _bassRatio;
+	else if (audioTrigger == AudioTrigger::snare)
+		return _snareRatio;
+	else
+		return _leadRatio;
 }

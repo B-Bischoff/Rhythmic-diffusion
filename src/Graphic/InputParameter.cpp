@@ -30,10 +30,12 @@ void InputParameter::changeType(const int& newTypeIndex)
 		case 0: // Number
 			_type = InputParameterType::Number;
 			_computeShader = ComputeShader("src/shaders/numberInput.cs");
+			_parameters = std::vector<float>(1, 0);
 			break;
 		case 1: // Perlin Noise
 			_type = InputParameterType::PerlinNoise;
 			_computeShader = ComputeShader("src/shaders/input1.cs");
+			_parameters = std::vector<float>(4, 0);
 			break;
 		case 2: // Voronoi
 			_type = InputParameterType::Voronoi;
