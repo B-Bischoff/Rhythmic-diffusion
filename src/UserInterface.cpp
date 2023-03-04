@@ -176,6 +176,44 @@ std::string UserInterface::getFieldNameFromIndex(const int& index) const
 
 void UserInterface::printAudioPlayer()
 {
+	const std::string downloadPath = "../../Downloads/wav/";
+	std::string files[] {"Le-Wanski-M.U.S.H..wav",
+	"花伦HuaLun-坏孩子的天空.wav",
+	"Dax-J-Reign-Of-Terror-_EDLX051_.wav",
+	"Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav",
+	"I-Hate-Models-Daydream-_ARTS020_.wav",
+	"I-Hate-Models-Shades-of-Night-_ARTS020_.wav",
+	"I-Hate-Models-Izanami-_ARTSBOX001_.wav",
+	"I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav",
+	"Mandragora-Codeine-_Original-Mix_.wav",
+	"BICEP-_-HAMMER-DAHLIA.wav",
+	"UICIDEBOY_-ANTARCTICA.wav",
+	"Sunshine.wav",
+	"UICIDEBOY_-CHARIOT-OF-FIRE.wav",
+	"UICIDEBOY_-I-NO-LONGER-FEAR-THE-RAZOR-GUARDING-MY-HEEL-I-_-II-_-III-_-IV.wav",
+	"UICIDEBOY_-O-Lord_-I-Have-My-Doubts.wav",
+	"Digital-Baptism.wav",
+	"Xaoc.wav",
+	"Panoramic-Feelings.wav",
+	"MilkyWay-_Explore_.wav",
+	"Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav",
+	"ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav",
+	"A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav",
+	"HI-LO-x-Space-92-Mercury-_Original-Mix_.wav",
+	"Jeff-Mills-Flying-Machines.wav",
+	"Le-Wanski-Clapotis.wav",
+	"Pawlowski-Demonic-Dimensions-_POSS001_.wav",
+	"Caravel-HÖR-Nov-29-2022.wav"};
+
+	// Play
+	static int fileToPlay = 0;
+	ImGui::Combo("fileList", &fileToPlay, "mush\0hualun\0daxj\0skone\0IHM-daydream\0IHM-shades\0IHM-izanami\0IHM-moon\0codeine\0dahlia\0antarctica\0sunshine\0chariotOfFire\0iNoLongFear\0OLord\0digitalBaptism\0xaoc\0panoramic\0milyWay\0thosewhoride\0alt236\0asys\0hilo\0jeffmills\0clapotis\0pawloski\0caravel\0");
+	if (ImGui::Button("play file"))
+	{
+		_audioPlayer.stopPlaying();
+		_audioPlayer.playWavFile(downloadPath + files[fileToPlay]);
+	}
+
 	// PAUSE / RESUME
 	ImGui::Text("audio file: %s", _audioPlayer.getFileName().c_str());
 	if (ImGui::Button("Pause/Resume"))
