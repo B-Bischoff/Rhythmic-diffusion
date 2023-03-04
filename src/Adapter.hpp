@@ -15,12 +15,12 @@ enum AudioTrigger { bass, snare, lead };
  * Those sub-properties depends on the reaction diffusion input parameter type
 */
 struct AdapterHook {
-	const AudioTrigger audioTrigger;
-	const int reactionPropertie;
-	const int propertieIndex;
-	const ActionMode actionMode;
-	const double simulationInitialValue;
-	const double value;
+	AudioTrigger audioTrigger;
+	int reactionPropertie;
+	int propertieIndex;
+	ActionMode actionMode;
+	double simulationInitialValue;
+	double value;
 
 	AdapterHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value)
 		: audioTrigger(audioTrigger), reactionPropertie(reactionPropertie), propertieIndex(propertieIndex), actionMode(actionMode), simulationInitialValue(simulationInitialValue), value(value) {}
@@ -48,4 +48,6 @@ public:
 
 	void update();
 	void createHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value);
+	void clearHooks();
+	std::vector<AdapterHook>& getHooks();
 };

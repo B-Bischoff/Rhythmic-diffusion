@@ -7,6 +7,8 @@ class InputParameter;
 class AudioPlayer;
 class AudioAnalyzer;
 class ReactionDiffusionSimulator;
+class Adapter;
+struct AdapterHook;
 
 class UserInterface {
 private:
@@ -16,17 +18,19 @@ private:
 
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
+	Adapter& _adapter;
 
 	void printOptionsFields(const int& i);
 	void printNumberTypeFields(const int& i, const float& min, const float& max);
 	void printPerlinNoiseFields(const int& i);
 
 	void printAudioPlayer();
+	void printAdapterHook();
 
 	std::string getFieldNameFromIndex(const int& index) const;
 
 public:
-	UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWidth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer);
+	UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWidth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adpter);
 
 	void createNewFrame();
 	void update();

@@ -1,7 +1,7 @@
 #include "UserInterface.hpp"
 
-UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
-	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
+UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter)
+	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	const char* glsl_version = "#version 100";
@@ -70,6 +70,7 @@ void UserInterface::update()
 	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
 
 	printAudioPlayer();
+	printAdapterHook();
 
 	ImGui::End();
 }
@@ -205,5 +206,71 @@ void UserInterface::printAudioPlayer()
 		for (int i = 0; i < ARRAY_SIZE; i++)
 			ARRAY_2[i] = outputFreq[i];
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
+	}
+}
+
+void UserInterface::printAdapterHook()
+{
+	// Clear hooks
+	if (ImGui::Button("clear hooks"))
+		_adapter.clearHooks();
+
+	static int audioTrigger = 0;
+	ImGui::Combo("audio trigger", &audioTrigger, "bass\0snare\0lead\0");
+
+	static int propertie = 0;
+	ImGui::SliderInt("propertie", &propertie, 0, 3);
+
+	static int propertieIndex = 0;
+	ImGui::SliderInt("propertie index", &propertieIndex, 0, 4);
+
+	static int actionMode = 0;
+	ImGui::Combo("action mode", &actionMode, "add\0subtract\0multiply\0divide\0");
+
+	static float initialValue = 0.0;
+	ImGui::SliderFloat("intial value", &initialValue, 0.0, 1.0);
+
+	static float value = 0.0;
+	ImGui::SliderFloat("value", &value, 0.0, 10.0);
+
+	if (ImGui::Button("add hook"))
+		_adapter.createHook((AudioTrigger)audioTrigger, propertie, propertieIndex, (ActionMode)actionMode, initialValue, value);
+
+	// Print existing hooks
+	std::vector<AdapterHook>& hooks = _adapter.getHooks();
+	for (int i = 0; i < (int)hooks.size(); i++)
+	{
+		ImGui::Text("hook: %d", i);
+		std::string str;
+
+		int hookAudioTrigger = hooks[i].audioTrigger;
+		str = "hook audio trigger " + std::to_string(i);
+		if (ImGui::Combo(str.c_str(), &hookAudioTrigger, "bass\0snare\0lead\0"))
+			hooks[i].audioTrigger = (AudioTrigger)hookAudioTrigger;
+
+		int hookPropertie = hooks[i].reactionPropertie;
+		str = "hook propertie " + std::to_string(i);
+		if (ImGui::SliderInt(str.c_str(), &hookPropertie, 0, 3))
+			hooks[i].reactionPropertie = hookPropertie;
+
+		int hookPropertieIndex = hooks[i].propertieIndex;
+		str = "hook propertie index " + std::to_string(i);
+		if (ImGui::SliderInt(str.c_str(), &hookPropertieIndex, 0, 4))
+			hooks[i].propertieIndex = hookPropertieIndex;
+
+		int hookActionMode = hooks[i].actionMode;
+		str = "hook action mode " + std::to_string(i);
+		if (ImGui::Combo(str.c_str(), &hookActionMode, "add\0subtract\0multiply\0divide\0"))
+			hooks[i].actionMode = (ActionMode)hookActionMode;
+
+		float hookInitialValue = hooks[i].simulationInitialValue;
+		str = "hook initial value " + std::to_string(i);
+		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, 0.0, 3.0))
+			hooks[i].simulationInitialValue = hookInitialValue;
+
+		float hookValue = hooks[i].value;
+		str = "hook value " + std::to_string(i);
+		if (ImGui::SliderFloat(str.c_str(), &hookValue, 0.0, 30.0))
+			hooks[i].value = hookValue;
 	}
 }
