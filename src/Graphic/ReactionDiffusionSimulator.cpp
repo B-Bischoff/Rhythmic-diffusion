@@ -70,8 +70,9 @@ void ReactionDiffusionSimulator::initShaders()
 {
 	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
 
-	_diffusionReactionShader = ComputeShader("src/shaders/computeShader.cs");
-	_inputShader = ComputeShader("src/shaders/inputCircle.cs");
+	_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/grayScott.comp");
+	//_inputShader = ComputeShader("src/shaders/inputCircle.cs");
+	_inputShader = ComputeShader("src/shaders/input/triangle.comp");
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
 	_diffusionRateAShader = InputParameter(&_parametersTexture);

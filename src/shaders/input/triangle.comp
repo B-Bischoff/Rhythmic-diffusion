@@ -1,0 +1,40 @@
+#version 460
+layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D texture;
+
+layout (location = 0) uniform float time;
+
+void main()
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	vec4 existingPixel = imageLoad(texture, pixel_coords);
+
+    // Define the coordinates of the triangle's vertices
+	vec2 v1 = vec2(1920/2, 1080/2 + 200);
+	vec2 v2 = vec2(1920/2 - 200, 1080/2 - 200);
+	vec2 v3 = vec2(1920/2 + 200, 1080/2 - 200);
+
+	// Calculate the center point of the triangle
+    vec2 center = (v1 + v2 + v3) / 3.0;
+
+    // Define the rotation angle in radians
+    float theta = time;
+
+    // Define the rotation matrix
+    mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
+
+    // Rotate each vertex around the center point
+    v1 = rotationMatrix * (v1 - center) + center;
+    v2 = rotationMatrix * (v2 - center) + center;
+    v3 = rotationMatrix * (v3 - center) + center;
+
+    vec2 p = vec2(gl_GlobalInvocationID.xy);
+    bool insideTriangle = (p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) < 0 &&
+                          (p.x - v2.x) * (v3.y - v2.y) - (p.y - v2.y) * (v3.x - v2.x) < 0 &&
+                          (p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) < 0;
+
+	if (insideTriangle)
+		existingPixel.b = 1;
+
+    imageStore(texture, pixel_coords, existingPixel);
+}

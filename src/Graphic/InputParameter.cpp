@@ -29,17 +29,17 @@ void InputParameter::changeType(const int& newTypeIndex)
 	{
 		case 0: // Number
 			_type = InputParameterType::Number;
-			_computeShader = ComputeShader("src/shaders/numberInput.cs");
+			_computeShader = ComputeShader("src/shaders/input/number.comp");
 			_parameters = std::vector<float>(1, 0);
 			break;
 		case 1: // Perlin Noise
 			_type = InputParameterType::PerlinNoise;
-			_computeShader = ComputeShader("src/shaders/input1.cs");
-			_parameters = std::vector<float>(4, 0);
+			_computeShader = ComputeShader("src/shaders/input/perlin.comp");
+			_parameters = std::vector<float>(6, 0);
 			break;
 		case 2: // Voronoi
 			_type = InputParameterType::Voronoi;
-			_computeShader = ComputeShader("src/shaders/voronoi.cs");
+			_computeShader = ComputeShader("src/shaders/input/voronoi.comp");
 			break;
 		default:
 			return;
@@ -76,15 +76,22 @@ void InputParameter::applyNumberSettings()
 
 void InputParameter::applyPerlinNoiseSettings()
 {
-	_computeShader.setFloat("t", glfwGetTime());
-	if (_parameters.size() >= 3)
-	{
-		double tmp = sin(glfwGetTime() * 0.02 + _parameters[0]) * 0.01;
-		_computeShader.setFloat("scale", tmp);
-		glm::vec2 scale = glm::vec2(_parameters[1], _parameters[2]);
-		_computeShader.setVec2("offset", scale);
-		_computeShader.setFloat("strengthFactor", _parameters[3]);
-	}
+	if (_parameters.size() < 6)
+		return;
+
+	float& scale = _parameters[0];
+	float offset[2] { _parameters[1], _parameters[2] };
+	float& strengthFactor = _parameters[3];
+	bool movingScale = _parameters[4] == 1.0;
+	float timeMultiplier = _parameters[5];
+
+	if (movingScale)
+		_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
+	else
+		_computeShader.setFloat("scale", scale);
+
+	_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
+	_computeShader.setFloat("strengthFactor", strengthFactor);
 }
 
 void InputParameter::applyVoronoiSettings()

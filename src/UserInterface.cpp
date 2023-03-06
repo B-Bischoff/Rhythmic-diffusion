@@ -118,33 +118,40 @@ void UserInterface::printPerlinNoiseFields(const int& i)
 	// Scale
 	std::string fieldName = std::string("scale " + std::to_string(i));
 	float scale = 0.001;
-	if (v.size())
-		scale = v[0];
-	if (ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 0.5))
+	scale = v[0];
+	if (ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 1.0))
 		valueChanged = true;
 
 	// Offset
 	fieldName = std::string("offset " + std::to_string(i));
 	float offset[2];
-	if (v.size() > 2)
-	{
-		offset[0] = v[1];
-		offset[1] = v[2];
-	}
+	offset[0] = v[1];
+	offset[1] = v[2];
 	if (ImGui::SliderFloat2(fieldName.c_str(), offset, -5000, 5000))
 		valueChanged = true;
 
 	// Strength factor
 	fieldName = std::string("Strength factor " + std::to_string(i));
 	float strengthFactor = 1.0f;
-	if (v.size() > 3)
-		strengthFactor = v[3];
-	if (ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 1.5))
+	strengthFactor = v[3];
+	if (ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 3.5))
+		valueChanged = true;
+
+	// Change scale depending on time
+	fieldName = std::string("Scale moving " + std::to_string(i));
+	bool movingScale = (bool)v[4];
+	if (ImGui::Checkbox(fieldName.c_str(), &movingScale))
+		valueChanged = true;
+
+	// Time multiplier
+	fieldName = std::string("Time multiplier" + std::to_string(i));
+	float timeMultiplier = v[5];
+	if (ImGui::SliderFloat(fieldName.c_str(), &timeMultiplier, 0.0, 1.0))
 		valueChanged = true;
 
 	if (valueChanged)
 	{
-		std::vector<float> values = { scale, offset[0], offset[1], strengthFactor };
+		std::vector<float> values = { scale, offset[0], offset[1], strengthFactor, (movingScale ? 1.0f : 0.0f), timeMultiplier};
 		_RDSimulator.setParameterValue(i, values);
 	}
 }
