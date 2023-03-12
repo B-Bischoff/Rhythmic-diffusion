@@ -31,6 +31,7 @@ ReactionDiffusionSimulator::ReactionDiffusionSimulator(GLFWwindow* window, const
 	_currentTexture = 0;
 	_colorA = glm::vec3(0.05);
 	_colorB = glm::vec3(0.9);
+	_parameterTexturesPreview = glm::vec4(0);
 
 	initPlane();
 	initTextures();
@@ -55,6 +56,7 @@ void ReactionDiffusionSimulator::initPlane()
 		0, 2, 1,
 		0, 3, 2
 	};
+
 	_plane = Object(positions, textureCoords, indices);
 }
 
@@ -68,14 +70,21 @@ void ReactionDiffusionSimulator::initTextures()
 
 void ReactionDiffusionSimulator::initShaders()
 {
-	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
+	try {
+		_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
+	}
+	catch (const std::invalid_argument& e)
+	{
+		std::cerr << "[ReactionDiffusionSimulator] cannot find plane shader" << std::endl;
+		exit (1);
+	}
 
 	_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/grayScott.comp");
 	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/mutipleNeighborhood.comp");
 	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/brusselator.comp");
 
-	_inputShader = ComputeShader("src/shaders/input/circle.comp");
-	//_inputShader = ComputeShader("src/shaders/input/triangle.comp");
+	_initialConditions = InitialConditions("src/shaders/input/circle.comp");
+
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
 	_diffusionRateAShader = InputParameter(&_parametersTexture);
@@ -104,10 +113,7 @@ void ReactionDiffusionSimulator::processInitialConditions(const bool initOnce)
 	if (!_init)
 		return;
 
-	_inputShader.useProgram();
-	_inputShader.setFloat("time", glfwGetTime());
-	glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	_initialConditions.execShader(_screenDimensions);
 
 	if (initOnce)
 		_init = false;
@@ -159,6 +165,8 @@ void ReactionDiffusionSimulator::printRendering()
 	_plane.render();
 }
 
+// --------------------- Global settings ---------------------
+
 void ReactionDiffusionSimulator::resetSimulation()
 {
 	glClearTexImage(_compute0Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
@@ -171,6 +179,20 @@ void ReactionDiffusionSimulator::setSimulationSpeed(const float& speed) { _simul
 void ReactionDiffusionSimulator::setSimulationColorA(const glm::vec3& color) { _colorA = color; }
 
 void ReactionDiffusionSimulator::setSimulationColorB(const glm::vec3& color) { _colorB = color; }
+
+// --------------------- Initial conditions methods ---------------------
+
+void ReactionDiffusionSimulator::setInitialConditionsShader(const std::string& shaderPath)
+{
+	_initialConditions.changeShader(shaderPath);
+}
+
+void ReactionDiffusionSimulator::setInitialConditionsRadius(const float& radius)
+{
+	_initialConditions.setRadius(radius);
+}
+
+// --------------------- Reaction diffusion parameters methods ---------------------
 
 void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& preview)
 {

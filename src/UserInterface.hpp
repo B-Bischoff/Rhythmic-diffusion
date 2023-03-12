@@ -26,6 +26,7 @@ private:
 
 	void printAudioPlayer();
 	void printAdapterHook();
+	void printInitialConditions();
 
 	std::string getFieldNameFromIndex(const int& index) const;
 

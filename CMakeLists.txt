@@ -53,10 +53,10 @@ set(ALL_LIBS
 
 add_executable(Rythmic-diffusion
 	src/main.cpp
-	src/Application.cpp
 	src/Application.hpp
-	src/UserInterface.cpp
+	src/Application.cpp
 	src/UserInterface.hpp
+	src/UserInterface.cpp
 	src/Adapter.hpp
 	src/Adapter.cpp
 
@@ -64,15 +64,17 @@ add_executable(Rythmic-diffusion
 	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.cpp
 	src/Graphic/ReactionDiffusion/InputParameter.hpp
 	src/Graphic/ReactionDiffusion/InputParameter.cpp
+	src/Graphic/ReactionDiffusion/InitialConditions.hpp
+	src/Graphic/ReactionDiffusion/InitialConditions.cpp
 
-	src/Graphic/OpenGlHelper/Shader.cpp
 	src/Graphic/OpenGlHelper/Shader.hpp
-	src/Graphic/OpenGlHelper/ComputeShader.cpp
+	src/Graphic/OpenGlHelper/Shader.cpp
 	src/Graphic/OpenGlHelper/ComputeShader.hpp
+	src/Graphic/OpenGlHelper/ComputeShader.cpp
 	src/Graphic/OpenGlHelper/Object.hpp
 	src/Graphic/OpenGlHelper/Object.cpp
-	src/Graphic/OpenGlHelper/Texture.cpp
 	src/Graphic/OpenGlHelper/Texture.hpp
+	src/Graphic/OpenGlHelper/Texture.cpp
 
 	src/Audio/AudioPlayer.hpp
 	src/Audio/AudioPlayer.cpp

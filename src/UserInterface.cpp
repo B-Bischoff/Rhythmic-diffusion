@@ -1,4 +1,5 @@
 #include "UserInterface.hpp"
+#include "vendor/imgui/imgui.h"
 
 UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter)
 	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter)
@@ -71,6 +72,7 @@ void UserInterface::update()
 
 	printAudioPlayer();
 	printAdapterHook();
+	printInitialConditions();
 
 	ImGui::End();
 }
@@ -316,7 +318,24 @@ void UserInterface::printAdapterHook()
 
 		float hookValue = hooks[i].value;
 		str = "hook value " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &hookValue, 0.0, 30.0))
+		if (ImGui::SliderFloat(str.c_str(), &hookValue, 0.0, 3.0))
 			hooks[i].value = hookValue;
 	}
+}
+
+void UserInterface::printInitialConditions()
+{
+	const std::string initialShaders[] {
+		"src/shaders/input/circle.comp",
+		"src/shaders/input/triangle.comp",
+	};
+
+	static int initialShaderId = 0;
+	ImGui::Combo("init shader list", &initialShaderId, "circle\0triangle\0");
+	if (ImGui::Button("set initial shader"))
+		_RDSimulator.setInitialConditionsShader(initialShaders[initialShaderId]);
+
+	static float initialRadius = 50;
+	if (ImGui::SliderFloat("init radius", &initialRadius, 0.00, 500.0))
+		_RDSimulator.setInitialConditionsRadius(initialRadius);
 }

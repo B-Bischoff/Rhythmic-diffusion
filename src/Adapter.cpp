@@ -145,6 +145,7 @@ void Adapter::applyHook(const AdapterHook& hook)
 	std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
 	newVector[hook.propertieIndex] = newValue;
 	_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
+	//_RDSimulator.setInitialConditionsRadius(newValue); // Manually plug adapter in rds init radius
 }
 
 const float& Adapter::getRatioReferenceFromAudioTrigger(const AudioTrigger& audioTrigger) const

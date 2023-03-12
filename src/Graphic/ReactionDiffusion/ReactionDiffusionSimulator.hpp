@@ -2,9 +2,10 @@
 
 #include "../../../inc/include.hpp"
 
+#include "./InputParameter.hpp"
+#include "./InitialConditions.hpp"
 #include "../OpenGlHelper/Shader.hpp"
 #include "../OpenGlHelper/ComputeShader.hpp"
-#include "./InputParameter.hpp"
 #include "../OpenGlHelper/Object.hpp"
 
 class ReactionDiffusionSimulator {
@@ -18,8 +19,10 @@ private:
 
 	Shader _shader;
 	ComputeShader _diffusionReactionShader;
-	ComputeShader _inputShader;
 	ComputeShader _colorOutputShader;
+
+	InitialConditions _initialConditions;
+	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
 
 	Object _plane;
 
@@ -31,7 +34,6 @@ private:
 	glm::vec3 _colorA, _colorB;
 	glm::vec4 _parameterTexturesPreview; // each component represents as a boolean if the input param should be printed
 
-	// METHODS
 	void initPlane();
 	void initTextures();
 	void initShaders();
@@ -44,18 +46,23 @@ private:
 	InputParameter& getParameterFromIndex(const int& index);
 
 public:
-	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
 
 	ReactionDiffusionSimulator(GLFWwindow* window, const glm::vec2& screenDimensions);
 
 	void processSimulation();
 	void printRendering();
 
+	// Global settings
 	void resetSimulation();
 	void setSimulationSpeed(const float& speed);
 	void setSimulationColorA(const glm::vec3& color);
 	void setSimulationColorB(const glm::vec3& color);
 
+	// Initial conditions methods
+	void setInitialConditionsShader(const std::string& shaderPath);
+	void setInitialConditionsRadius(const float& radius);
+
+	// Reaction diffusion parameters methods
 	void setParameterPreview(const int& parameterIndex, const bool& preview);
 	bool getParameterPreview(const int& parameterIndex) const;
 	void setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues);
