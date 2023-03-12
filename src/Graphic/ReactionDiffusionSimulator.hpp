@@ -50,7 +50,7 @@ public:
 	void processSimulation();
 	void printRendering();
 
-	void resetSimulation() const;
+	void resetSimulation();
 	void setSimulationSpeed(const float& speed);
 	void setSimulationColorA(const glm::vec3& color);
 	void setSimulationColorB(const glm::vec3& color);

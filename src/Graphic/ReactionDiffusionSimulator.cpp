@@ -71,8 +71,11 @@ void ReactionDiffusionSimulator::initShaders()
 	_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
 
 	_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/grayScott.comp");
-	//_inputShader = ComputeShader("src/shaders/inputCircle.cs");
-	_inputShader = ComputeShader("src/shaders/input/triangle.comp");
+	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/mutipleNeighborhood.comp");
+	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/brusselator.comp");
+
+	_inputShader = ComputeShader("src/shaders/input/circle.comp");
+	//_inputShader = ComputeShader("src/shaders/input/triangle.comp");
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
 	_diffusionRateAShader = InputParameter(&_parametersTexture);
@@ -151,10 +154,11 @@ void ReactionDiffusionSimulator::printRendering()
 	_plane.render();
 }
 
-void ReactionDiffusionSimulator::resetSimulation() const
+void ReactionDiffusionSimulator::resetSimulation()
 {
 	glClearTexImage(_compute0Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
 	glClearTexImage(_compute1Texture.getTextureID(), 0, GL_RGBA, GL_FLOAT, 0);
+	_init = true;
 }
 
 void ReactionDiffusionSimulator::setSimulationSpeed(const float& speed) { _simulationSpeed = speed; }

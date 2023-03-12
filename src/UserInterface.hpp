@@ -22,7 +22,7 @@ private:
 
 	void printOptionsFields(const int& i);
 	void printNumberTypeFields(const int& i, const float& min, const float& max);
-	void printPerlinNoiseFields(const int& i);
+	void printNoiseFields(const int& i);
 
 	void printAudioPlayer();
 	void printAdapterHook();

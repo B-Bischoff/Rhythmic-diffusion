@@ -138,9 +138,9 @@ void Adapter::applyHook(const AdapterHook& hook)
 	else if (hook.actionMode == subtract)
 		newValue = hook.simulationInitialValue - (ratio * hook.value);
 	else if (hook.actionMode == multiply)
-		newValue = hook.simulationInitialValue * (ratio * hook.value);
+		newValue = hook.simulationInitialValue * (1 + ratio);
 	else
-		newValue = hook.simulationInitialValue / (ratio * hook.value);
+		newValue = hook.simulationInitialValue * (1 - ratio);
 
 	std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
 	newVector[hook.propertieIndex] = newValue;

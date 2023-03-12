@@ -2,8 +2,10 @@
 layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D texture;
 
-layout (location = 0) uniform vec4 channels;
-layout (location = 1) uniform float t;
+layout (location = 0) uniform int channel;
+layout (location = 1) uniform float scale;
+layout (location = 2) uniform vec2 offset;
+layout (location = 3) uniform float strengthFactor;
 
 const mat2 myt = mat2(.12121212, .13131313, -.13131313, .12121212);
 const vec2 mys = vec2(1e4, 1e6);
@@ -40,19 +42,10 @@ void main()
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(texture, pixel_coords);
 
-	const float SCALE = 0.01;
-	float h = voronoi2d((pixel_coords + vec2(t*10, t*10)) * SCALE);
-	h = clamp(h, 0, 1);
+	float noiseOutput = voronoi2d((pixel_coords + offset) * scale);
+	noiseOutput = clamp(noiseOutput, 0, 1) * strengthFactor;
 
-
-	if (channels.x != 0.0)
-		existingPixel.x = h;
-	if (channels.y != 0.0)
-		existingPixel.y = h;
-	if (channels.z != 0.0)
-		existingPixel.z = h;
-	if (channels.w != 0.0)
-		existingPixel.w = h * 0.10;
+	existingPixel[channel] = noiseOutput;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

@@ -23,9 +23,21 @@ void main()
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(inTexture, pixel_coords);
 
-	existingPixel = mix(vec4(colorA, 1), vec4(colorB, 1), existingPixel.b);
-	//if (existingPixel.b > 0.2)
-	//	existingPixel = mix(existingPixel, vec4(1, 0, 0, 1), imageLoad(paramTexture, pixel_coords).w * 6.66);
+	//existingPixel = mix(vec4(colorA, 1), vec4(colorB, 1), existingPixel.b);
+
+	vec4 color0 = vec4(0, 0, 0, 1);
+	vec4 color1 = vec4(1, 0, 0, 1);
+	vec4 color2 = vec4(0, 0, 1, 1);
+
+	// Some interesting resuts:
+	//if (existingPixel.b < 0.1)
+	//	existingPixel = mix(color0, color1, existingPixel.b);
+	//else
+	//	existingPixel = mix(color1, color2, existingPixel.b);
+
+
+	if (existingPixel.b > 0.2)
+		existingPixel = mix(existingPixel, vec4(1, 0, 0, 1), imageLoad(paramTexture, pixel_coords).w * 6.66);
 
 	if (visualizeChannels != vec4(0))
 	{

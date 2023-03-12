@@ -89,14 +89,15 @@ void UserInterface::printOptionsFields(const int& i)
 		_RDSimulator.setParameterPreview(i, showParam);
 
 	// Print input fields according to input type
-	if (_RDSimulator.getParameterType(i) == InputParameterType::Number)
+	const InputParameterType& parameterType = _RDSimulator.getParameterType(i);
+	if (parameterType == Number)
 	{
 		float min = 0.0f;
-		float max = i <= 1 ? 1.0f : 0.15f;
+		float max = i <= 1 ? 1.0f : 0.1f;
 		printNumberTypeFields(i, min, max);
 	}
-	else if (_RDSimulator.getParameterType(i) == InputParameterType::PerlinNoise)
-		printPerlinNoiseFields(i);
+	else if (parameterType == PerlinNoise || parameterType == Voronoi)
+		printNoiseFields(i);
 }
 
 void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
@@ -106,11 +107,11 @@ void UserInterface::printNumberTypeFields(const int& i, const float& min, const 
 	if (inputValue.size())
 		value = inputValue[0];
 	std::string fieldName = std::string("value " + std::to_string(i));
-	if (ImGui::SliderFloat(fieldName.c_str(), &value, min, max))
+	if (ImGui::SliderFloat(fieldName.c_str(), &value, min, max,"%.5f"))
 		_RDSimulator.setParameterValue(i, std::vector<float>(1, value));
 }
 
-void UserInterface::printPerlinNoiseFields(const int& i)
+void UserInterface::printNoiseFields(const int& i)
 {
 	const std::vector<float>& v = _RDSimulator.getParameterValue(i);
 	bool valueChanged = false;

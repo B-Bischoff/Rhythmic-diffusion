@@ -40,9 +40,10 @@ void InputParameter::changeType(const int& newTypeIndex)
 		case 2: // Voronoi
 			_type = InputParameterType::Voronoi;
 			_computeShader = ComputeShader("src/shaders/input/voronoi.comp");
+			_parameters = std::vector<float>(6, 0);
 			break;
 		default:
-			return;
+			std::cerr << "[InputParameter]: invalid input type selected" << std::endl;
 	}
 }
 
@@ -96,9 +97,22 @@ void InputParameter::applyPerlinNoiseSettings()
 
 void InputParameter::applyVoronoiSettings()
 {
-	// Set voronoi scale
-	// offset
-	// moving with time
+	if (_parameters.size() < 6)
+		return;
+
+	float& scale = _parameters[0];
+	float offset[2] { _parameters[1], _parameters[2] };
+	float& strengthFactor = _parameters[3];
+	bool movingScale = _parameters[4] == 1.0;
+	float timeMultiplier = _parameters[5];
+
+	if (movingScale)
+		_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
+	else
+		_computeShader.setFloat("scale", scale);
+
+	_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
+	_computeShader.setFloat("strengthFactor", strengthFactor);
 }
 
 std::vector<float>& InputParameter::getVectorParameters()

@@ -50,11 +50,11 @@ void main()
 	vec4 existingPixel = imageLoad(texture, pixel_coords);
 
 	const float SCALE = 0.01;
-	float h = cnoise((pixel_coords + offset) * scale);
-	h = clamp(h, 0, 1);
-	h = h * strengthFactor;
+	float noiseOutput = cnoise((pixel_coords + offset) * scale);
+	noiseOutput = clamp(noiseOutput, 0, 1);
+	noiseOutput = noiseOutput * strengthFactor;
 
-	existingPixel[channel] = h;
+	existingPixel[channel] = noiseOutput;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }
