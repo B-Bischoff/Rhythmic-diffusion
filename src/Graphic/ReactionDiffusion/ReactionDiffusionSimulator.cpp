@@ -91,21 +91,26 @@ void ReactionDiffusionSimulator::processSimulation()
 	_compute0Texture.useTexture(_currentTexture); // 0 = input texture | 1 = output texture
 	_compute1Texture.useTexture(!_currentTexture);
 
-	// Initial conditions
-	if (_init)
-	{
-		_inputShader.useProgram();
-		_inputShader.setFloat("time", glfwGetTime());
-		glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
-		//_init = false;
-	}
+	processInitialConditions(false);
 
 	processDiffusionReaction();
-
 	applyPostProcessing();
 
-	_currentTexture = !_currentTexture;
+	_currentTexture = !_currentTexture; // Swap previous and current texture
+}
+
+void ReactionDiffusionSimulator::processInitialConditions(const bool initOnce)
+{
+	if (!_init)
+		return;
+
+	_inputShader.useProgram();
+	_inputShader.setFloat("time", glfwGetTime());
+	glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
+	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+	if (initOnce)
+		_init = false;
 }
 
 void ReactionDiffusionSimulator::processInputParameters()

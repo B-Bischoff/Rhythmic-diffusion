@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Graphic/ReactionDiffusionSimulator.hpp"
+#include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
 
 enum ActionMode { add, subtract, multiply, divide };

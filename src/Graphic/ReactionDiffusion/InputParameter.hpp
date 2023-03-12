@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../inc/include.hpp"
-#include "./ComputeShader.hpp"
-#include "./Texture.hpp"
+#include "../../../inc/include.hpp"
+#include "../OpenGlHelper/ComputeShader.hpp"
+#include "../OpenGlHelper/Texture.hpp"
 
 class ComputeShader;
 class Texture;

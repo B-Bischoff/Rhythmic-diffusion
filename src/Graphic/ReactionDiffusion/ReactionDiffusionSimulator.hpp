@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../inc/include.hpp"
+#include "../../../inc/include.hpp"
 
-#include "./Shader.hpp"
-#include "./ComputeShader.hpp"
+#include "../OpenGlHelper/Shader.hpp"
+#include "../OpenGlHelper/ComputeShader.hpp"
 #include "./InputParameter.hpp"
-#include "./Object.hpp"
+#include "../OpenGlHelper/Object.hpp"
 
 class ReactionDiffusionSimulator {
 private:
@@ -36,6 +36,7 @@ private:
 	void initTextures();
 	void initShaders();
 
+	void processInitialConditions(const bool initOnce);
 	void processInputParameters();
 	void processDiffusionReaction();
 	void applyPostProcessing();
@@ -61,9 +62,4 @@ public:
 	const std::vector<float>& getParameterValue(const int& parameterIndex);
 	void setParameterType(const int& parameterIndex, const InputParameterType& type);
 	InputParameterType getParameterType(const int& parameterIndex);
-
-	// Set parameter preview (parameter index, value -> bool)
-	// Set parameter value (parameter index, vector containing values)
-	// Set paramter type (parameter index, new type)
-	// Get parameter type (parameter index)
 };

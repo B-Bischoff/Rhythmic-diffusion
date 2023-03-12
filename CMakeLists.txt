@@ -60,18 +60,19 @@ add_executable(Rythmic-diffusion
 	src/Adapter.hpp
 	src/Adapter.cpp
 
-	src/Graphic/ReactionDiffusionSimulator.hpp
-	src/Graphic/ReactionDiffusionSimulator.cpp
-	src/Graphic/Shader.cpp
-	src/Graphic/Shader.hpp
-	src/Graphic/ComputeShader.cpp
-	src/Graphic/ComputeShader.hpp
-	src/Graphic/Object.hpp
-	src/Graphic/Object.cpp
-	src/Graphic/Texture.cpp
-	src/Graphic/Texture.hpp
-	src/Graphic/InputParameter.cpp
-	src/Graphic/InputParameter.hpp
+	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp
+	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.cpp
+	src/Graphic/ReactionDiffusion/InputParameter.hpp
+	src/Graphic/ReactionDiffusion/InputParameter.cpp
+
+	src/Graphic/OpenGlHelper/Shader.cpp
+	src/Graphic/OpenGlHelper/Shader.hpp
+	src/Graphic/OpenGlHelper/ComputeShader.cpp
+	src/Graphic/OpenGlHelper/ComputeShader.hpp
+	src/Graphic/OpenGlHelper/Object.hpp
+	src/Graphic/OpenGlHelper/Object.cpp
+	src/Graphic/OpenGlHelper/Texture.cpp
+	src/Graphic/OpenGlHelper/Texture.hpp
 
 	src/Audio/AudioPlayer.hpp
 	src/Audio/AudioPlayer.cpp
@@ -79,6 +80,8 @@ add_executable(Rythmic-diffusion
 	src/Audio/AudioAnalyzer.cpp
 	src/Audio/SoundGroup.hpp
 	src/Audio/SoundGroup.cpp
+
+	# ------------ EXTERNAL LIBS ------------
 
 	# STB IMAGE
 	src/vendor/stb/stb_image.h

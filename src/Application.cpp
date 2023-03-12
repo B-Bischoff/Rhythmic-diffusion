@@ -112,16 +112,16 @@ void Application::loop()
 
 		printFps(deltaTime, lastFrame, fCounter);
 
-		if (firstFrame)
+		if (firstFrame) // To remove -> audioPlayer should not instantly play
 		{
 			firstFrame = false;
 			audioPlayer.togglePause();
 		}
 
-		adapter.update();
-
 		ui.createNewFrame();
 		ui.update();
+
+		adapter.update();
 
 		RDSimulator.processSimulation();
 		RDSimulator.printRendering();

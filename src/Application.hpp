@@ -4,7 +4,7 @@
 #include "./UserInterface.hpp"
 #include "./Audio/AudioPlayer.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
-#include "./Graphic/ReactionDiffusionSimulator.hpp"
+#include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"
 #include "./Adapter.hpp"
 
 class Application {

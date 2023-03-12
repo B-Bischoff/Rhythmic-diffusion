@@ -1,24 +1,24 @@
 #pragma once
 
-#include "../../inc/include.hpp"
+#include "../../../inc/include.hpp"
 
-class ComputeShader {
+class Shader {
 private:
 
 	GLuint _programID;
-	GLuint _shaderID;
+	GLuint _vertexShaderID, _fragmentShaderID;
 
-	std::string readShaderContent(const std::string& file);
-	void CompileShader(const std::string& shaderContent);
+	std::string readShaderContent(std::string file);
+	void CompileShader(std::string shaderContent, GLuint& shaderID);
 	void LinkProgram();
 
 public:
-	ComputeShader();
-	ComputeShader(const std::string& pathFile);
-	~ComputeShader();
+	Shader();
+	Shader(std::string vertexPathFile, std::string fragmentPathFile);
+	~Shader();
 
 	GLuint getProgramID() const;
-	void useProgram() const;
+	void useProgram();
 
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
