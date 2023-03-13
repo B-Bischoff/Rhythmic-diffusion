@@ -34,4 +34,4 @@ void InitialConditions::execShader(const glm::vec2& screenDimensions)
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }
 
-void InitialConditions::setRadius(const float& radius) { if (_radius > 0) _radius = radius; }
+void InitialConditions::setRadius(const float& radius) { _radius = radius; }

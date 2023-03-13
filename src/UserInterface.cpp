@@ -213,11 +213,12 @@ void UserInterface::printAudioPlayer()
 	"Jeff-Mills-Flying-Machines.wav",
 	"Le-Wanski-Clapotis.wav",
 	"Pawlowski-Demonic-Dimensions-_POSS001_.wav",
-	"Caravel-HÖR-Nov-29-2022.wav"};
+	"Caravel-HÖR-Nov-29-2022.wav",
+	"Jacques-Brel-La-valse-à-mille-temps.wav"};
 
 	// Play
 	static int fileToPlay = 0;
-	ImGui::Combo("fileList", &fileToPlay, "mush\0hualun\0daxj\0skone\0IHM-daydream\0IHM-shades\0IHM-izanami\0IHM-moon\0codeine\0dahlia\0antarctica\0sunshine\0chariotOfFire\0iNoLongFear\0OLord\0digitalBaptism\0xaoc\0panoramic\0milyWay\0thosewhoride\0alt236\0asys\0hilo\0jeffmills\0clapotis\0pawloski\0caravel\0");
+	ImGui::Combo("fileList", &fileToPlay, "mush\0hualun\0daxj\0skone\0IHM-daydream\0IHM-shades\0IHM-izanami\0IHM-moon\0codeine\0dahlia\0antarctica\0sunshine\0chariotOfFire\0iNoLongFear\0OLord\0digitalBaptism\0xaoc\0panoramic\0milyWay\0thosewhoride\0alt236\0asys\0hilo\0jeffmills\0clapotis\0pawloski\0caravel\0jacques\0");
 	if (ImGui::Button("play file"))
 	{
 		_audioPlayer.stopPlaying();
@@ -328,10 +329,11 @@ void UserInterface::printInitialConditions()
 	const std::string initialShaders[] {
 		"src/shaders/input/circle.comp",
 		"src/shaders/input/triangle.comp",
+		"src/shaders/input/hexagon.comp",
 	};
 
 	static int initialShaderId = 0;
-	ImGui::Combo("init shader list", &initialShaderId, "circle\0triangle\0");
+	ImGui::Combo("init shader list", &initialShaderId, "circle\0triangle\0hexagon\0");
 	if (ImGui::Button("set initial shader"))
 		_RDSimulator.setInitialConditionsShader(initialShaders[initialShaderId]);
 

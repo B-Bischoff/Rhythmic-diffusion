@@ -5,24 +5,21 @@ layout(rgba32f, binding = 0) uniform image2D texture;
 layout (location = 0) uniform float radius;
 layout (location = 1) uniform float time;
 
-void main()
+bool insideTriangle(float angle, float hexagonRadius)
 {
-	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	vec4 existingPixel = imageLoad(texture, pixel_coords);
-
 	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(1920/2, 1080/2 + radius); // Top vertex
+	vec2 v1 = vec2(1920/2, 1080/2); // Top vertex
 
-	float x = cos(120.0) * radius;
-	float y = sin(120.0) * radius;
+	float x = cos(radians(60.0)) * hexagonRadius;
+	float y = sin(radians(60.0)) * hexagonRadius;
 	vec2 v2 = vec2(1920/2 - x, 1080/2 - y); // Left vertex
 	vec2 v3 = vec2(1920/2 + x, 1080/2 - y); // Right vertex
 
 	// Calculate the center point of the triangle
-	vec2 center = (v1 + v2 + v3) / 3.0;
+	vec2 center = v1;
 
 	// Define the rotation angle in radians
-	float theta = time;
+	float theta = radians(angle);
 
 	// Define the rotation matrix
 	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
@@ -33,11 +30,38 @@ void main()
 	v3 = rotationMatrix * (v3 - center) + center;
 
 	vec2 p = vec2(gl_GlobalInvocationID.xy);
-	bool insideTriangle = (p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) < 0 &&
+	return (p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) < 0 &&
 						(p.x - v2.x) * (v3.y - v2.y) - (p.y - v2.y) * (v3.x - v2.x) < 0 &&
 						(p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) < 0;
+}
 
-	if (insideTriangle)
+bool insideHexagon(float borderSize)
+{
+	bool insideLargerHexagon = false;
+	for (int i = 0; i < 360; i += 60)
+	{
+		if (insideTriangle(float(i), radius))
+		{
+			insideLargerHexagon = true;
+			if (borderSize == 0)
+				return true;
+			break;
+		}
+	}
+	for (int i = 0; i < 360; i += 60)
+	{
+		if (insideTriangle(float(i), radius - borderSize))
+			return false;
+	}
+	return insideLargerHexagon;
+}
+
+void main()
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	vec4 existingPixel = imageLoad(texture, pixel_coords);
+
+	if (insideHexagon(10))
 		existingPixel.b = 1;
 
 	imageStore(texture, pixel_coords, existingPixel);
