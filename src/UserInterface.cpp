@@ -340,4 +340,12 @@ void UserInterface::printInitialConditions()
 	static float initialRadius = 50;
 	if (ImGui::SliderFloat("init radius", &initialRadius, 0.00, 500.0))
 		_RDSimulator.setInitialConditionsRadius(initialRadius);
+
+	static float initialBorderSize = 50;
+	if (ImGui::SliderFloat("init border", &initialBorderSize, 0.00, 500.0))
+		_RDSimulator.setInitialConditionsBorder(initialBorderSize);
+
+	static float initialRotationAngle = 50;
+	if (ImGui::SliderFloat("init angle", &initialRotationAngle, 0.00, 360.0))
+		_RDSimulator.setInitialConditionsRotationAngle(initialRotationAngle);
 }

@@ -61,6 +61,8 @@ public:
 	// Initial conditions methods
 	void setInitialConditionsShader(const std::string& shaderPath);
 	void setInitialConditionsRadius(const float& radius);
+	void setInitialConditionsBorder(const float& bordersSize);
+	void setInitialConditionsRotationAngle(const float& rotationAngle);
 
 	// Reaction diffusion parameters methods
 	void setParameterPreview(const int& parameterIndex, const bool& preview);

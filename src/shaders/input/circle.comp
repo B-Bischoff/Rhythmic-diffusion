@@ -3,20 +3,39 @@ layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D texture;
 
 layout (location = 0) uniform float radius;
+layout (location = 1) uniform float border;
+layout (location = 2) uniform float angle;
+layout (location = 3) uniform float time;
 
-void main()
+bool insideCircle(float circleRadius)
 {
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	vec4 existingPixel = imageLoad(texture, pixel_coords);
-
 	ivec2 center = ivec2(1920 / 2, 1080 / 2);
 	int x = center.x - pixel_coords.x;
 	x = x * x;
 	int y = center.y - pixel_coords.y;
 	y = y * y;
 
-	if (x + y < radius * radius)
-		existingPixel.b = 1;
+	return (x + y < circleRadius * circleRadius);
+}
+
+bool insideCircleBorder()
+{
+	bool insideLargerCircle = insideCircle(radius);
+	if (insideLargerCircle && border == 0)
+		return insideLargerCircle;
+	if (insideCircle(radius - border))
+		return false;
+	return insideLargerCircle;
+}
+
+void main()
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	vec4 existingPixel = imageLoad(texture, pixel_coords);
+
+	if (insideCircleBorder())
+		existingPixel.b = 1.0;
 
 	imageStore(texture, pixel_coords, existingPixel);
 }

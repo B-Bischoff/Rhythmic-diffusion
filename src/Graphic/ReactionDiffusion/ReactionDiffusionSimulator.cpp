@@ -192,6 +192,16 @@ void ReactionDiffusionSimulator::setInitialConditionsRadius(const float& radius)
 	_initialConditions.setRadius(radius);
 }
 
+void ReactionDiffusionSimulator::setInitialConditionsBorder(const float& bordersSize)
+{
+	_initialConditions.setBordersSize(bordersSize);
+}
+
+void ReactionDiffusionSimulator::setInitialConditionsRotationAngle(const float& rotationAngle)
+{
+	_initialConditions.setRotationAngle(rotationAngle);
+}
+
 // --------------------- Reaction diffusion parameters methods ---------------------
 
 void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& preview)

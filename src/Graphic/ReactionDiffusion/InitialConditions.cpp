@@ -29,9 +29,13 @@ void InitialConditions::execShader(const glm::vec2& screenDimensions)
 
 	// Apply shader parameters
 	_computeShader.setFloat("radius", _radius);
+	_computeShader.setFloat("border", _bordersSize);
+	_computeShader.setFloat("angle", _rotationAngle);
 
 	glDispatchCompute(ceil(screenDimensions.x/8),ceil(screenDimensions.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }
 
 void InitialConditions::setRadius(const float& radius) { _radius = radius; }
+void InitialConditions::setBordersSize(const float& borderSize) { _bordersSize = borderSize; }
+void InitialConditions::setRotationAngle(const float& rotationAngle) { _rotationAngle = rotationAngle; }
