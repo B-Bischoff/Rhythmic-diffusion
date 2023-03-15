@@ -1,0 +1,21 @@
+bool insideCircle(float circleRadius)
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 center = ivec2(1920 / 2, 1080 / 2);
+	int x = center.x - pixel_coords.x;
+	x = x * x;
+	int y = center.y - pixel_coords.y;
+	y = y * y;
+
+	return (x + y < circleRadius * circleRadius);
+}
+
+bool insideCircleBorder(int currentShape)
+{
+	bool insideLargerCircle = insideCircle(radius[currentShape]);
+	if (insideLargerCircle && border[currentShape] == 0)
+		return insideLargerCircle;
+	if (insideCircle(radius[currentShape] - border[currentShape]))
+		return false;
+	return insideLargerCircle;
+}

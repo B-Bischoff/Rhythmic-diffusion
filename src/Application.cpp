@@ -41,6 +41,7 @@ Application::Application(const int& width, const int& height)
 		exit(1);
 	}
 
+
 	loop();
 }
 

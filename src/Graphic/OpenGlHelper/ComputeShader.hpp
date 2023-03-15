@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../inc/include.hpp"
+#include <iomanip>
 
 class ComputeShader {
 private:
@@ -9,12 +10,15 @@ private:
 	GLuint _shaderID;
 
 	std::string readShaderContent(const std::string& file);
-	void CompileShader(const std::string& shaderContent);
+	void CompileShader(const std::string& shaderContent, const bool printShaderOnError);
 	void LinkProgram();
+
+	void printShader(const std::string& shaderContent) const;
 
 public:
 	ComputeShader();
-	ComputeShader(const std::string& pathFile);
+	ComputeShader(const std::string& pathFile, const bool printShaderOnError = true);
+	ComputeShader(const std::vector<std::string>& pathFiles, const bool printShaderOnError = true);
 	~ComputeShader();
 
 	GLuint getProgramID() const;

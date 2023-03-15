@@ -59,10 +59,10 @@ public:
 	void setSimulationColorB(const glm::vec3& color);
 
 	// Initial conditions methods
-	void setInitialConditionsShader(const std::string& shaderPath);
-	void setInitialConditionsRadius(const float& radius);
-	void setInitialConditionsBorder(const float& bordersSize);
-	void setInitialConditionsRotationAngle(const float& rotationAngle);
+	void addInitialConditionsShape(InitialConditionsShape shape);
+	std::vector<InitialConditionsShape>& getInitialConditionsShapes();
+	void clearInitialConditionsShapes();
+	void removeInitialConditionsShape(const int& index);
 
 	// Reaction diffusion parameters methods
 	void setParameterPreview(const int& parameterIndex, const bool& preview);

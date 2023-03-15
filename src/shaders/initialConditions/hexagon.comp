@@ -1,12 +1,3 @@
-#version 460
-layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
-layout(rgba32f, binding = 0) uniform image2D texture;
-
-layout (location = 0) uniform float radius;
-layout (location = 1) uniform float border;
-layout (location = 2) uniform float angle;
-layout (location = 3) uniform float time;
-
 bool insideTriangle(float triangleAngle, float hexagonRadius)
 {
 	// Define the coordinates of the triangle's vertices
@@ -57,15 +48,4 @@ bool insideHexagon()
 			return false;
 	}
 	return insideLargerHexagon;
-}
-
-void main()
-{
-	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	vec4 existingPixel = imageLoad(texture, pixel_coords);
-
-	if (insideHexagon())
-		existingPixel.b = 1;
-
-	imageStore(texture, pixel_coords, existingPixel);
 }

@@ -10,11 +10,20 @@ ComputeShader::~ComputeShader()
 	glDeleteShader(this->_programID);
 }
 
-ComputeShader::ComputeShader(const std::string& pathFile)
+ComputeShader::ComputeShader(const std::string& pathFile, const bool printShaderOnError)
 {
-	std::cout << "Compiling: " << pathFile << " ..." << std::endl;
 	std::string shaderContent = readShaderContent(pathFile);
-	CompileShader(shaderContent);
+	CompileShader(shaderContent, printShaderOnError);
+	LinkProgram();
+}
+
+ComputeShader::ComputeShader(const std::vector<std::string>& pathFiles, const bool printShaderOnError)
+{
+	std::string shaderContent;
+	for (int i = 0; i < (int)pathFiles.size(); i++)
+		shaderContent += readShaderContent(pathFiles[i]);
+
+	CompileShader(shaderContent, printShaderOnError);
 	LinkProgram();
 }
 
@@ -37,7 +46,7 @@ std::string ComputeShader::readShaderContent(const std::string& file)
 	return fileContent;
 }
 
-void ComputeShader::CompileShader(const std::string& shaderContent)
+void ComputeShader::CompileShader(const std::string& shaderContent, const bool printShaderOnError)
 {
 	const char* shaderSourcePointer = shaderContent.c_str();
 
@@ -53,6 +62,10 @@ void ComputeShader::CompileShader(const std::string& shaderContent)
 	{
 		std::vector<char> VertexComputeShaderErrorMessage(infoLogLength + 1);
 		glGetShaderInfoLog(_shaderID, infoLogLength, NULL, &VertexComputeShaderErrorMessage[0]);
+
+		if (printShaderOnError)
+			printShader(shaderContent);
+
 		std::cerr << &VertexComputeShaderErrorMessage[0] << std::endl;
 		exit (1);
 	}
@@ -78,6 +91,20 @@ void ComputeShader::LinkProgram()
 
 	glDetachShader(_programID, _shaderID);
 	glDeleteShader(_shaderID);
+}
+
+void ComputeShader::printShader(const std::string& shaderContent) const
+{
+	std::istringstream stream(shaderContent);
+	std::string line;
+	int lineNumber = 1;
+	while (std::getline(stream, line))
+	{
+		std::cout << std::setw(4) << std::left << lineNumber++ << "| ";
+		std::cout << line << std::endl;
+	}
+
+	std::cout << std::endl << std::endl;
 }
 
 GLuint ComputeShader::getProgramID() const

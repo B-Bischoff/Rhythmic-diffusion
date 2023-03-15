@@ -12,11 +12,11 @@
 
 #include "Application.hpp"
 
+
+#include "Graphic/OpenGlHelper/ComputeShader.hpp"
 int main(void)
 {
 	Application application(1920, 1080);
-
-	//stk_main(argc, argv);
 
 	return 0;
 }

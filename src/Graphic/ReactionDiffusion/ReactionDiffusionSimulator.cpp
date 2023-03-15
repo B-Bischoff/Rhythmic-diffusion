@@ -83,7 +83,7 @@ void ReactionDiffusionSimulator::initShaders()
 	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/mutipleNeighborhood.comp");
 	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/brusselator.comp");
 
-	_initialConditions = InitialConditions("src/shaders/input/circle.comp");
+	_initialConditions = InitialConditions("src/shaders/initialConditions/circle.comp");
 
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
@@ -182,24 +182,24 @@ void ReactionDiffusionSimulator::setSimulationColorB(const glm::vec3& color) { _
 
 // --------------------- Initial conditions methods ---------------------
 
-void ReactionDiffusionSimulator::setInitialConditionsShader(const std::string& shaderPath)
+void ReactionDiffusionSimulator::addInitialConditionsShape(InitialConditionsShape shape)
 {
-	_initialConditions.changeShader(shaderPath);
+	_initialConditions.addShape(shape);
 }
 
-void ReactionDiffusionSimulator::setInitialConditionsRadius(const float& radius)
+std::vector<InitialConditionsShape>& ReactionDiffusionSimulator::getInitialConditionsShapes()
 {
-	_initialConditions.setRadius(radius);
+	return _initialConditions.getShapes();
 }
 
-void ReactionDiffusionSimulator::setInitialConditionsBorder(const float& bordersSize)
+void ReactionDiffusionSimulator::clearInitialConditionsShapes()
 {
-	_initialConditions.setBordersSize(bordersSize);
+	_initialConditions.clearShapes();
 }
 
-void ReactionDiffusionSimulator::setInitialConditionsRotationAngle(const float& rotationAngle)
+void ReactionDiffusionSimulator::removeInitialConditionsShape(const int& index)
 {
-	_initialConditions.setRotationAngle(rotationAngle);
+	_initialConditions.removeShape(index);
 }
 
 // --------------------- Reaction diffusion parameters methods ---------------------

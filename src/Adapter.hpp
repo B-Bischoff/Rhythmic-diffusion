@@ -49,5 +49,6 @@ public:
 	void update();
 	void createHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value);
 	void clearHooks();
+	void removeHook(const int& index);
 	std::vector<AdapterHook>& getHooks();
 };

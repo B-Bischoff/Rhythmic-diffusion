@@ -4,11 +4,13 @@
 #include "../OpenGlHelper/ComputeShader.hpp"
 #include "../OpenGlHelper/Texture.hpp"
 
-enum Shape { Circle, Triangle, Hexagon };
+#define MAX_SHAPE 16 // The same value should be present in glslSpec.comp
+
+enum Shape { None = -1, Circle, Triangle, Hexagon };
 
 struct InitialConditionsShape {
-	float radius, borderSize, rotationAngle;
 	Shape shape;
+	float radius, borderSize, rotationAngle;
 
 	InitialConditionsShape(const Shape shape, const float radius, const float borderSize, const float rotationAngle)
 		: shape(shape), radius(radius), borderSize(borderSize), rotationAngle(rotationAngle) { }
@@ -19,8 +21,8 @@ private:
 	ComputeShader _computeShader;
 	std::vector<ComputeShader> _shaders;
 
-	float _radius, _bordersSize, _rotationAngle;
 	std::vector<InitialConditionsShape> _shapes;
+
 
 public:
 	InitialConditions();
@@ -30,7 +32,8 @@ public:
 
 	void execShader(const glm::vec2& screenDimensions);
 
-	void setRadius(const float& radius);
-	void setBordersSize(const float& radius);
-	void setRotationAngle(const float& rotationAngle);
+	void addShape(InitialConditionsShape shape);
+	std::vector<InitialConditionsShape>& getShapes();
+	void clearShapes();
+	void removeShape(const int& index);
 };

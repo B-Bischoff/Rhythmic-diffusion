@@ -158,6 +158,21 @@ const float& Adapter::getRatioReferenceFromAudioTrigger(const AudioTrigger& audi
 		return _leadRatio;
 }
 
+void Adapter::removeHook(const int& index)
+{
+	std::cout << index << std::endl;
+	int i = 0;
+	for (std::vector<AdapterHook>::iterator it = _hooks.begin(); it != _hooks.end(); it++)
+	{
+		if (i == index)
+		{
+			_hooks.erase(it);
+			return;
+		}
+		i++;
+	}
+}
+
 void Adapter::clearHooks()
 {
 	_hooks.clear();

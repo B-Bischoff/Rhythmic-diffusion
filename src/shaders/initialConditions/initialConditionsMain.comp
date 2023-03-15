@@ -1,0 +1,30 @@
+void main()
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	vec4 existingPixel = imageLoad(texture, pixel_coords);
+
+	int currentShape = 0;
+
+	while (currentShape < MAX_SHAPE && shapes[currentShape] != -1)
+	{
+		if (shapes[currentShape] == 0 && insideCircleBorder(currentShape))
+		{
+			existingPixel.b = 1.0;
+			break;
+		}
+
+		if (shapes[currentShape] == 1 && insideTriangleBorder(currentShape))
+		{
+			existingPixel.b = 1.0;
+			break;
+		}
+
+
+		//if (insideHexagon())
+		//	existingPixel.b = 1.0;
+
+		currentShape++;
+	}
+
+	imageStore(texture, pixel_coords, existingPixel);
+}
