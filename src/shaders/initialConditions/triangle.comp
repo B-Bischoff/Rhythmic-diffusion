@@ -1,20 +1,19 @@
-bool insideTriangle(int currentShape, float triangleRadius)
+bool insidePlainTriangle(int currentShape, float triangleRadius)
 {
+	const vec2 imageSize = imageSize(texture);
+
 	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(1920/2, 1080/2 + triangleRadius); // Top vertex
+	vec2 v1 = vec2(imageSize.x / 2.0, imageSize.y / 2.0 + triangleRadius); // Top vertex
 
 	float x = cos(radians(30.0)) * triangleRadius;
 	float y = sin(radians(30.0)) * triangleRadius;
-	vec2 v2 = vec2(1920.0/2.0 - x, 1080.0/2.0 - y); // Left vertex
-	vec2 v3 = vec2(1920.0/2.0 + x, 1080.0/2.0 - y); // Right vertex
+	vec2 v2 = vec2(imageSize.x / 2.0 - x, imageSize.y / 2.0 - y); // Left vertex
+	vec2 v3 = vec2(imageSize.x / 2.0 + x, imageSize.y / 2.0 - y); // Right vertex
 
 	// Calculate the center point of the triangle
 	vec2 center = (v1 + v2 + v3) / 3.0;
 
-	// Define the rotation angle in radians
 	float theta = radians(angle[currentShape]);
-
-	// Define the rotation matrix
 	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
 
 	// Rotate each vertex around the center point
@@ -24,16 +23,20 @@ bool insideTriangle(int currentShape, float triangleRadius)
 
 	vec2 p = vec2(gl_GlobalInvocationID.xy);
 	return (p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) < 0 &&
-						(p.x - v2.x) * (v3.y - v2.y) - (p.y - v2.y) * (v3.x - v2.x) < 0 &&
-						(p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) < 0;
+		(p.x - v2.x) * (v3.y - v2.y) - (p.y - v2.y) * (v3.x - v2.x) < 0 &&
+		(p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) < 0;
 }
 
-bool insideTriangleBorder(int currentShape)
+bool insideTriangle(int currentShape)
 {
-	bool insideLargerTriangle = insideTriangle(currentShape, radius[currentShape]);
+	bool insideLargerTriangle = insidePlainTriangle(currentShape, radius[currentShape]);
+
+	// If border is equal to 0, consider the triangle as plain
 	if (insideLargerTriangle && border[currentShape] == 0)
 		return insideLargerTriangle;
-	if (insideTriangle(currentShape, radius[currentShape] - border[currentShape]))
+
+	if (insidePlainTriangle(currentShape, radius[currentShape] - border[currentShape]))
 		return false;
+
 	return insideLargerTriangle;
 }

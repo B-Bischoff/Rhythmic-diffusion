@@ -1,21 +1,25 @@
-bool insideTriangle(float triangleAngle, float hexagonRadius)
+/*
+* This functions is not similar to the "insidePlainTriangle" function located in triangle.comp
+* In this one, the center of the triangle is located on the top vertex and not in the middle of the 3 vertices,
+* Allowing it to rotate in a non-symetrical way, thus creating an hexagon with 6 triangles, each rotate with an offset of 60 degrees.
+*/
+bool insideTriangle(int currentShape, float triangleAngle, float hexagonRadius)
 {
-	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(1920/2, 1080/2); // Top vertex
+	const vec2 imageSize = imageSize(texture);
 
-	// Things go crazy when you put anything but 30
+	// Define the coordinates of the triangle's vertices
+	vec2 v1 = vec2(imageSize.x / 2.0, imageSize.y / 2.0); // Top vertex
+
+	// Things go crazy when you put anything but 60
 	float x = cos(radians(60.0)) * hexagonRadius;
 	float y = sin(radians(60.0)) * hexagonRadius;
-	vec2 v2 = vec2(1920.0/2.0 - x, 1080.0/2.0 - y); // Left vertex
-	vec2 v3 = vec2(1920.0/2.0 + x, 1080.0/2.0 - y); // Right vertex
+	vec2 v2 = vec2(imageSize.x / 2.0 - x, imageSize.y / 2.0 - y); // Left vertex
+	vec2 v3 = vec2(imageSize.x / 2.0 + x, imageSize.y / 2.0 - y); // Right vertex
 
 	// The triangle's pivot point is its top vertex
 	vec2 center = v1;
 
-	// Define the rotation angle in radians
-	float theta = radians(triangleAngle + angle);
-
-	// Define the rotation matrix
+	float theta = radians(triangleAngle + angle[currentShape]);
 	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
 
 	// Rotate each vertex around the center point
@@ -29,22 +33,23 @@ bool insideTriangle(float triangleAngle, float hexagonRadius)
 		(p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) <    0.1;
 }
 
-bool insideHexagon()
+bool insideHexagon(int currentShape)
 {
 	bool insideLargerHexagon = false;
 	for (int i = 0; i <= 360; i += 60)
 	{
-		if (insideTriangle(float(i), radius))
+		if (insideTriangle(currentShape, float(i), radius[currentShape]))
 		{
 			insideLargerHexagon = true;
-			if (border == 0)
+			// If border is equal to 0, consider the hexagon as plain
+			if (border[currentShape] == 0)
 				return true;
 			break;
 		}
 	}
 	for (int i = 0; i < 360; i += 60)
 	{
-		if (insideTriangle(float(i), radius - border))
+		if (insideTriangle(currentShape, float(i), radius[currentShape] - border[currentShape]))
 			return false;
 	}
 	return insideLargerHexagon;

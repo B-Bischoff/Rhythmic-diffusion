@@ -12,7 +12,7 @@ InitialConditions::InitialConditions(const std::string& computeShaderPath)
 	std::vector<std::string> files {
 		"src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
 		"src/shaders/initialConditions/triangle.comp",
-		//"src/shaders/initialConditions/hexagon.comp",
+		"src/shaders/initialConditions/hexagon.comp",
 		"src/shaders/initialConditions/circle.comp",
 		"src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
 	};
