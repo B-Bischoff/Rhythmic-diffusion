@@ -6,6 +6,8 @@ bool insideAnyShape(int currentShape)
 		return insideTriangle(currentShape);
 	else if (shapes[currentShape] == 2)
 		return insideHexagon(currentShape);
+	else if (shapes[currentShape] == 3)
+		return insideSquare(currentShape);
 
 	return false;
 }

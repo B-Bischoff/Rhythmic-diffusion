@@ -154,7 +154,7 @@ void Adapter::applyHook(const AdapterHook& hook)
 	}
 	else // Reaction diffusion intial conditions shape
 	{
-		InitialConditionsShape& shape = _RDSimulator.getInitialConditionsShapes().at(REACTION_DIFFUSION_PARAMETER_NB - hook.reactionPropertie);
+		InitialConditionsShape& shape = _RDSimulator.getInitialConditionsShapes().at(hook.reactionPropertie - REACTION_DIFFUSION_PARAMETER_NB) ;
 		switch (hook.propertieIndex)
 		{
 			case 0: shape.radius = newValue; break;

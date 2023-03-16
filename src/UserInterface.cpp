@@ -338,7 +338,8 @@ void UserInterface::printAdapterHook()
 void UserInterface::printInitialConditions()
 {
 	static int shape = 0;
-	ImGui::Combo("shape shape", &shape, "circle\0triangle\0hexagon\0");
+	const char* shapesElements = "circle\0triangle\0hexagon\0square\0";
+	ImGui::Combo("shape shape", &shape, shapesElements);
 
 	static float radius = 0;
 	ImGui::SliderFloat("shape radius", &radius, 0, 1000);
@@ -362,7 +363,7 @@ void UserInterface::printInitialConditions()
 
 		int shapeShape = (int)shapes[i].shape;
 		str = "shape " + std::to_string(i);
-		if (ImGui::Combo(str.c_str(), &shapeShape, "circle\0triangle\0hexagon\0"))
+		if (ImGui::Combo(str.c_str(), &shapeShape, shapesElements))
 			shapes[i].shape = (Shape)shapeShape;
 
 		float shapeRadius = shapes[i].radius;

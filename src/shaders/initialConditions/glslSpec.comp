@@ -9,6 +9,7 @@ uniform int shapes[MAX_SHAPE]; // The value design the shapes to be rendered
 //  0 : circle
 //  1 : triangle
 //  2 : hexagon
+//  3 : square
 
 uniform float radius[MAX_SHAPE];
 uniform float border[MAX_SHAPE];

@@ -1,0 +1,43 @@
+bool insidePlainSquare(int currentShape, float squareRadius)
+{
+	const vec2 imageSize = imageSize(texture);
+	const vec2 center = imageSize / 2.0;
+
+	// Define the coordinates of the triangle's vertices
+	vec2 v1 = center - squareRadius; // Top left corner
+	vec2 v2 = vec2(v1.x + squareRadius * 2, v1.y); // Top right corner
+	vec2 v3 = vec2(v1.x, v1.y + squareRadius * 2.0); // Bottom left corner
+	vec2 v4 = center + squareRadius; // Bottom right corner
+
+	float theta = radians(angle[currentShape]);
+	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
+
+	// Rotate each vertex around the center point
+	v1 = rotationMatrix * (v1 - center) + center;
+	v2 = rotationMatrix * (v2 - center) + center;
+	v3 = rotationMatrix * (v3 - center) + center;
+	v4 = rotationMatrix * (v4 - center) + center;
+
+	vec2 p = vec2(gl_GlobalInvocationID.xy);
+	if ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) < 0.1 &&
+		(p.x - v2.x) * (v3.y - v2.y) - (p.y - v2.y) * (v3.x - v2.x) < 0.1 &&
+		(p.x - v3.x) * (v1.y - v3.y) - (p.y - v3.y) * (v1.x - v3.x) < 0.1)
+		return true;
+	return (p.x - v2.x) * (v4.y - v2.y) - (p.y - v2.y) * (v4.x - v2.x) < 0.1 &&
+		(p.x - v4.x) * (v3.y - v4.y) - (p.y - v4.y) * (v3.x - v4.x) < 0.1 &&
+		(p.x - v3.x) * (v2.y - v3.y) - (p.y - v3.y) * (v2.x - v3.x) < 0.1;
+}
+
+bool insideSquare(int currentShape)
+{
+	bool insideLargerSquare = insidePlainSquare(currentShape, radius[currentShape]);
+
+	// If border is equal to 0, consider the square as plain
+	if (insideLargerSquare && border[currentShape] == 0)
+		return insideLargerSquare;
+
+	if (insidePlainSquare(currentShape, radius[currentShape] - border[currentShape]))
+		return false;
+
+	return insideLargerSquare;
+}
