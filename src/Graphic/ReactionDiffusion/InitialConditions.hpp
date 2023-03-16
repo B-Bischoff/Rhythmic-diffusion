@@ -26,9 +26,7 @@ private:
 
 public:
 	InitialConditions();
-	InitialConditions(const std::string& computeShaderPath);
-
-	void changeShader(const std::string& computeShaderPath);
+	InitialConditions(const std::vector<std::string>& computeShadersPath);
 
 	void execShader(const glm::vec2& screenDimensions);
 

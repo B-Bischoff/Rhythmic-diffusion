@@ -4,30 +4,9 @@ InitialConditions::InitialConditions()
 {
 }
 
-InitialConditions::InitialConditions(const std::string& computeShaderPath)
+InitialConditions::InitialConditions(const std::vector<std::string>& computeShadersPath)
 {
-	//changeShader(computeShaderPath);
-
-	// DO THAT CLEANER
-	std::vector<std::string> files {
-		"src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
-		"src/shaders/initialConditions/triangle.comp",
-		"src/shaders/initialConditions/hexagon.comp",
-		"src/shaders/initialConditions/circle.comp",
-		"src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
-	};
-	_computeShader = ComputeShader(files);
-}
-
-void InitialConditions::changeShader(const std::string& computeShaderPath)
-{
-	try {
-		_computeShader = ComputeShader(computeShaderPath);
-	}
-	catch (const std::invalid_argument& e)
-	{
-		std::cerr << "[InitialConditions] cannot find compute shader: " << computeShaderPath << std::endl;
-	}
+	_computeShader = ComputeShader(computeShadersPath);
 }
 
 void InitialConditions::execShader(const glm::vec2& screenDimensions)

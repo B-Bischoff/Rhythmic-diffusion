@@ -3,9 +3,7 @@
 
 Adapter::Adapter(ReactionDiffusionSimulator& RDSimulator, AudioAnalyzer& audioAnalyzer)
 	: _RDSimulator(RDSimulator), _audioAnalyzer(audioAnalyzer)
-{
-	createHook(bass, 3, 0, add, 0.038, 0.02);
-}
+{ }
 
 void Adapter::update()
 {
@@ -99,15 +97,18 @@ void Adapter::findLeadRatioFromGroup(SoundGroup& group)
 
 void Adapter::createHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value)
 {
-	try {
-		const std::vector<float>& vector = _RDSimulator.getParameterValue(reactionPropertie);
-		(void)vector.at(propertieIndex);
-	} catch (std::invalid_argument& e) {
-		std::cerr << "[Adapter]: could not create hook, invalid reaction propertie" << std::endl;
-		return;
-	} catch (std::out_of_range& e) {
-		std::cerr << "[Adapter]: could not create hook, invalid reaction propertie index" << std::endl;
-		return;
+	if (reactionPropertie < 4)
+	{
+		try {
+			const std::vector<float>& vector = _RDSimulator.getParameterValue(reactionPropertie);
+			(void)vector.at(propertieIndex);
+		} catch (std::invalid_argument& e) {
+			std::cerr << "[Adapter]: could not create hook, invalid reaction propertie" << std::endl;
+			return;
+		} catch (std::out_of_range& e) {
+			std::cerr << "[Adapter]: could not create hook, invalid reaction propertie index" << std::endl;
+			return;
+		}
 	}
 
 	_hooks.push_back(AdapterHook(audioTrigger, reactionPropertie, propertieIndex, actionMode, simulationInitialValue, value));
@@ -115,17 +116,17 @@ void Adapter::createHook(const AudioTrigger audioTrigger, const int reactionProp
 
 void Adapter::modifyReactionDiffusion()
 {
-	static float initialKillRate = _RDSimulator.getParameterValue(3)[0];
-	static float initialDiffusionRateB = 0;//_RDSimulator.getParameterValue(1)[0];
-
-	//_RDSimulator.setParameterValue(1, std::vector<float>(1, initalDiffusionRateB + (0.85 * _snareRatio)));
-	//_RDSimulator.setParameterValue(3, std::vector<float>(1, initialKillRate - (0.02 * _bassRatio)));
-	//float tmp = initialKillRate - (0.04 * _leadRatio);
-	//if (tmp < 0) tmp = 0.0;
-	//_RDSimulator.setParameterValue(3, std::vector<float>(1, tmp));
-
 	for (int i = 0; i < (int)_hooks.size(); i++)
-		applyHook(_hooks[i]);
+	{
+		try {
+			applyHook(_hooks[i]);
+		}
+		catch (...)
+		{
+			std::cerr << "[AdapterHook] invalid hooks, removing it" << std::endl;
+			removeHook(i);
+		}
+	}
 }
 
 void Adapter::applyHook(const AdapterHook& hook)
@@ -133,6 +134,7 @@ void Adapter::applyHook(const AdapterHook& hook)
 	const float& ratio = getRatioReferenceFromAudioTrigger(hook.audioTrigger);
 
 	float newValue;
+	// Use fuction pointer
 	if (hook.actionMode == add)
 		newValue = hook.simulationInitialValue + (ratio * hook.value);
 	else if (hook.actionMode == subtract)
@@ -140,12 +142,26 @@ void Adapter::applyHook(const AdapterHook& hook)
 	else if (hook.actionMode == multiply)
 		newValue = hook.simulationInitialValue * (1 + ratio);
 	else
-		newValue = hook.simulationInitialValue * (1 - ratio);
+		newValue = hook.simulationInitialValue * (ratio);
 
-	std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
-	newVector[hook.propertieIndex] = newValue;
-	_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
-	//_RDSimulator.setInitialConditionsRadius(newValue); // Manually plug adapter in rds init radius
+	// Reaction diffusion parameter ( rdA, rdB, feedRate or killRate )
+	const int REACTION_DIFFUSION_PARAMETER_NB = 4;
+	if (hook.reactionPropertie >= 0 && hook.reactionPropertie < REACTION_DIFFUSION_PARAMETER_NB)
+	{
+		std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
+		newVector[hook.propertieIndex] = newValue;
+		_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
+	}
+	else // Reaction diffusion intial conditions shape
+	{
+		InitialConditionsShape& shape = _RDSimulator.getInitialConditionsShapes().at(REACTION_DIFFUSION_PARAMETER_NB - hook.reactionPropertie);
+		switch (hook.propertieIndex)
+		{
+			case 0: shape.radius = newValue; break;
+			case 1: shape.borderSize = newValue; break;
+			case 2: shape.rotationAngle = newValue; break;
+		}
+	}
 }
 
 const float& Adapter::getRatioReferenceFromAudioTrigger(const AudioTrigger& audioTrigger) const
@@ -160,7 +176,6 @@ const float& Adapter::getRatioReferenceFromAudioTrigger(const AudioTrigger& audi
 
 void Adapter::removeHook(const int& index)
 {
-	std::cout << index << std::endl;
 	int i = 0;
 	for (std::vector<AdapterHook>::iterator it = _hooks.begin(); it != _hooks.end(); it++)
 	{

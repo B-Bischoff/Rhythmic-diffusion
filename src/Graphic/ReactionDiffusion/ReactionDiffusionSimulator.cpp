@@ -3,30 +3,6 @@
 ReactionDiffusionSimulator::ReactionDiffusionSimulator(GLFWwindow* window, const glm::vec2& screenDimensions)
 	: _window(window), _screenDimensions(screenDimensions)
 {
-	{ // -------------------- COMPUTE WORK GROUP INFO (NO CONCRETE USE) -----------------------
-		int work_grp_cnt[3];
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
-		std::cout << "Max work groups per compute shader" <<
-			" x:" << work_grp_cnt[0] <<
-			" y:" << work_grp_cnt[1] <<
-			" z:" << work_grp_cnt[2] << "\n";
-
-		int work_grp_size[3];
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
-		std::cout << "Max work group sizes" <<
-			" x:" << work_grp_size[0] <<
-			" y:" << work_grp_size[1] <<
-			" z:" << work_grp_size[2] << "\n";
-
-		int work_grp_inv;
-		glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
-		std::cout << "Max invocations count per work group: " << work_grp_inv << "\n";
-	}
-
 	_init = true;
 	_currentTexture = 0;
 	_colorA = glm::vec3(0.05);
@@ -80,10 +56,15 @@ void ReactionDiffusionSimulator::initShaders()
 	}
 
 	_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/grayScott.comp");
-	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/mutipleNeighborhood.comp");
-	//_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/brusselator.comp");
 
-	_initialConditions = InitialConditions("src/shaders/initialConditions/circle.comp");
+	std::vector<std::string> initialConditionsShadersfiles {
+		"src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
+		"src/shaders/initialConditions/triangle.comp",
+		"src/shaders/initialConditions/hexagon.comp",
+		"src/shaders/initialConditions/circle.comp",
+		"src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
+	};
+	_initialConditions = InitialConditions(initialConditionsShadersfiles);
 
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 

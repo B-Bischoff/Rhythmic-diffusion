@@ -268,7 +268,11 @@ void UserInterface::printAdapterHook()
 	ImGui::Combo("audio trigger", &audioTrigger, "bass\0snare\0lead\0");
 
 	static int propertie = 0;
-	ImGui::SliderInt("propertie", &propertie, 0, 3);
+	const int ITEMS_NUMBER = 4 + (int)_RDSimulator.getInitialConditionsShapes().size();
+	const char* items[] = { "RdA", "RdB", "Feed", "Kill", "Shape 0", "Shape 1", "Shape 2", "Shape 3",
+		"Shape 4", "Shape 5", "Shape 6", "Shape 7", "Shape 8", "Shape 9", "Shape 10", "Shape 11", "Shape 12", "Shape 13", "Shape 14", "Shape 15", "Shape 16" };
+
+	ImGui::Combo("propertie", &propertie, items, ITEMS_NUMBER);
 
 	static int propertieIndex = 0;
 	ImGui::SliderInt("propertie index", &propertieIndex, 0, 4);
@@ -299,7 +303,7 @@ void UserInterface::printAdapterHook()
 
 		int hookPropertie = hooks[i].reactionPropertie;
 		str = "hook propertie " + std::to_string(i);
-		if (ImGui::SliderInt(str.c_str(), &hookPropertie, 0, 3))
+		if (ImGui::Combo(str.c_str(), &hookPropertie, items, ITEMS_NUMBER))
 			hooks[i].reactionPropertie = hookPropertie;
 
 		int hookPropertieIndex = hooks[i].propertieIndex;
