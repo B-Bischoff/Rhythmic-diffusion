@@ -19,10 +19,7 @@ struct InitialConditionsShape {
 class InitialConditions {
 private:
 	ComputeShader _computeShader;
-	std::vector<ComputeShader> _shaders;
-
 	std::vector<InitialConditionsShape> _shapes;
-
 
 public:
 	InitialConditions();

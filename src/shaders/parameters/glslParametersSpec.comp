@@ -1,0 +1,14 @@
+#version 460 core
+layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D texture;
+
+#define PARAMETER_NUMBER 4
+
+uniform float strengthFactor[PARAMETER_NUMBER];
+uniform float scale[PARAMETER_NUMBER];
+uniform float offsetX[PARAMETER_NUMBER];
+uniform float offsetY[PARAMETER_NUMBER];
+uniform int type[PARAMETER_NUMBER]; // The value indicates the method to apply parameter
+//  0 : number (every pixel is set to the same value)
+//  1 : perlin noise
+//  2 : voronoi

@@ -69,10 +69,18 @@ void ReactionDiffusionSimulator::initShaders()
 
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
-	_diffusionRateAShader = InputParameter(&_parametersTexture);
-	_diffusionRateBShader = InputParameter(&_parametersTexture);
-	_feedRateShader = InputParameter(&_parametersTexture);
-	_killRateShader = InputParameter(&_parametersTexture);
+	//_diffusionRateAShader = InputParameter(&_parametersTexture);
+	//_diffusionRateBShader = InputParameter(&_parametersTexture);
+	//_feedRateShader = InputParameter(&_parametersTexture);
+	//_killRateShader = InputParameter(&_parametersTexture);
+
+	std::vector<std::string> inputParametersShadersfiles {
+		"src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
+		"src/shaders/parameters/number.comp",
+		"src/shaders/parameters/perlin.comp",
+		"src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
+	};
+	_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);
 }
 
 void ReactionDiffusionSimulator::processSimulation()
@@ -105,11 +113,13 @@ void ReactionDiffusionSimulator::processInputParameters()
 {
 	_parametersTexture.useTexture(0);
 
+	_inputParameter.execShader(_screenDimensions);
+
 	// Thread input shaders ?
-	_diffusionRateAShader.execShader(0, _screenDimensions);
-	_diffusionRateBShader.execShader(1, _screenDimensions);
-	_feedRateShader.execShader(2, _screenDimensions);
-	_killRateShader.execShader(3, _screenDimensions);
+	//_diffusionRateAShader.execShader(0, _screenDimensions);
+	//_diffusionRateBShader.execShader(1, _screenDimensions);
+	//_feedRateShader.execShader(2, _screenDimensions);
+	//_killRateShader.execShader(3, _screenDimensions);
 }
 
 void ReactionDiffusionSimulator::processDiffusionReaction()
@@ -204,43 +214,20 @@ bool ReactionDiffusionSimulator::getParameterPreview(const int& parameterIndex) 
 
 void ReactionDiffusionSimulator::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
 {
-	if (parameterIndex < 0 || parameterIndex > 3)
-		return;
-
-	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
-	std::vector<float>& inputValues = inputParameter.getVectorParameters();
-	inputValues = parameterValues;
+	_inputParameter.setParameterValue(parameterIndex, parameterValues);
 }
 
 const std::vector<float>& ReactionDiffusionSimulator::getParameterValue(const int& parameterIndex)
 {
-	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
-	return inputParameter.getVectorParameters();
+	return _inputParameter.getParameterValue(parameterIndex);
 }
 
 void ReactionDiffusionSimulator::setParameterType(const int& parameterIndex, const InputParameterType& type)
 {
-	if (parameterIndex < 0 || parameterIndex > 3)
-		return;
-
-	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
-	inputParameter.changeType(type);
+	_inputParameter.changeType(parameterIndex, type);
 }
 
 InputParameterType ReactionDiffusionSimulator::getParameterType(const int& parameterIndex)
 {
-	InputParameter& inputParameter = getParameterFromIndex(parameterIndex);
-	return inputParameter.getType();
-}
-
-InputParameter& ReactionDiffusionSimulator::getParameterFromIndex(const int& index)
-{
-	switch(index)
-	{
-		case 0: return _diffusionRateAShader;
-		case 1: return _diffusionRateBShader;
-		case 2: return _feedRateShader;
-		case 3: return _killRateShader;
-		default: throw std::invalid_argument("[ReactionDiffusionSimulator]: bad index\n");
-	}
+	return _inputParameter.getParameterType(parameterIndex);
 }

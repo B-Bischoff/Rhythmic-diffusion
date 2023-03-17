@@ -8,30 +8,33 @@ class ComputeShader;
 class Texture;
 class InputParameterSettings;
 
+enum ParameterName { DiffusionRateA, DiffusionRateB, FeedRate, KillRate };
 enum InputParameterType { Number, PerlinNoise, Voronoi };
+
+struct Parameter {
+	std::vector<float> parameters;
+	InputParameterType type;
+};
 
 class InputParameter {
 private:
 	InputParameterType _type;
-	std::vector<float> _parameters;
+	std::vector<Parameter> _parameters;
 	ComputeShader _computeShader;
 	Texture* _parametersTexture;
+	bool _needToApplyChanges;
 
-	void applyParameterSettings();
-
-	void applyNumberSettings();
-	void applyPerlinNoiseSettings();
-	void applyVoronoiSettings();
-
+	void applyPerlinNoiseSettings(Parameter& parameter, const int parameterIndex);
 
 public:
 	InputParameter();
 	~InputParameter();
-	InputParameter(Texture* texture);
+	InputParameter(Texture* texture, const std::vector<std::string>& computeShadersPath);
 
-	void changeType(const InputParameterType& newType);
-	void changeType(const int& newTypeIndex);
-	void execShader(const int& channel, const glm::vec2& SCREEN_DIMENSION);
-	std::vector<float>& getVectorParameters();
-	const InputParameterType& getType() const;
+	void changeType(const int& parameterIndex, const InputParameterType& newType);
+	void changeType(const int& parameterIndex, const int& newTypeIndex);
+	void setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues);
+	void execShader(const glm::vec2& SCREEN_DIMENSION);
+	std::vector<float>& getParameterValue(const int& index);
+	InputParameterType getParameterType(const int& parameterIndex);
 };

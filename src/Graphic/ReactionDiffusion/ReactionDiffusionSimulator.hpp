@@ -23,6 +23,7 @@ private:
 
 	InitialConditions _initialConditions;
 	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
+	InputParameter _inputParameter;
 
 	Object _plane;
 

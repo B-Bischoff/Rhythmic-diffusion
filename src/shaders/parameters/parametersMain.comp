@@ -1,0 +1,22 @@
+float applyParameter(int currentParameter)
+{
+	if (type[currentParameter] == 0)
+		return number(currentParameter);
+	else if (type[currentParameter] == 1)
+		return perlinNoise(currentParameter);
+
+	return 0;
+}
+
+void main()
+{
+	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+	vec4 pixel = imageLoad(texture, pixel_coords);
+
+	for (int currentParameter = 0; currentParameter < 4; currentParameter++)
+	{
+		pixel[currentParameter] = applyParameter(currentParameter);
+	}
+
+	imageStore(texture, pixel_coords, pixel);
+}

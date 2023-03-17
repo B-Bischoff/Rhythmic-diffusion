@@ -9,118 +9,143 @@ InputParameter::~InputParameter()
 {
 }
 
-InputParameter::InputParameter(Texture* texture)
+InputParameter::InputParameter(Texture* texture, const std::vector<std::string>& computeShadersPath)
 	: _parametersTexture(texture)
 {
-	changeType(InputParameterType::Number);
+	_computeShader = ComputeShader(computeShadersPath);
+
+	for (int i = 0; i < 4; i++)
+		_parameters.push_back(Parameter());
+
+	_needToApplyChanges = true;
 }
 
-void InputParameter::changeType(const InputParameterType& newType)
+void InputParameter::changeType(const int& parameterIndex, const InputParameterType& newType)
 {
-	changeType((int)newType);
-	_parameters.push_back(0);
+	changeType(parameterIndex, (int)newType);
 }
 
-void InputParameter::changeType(const int& newTypeIndex)
+void InputParameter::changeType(const int& parameterIndex, const int& newTypeIndex)
 {
-	_parameters.clear();
-	// DONT USE HARDCODED PATHS
+	if (parameterIndex < 0 || parameterIndex >= (int)_parameters.size())
+	{
+		std::cerr << "[InputParameter] invalid parameter index, aborting parameter type modification" << std::endl;
+		return;
+	}
+
+	std::vector<float>& parameters = _parameters[parameterIndex].parameters;
+
+	parameters.clear();
+
 	switch (newTypeIndex)
 	{
 		case 0: // Number
-			_type = InputParameterType::Number;
-			_computeShader = ComputeShader("src/shaders/parameters/number.comp");
-			_parameters = std::vector<float>(1, 0);
+			parameters = std::vector<float>(1, 0);
+			_parameters[parameterIndex].type = Number;
 			break;
 		case 1: // Perlin Noise
-			_type = InputParameterType::PerlinNoise;
-			_computeShader = ComputeShader("src/shaders/parameters/perlin.comp");
-			_parameters = std::vector<float>(6, 0);
+			parameters = std::vector<float>(6, 0);
+			_parameters[parameterIndex].type = PerlinNoise;
 			break;
 		case 2: // Voronoi
-			_type = InputParameterType::Voronoi;
-			_computeShader = ComputeShader("src/shaders/parameters/voronoi.comp");
-			_parameters = std::vector<float>(6, 0);
+			parameters = std::vector<float>(6, 0);
+			_parameters[parameterIndex].type = Voronoi;
 			break;
 		default:
-			std::cerr << "[InputParameter]: invalid input type selected" << std::endl;
+			std::cerr << "[InputParameter] invalid input type selected" << std::endl;
 	}
 }
 
-void InputParameter::execShader(const int& channel, const glm::vec2& SCREEN_DIMENSION)
+void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 {
-	_computeShader.useProgram();
-	_computeShader.setInt("channel", channel);
+	if (!_needToApplyChanges)
+		return;
 
-	applyParameterSettings();
+	std::cout << "input param" << std::endl;
+
+	_computeShader.useProgram();
+
+	const int PARAMETER_NUMBER = _parameters.size();
+	float* strengthFactor = new float[PARAMETER_NUMBER];
+	float* scale = new float[PARAMETER_NUMBER];
+	float* offsetX = new float[PARAMETER_NUMBER];
+	float* offsetY = new float[PARAMETER_NUMBER];
+	int* type = new int[PARAMETER_NUMBER];
+
+	for (int i = 0; i < (int)_parameters.size(); i++)
+	{
+		std::vector<float>& param = _parameters[i].parameters;
+
+		strengthFactor[i] = param.size() > 0 ? param[0] : 0;
+		scale[i] = param.size() > 1 ? param[1] : 0;
+		offsetX[i] = param.size() > 2 ? param[2] : 0;
+		offsetY[i] = param.size() > 3 ? param[3] : 0;
+		type[i] = (int)_parameters[i].type;
+	}
+
+	const GLuint programId = _computeShader.getProgramID();
+	glUniform1fv(glGetUniformLocation(programId, "strengthFactor"), PARAMETER_NUMBER, strengthFactor);
+	glUniform1fv(glGetUniformLocation(programId, "scale"), PARAMETER_NUMBER, scale);
+	glUniform1fv(glGetUniformLocation(programId, "offsetX"), PARAMETER_NUMBER, offsetX);
+	glUniform1fv(glGetUniformLocation(programId, "offsetY"), PARAMETER_NUMBER, offsetY);
+	glUniform1iv(glGetUniformLocation(programId, "type"), PARAMETER_NUMBER, type);
 
 	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+	delete[] strengthFactor;
+	delete[] scale;
+	delete[] offsetX;
+	delete[] offsetY;
+	delete[] type;
+
+	_needToApplyChanges = false;
 }
 
-void InputParameter::applyParameterSettings()
+void InputParameter::applyPerlinNoiseSettings(Parameter& parameter, const int parameterIndex)
 {
-	switch ((int)_type)
+	//if (_parameters.size() < 6)
+	//	return;
+
+		//float& scale = _parameters[0];
+		//float offset[2] { _parameters[1], _parameters[2] };
+		//float& strengthFactor = _parameters[3];
+		//bool movingScale = _parameters[4] == 1.0;
+		//float timeMultiplier = _parameters[5];
+
+	//if (movingScale)
+	//	_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
+	//else
+	//	_computeShader.setFloat("scale", scale);
+
+	//_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
+	//_computeShader.setFloat("strengthFactor", strengthFactor);
+}
+
+void InputParameter::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
+{
+	if (parameterIndex < 0 || parameterIndex >= (int)_parameters.size())
 	{
-		case 0: applyNumberSettings(); break;
-		case 1: applyPerlinNoiseSettings(); break;
-		case 2: applyVoronoiSettings(); break;
-		default: return;
+		std::cerr << "[InputParameter] invalid parameter index, aborting parameter modifications" << std::endl;
+		return;
 	}
+
+	_parameters[parameterIndex].parameters = parameterValues;
+	_needToApplyChanges = true;
 }
 
-void InputParameter::applyNumberSettings()
+std::vector<float>& InputParameter::getParameterValue(const int& index)
 {
-	if (_parameters.size() >= 1)
-		_computeShader.setFloat("value", _parameters[0]);
+	return _parameters.at(index).parameters;
 }
 
-void InputParameter::applyPerlinNoiseSettings()
+InputParameterType InputParameter::getParameterType(const int& parameterIndex)
 {
-	if (_parameters.size() < 6)
-		return;
+	if (parameterIndex < 0 || parameterIndex >= (int)_parameters.size())
+	{
+		std::cerr << "[InputParameter] invalid parameter index, aborting parameter modifications" << std::endl;
+		return Number;
+	}
 
-	float& scale = _parameters[0];
-	float offset[2] { _parameters[1], _parameters[2] };
-	float& strengthFactor = _parameters[3];
-	bool movingScale = _parameters[4] == 1.0;
-	float timeMultiplier = _parameters[5];
-
-	if (movingScale)
-		_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
-	else
-		_computeShader.setFloat("scale", scale);
-
-	_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
-	_computeShader.setFloat("strengthFactor", strengthFactor);
-}
-
-void InputParameter::applyVoronoiSettings()
-{
-	if (_parameters.size() < 6)
-		return;
-
-	float& scale = _parameters[0];
-	float offset[2] { _parameters[1], _parameters[2] };
-	float& strengthFactor = _parameters[3];
-	bool movingScale = _parameters[4] == 1.0;
-	float timeMultiplier = _parameters[5];
-
-	if (movingScale)
-		_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
-	else
-		_computeShader.setFloat("scale", scale);
-
-	_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
-	_computeShader.setFloat("strengthFactor", strengthFactor);
-}
-
-std::vector<float>& InputParameter::getVectorParameters()
-{
-	return _parameters;
-}
-
-const InputParameterType& InputParameter::getType() const
-{
-	return _type;
+	return _parameters[parameterIndex].type;
 }

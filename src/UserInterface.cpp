@@ -85,7 +85,7 @@ void UserInterface::printOptionsFields(const int& i)
 		_RDSimulator.setParameterType(i, static_cast<InputParameterType>(inputParameterType));
 
 	// Parameter preview
-	ImGui::SameLine();
+	//ImGui::SameLine();
 	bool showParam = _RDSimulator.getParameterPreview(i);
 	if (ImGui::Checkbox(std::string("Show " + std::to_string(i)).c_str(), &showParam))
 		_RDSimulator.setParameterPreview(i, showParam);
@@ -105,7 +105,14 @@ void UserInterface::printOptionsFields(const int& i)
 void UserInterface::printNumberTypeFields(const int& i, const float& min, const float& max)
 {
 	float value = min;
-	const std::vector<float>& inputValue = _RDSimulator.getParameterValue(i);
+	std::vector<float> inputValue;
+	try {
+		inputValue = _RDSimulator.getParameterValue(i);
+	}
+	catch (std::out_of_range& e) {
+		//std::cout << "error" << std::endl;
+		inputValue.push_back(0);
+	}
 	if (inputValue.size())
 		value = inputValue[0];
 	std::string fieldName = std::string("value " + std::to_string(i));
@@ -118,26 +125,28 @@ void UserInterface::printNoiseFields(const int& i)
 	const std::vector<float>& v = _RDSimulator.getParameterValue(i);
 	bool valueChanged = false;
 
+	std::string fieldName;
+
+	// Strength factor
+	fieldName = std::string("Strength factor " + std::to_string(i));
+	float strengthFactor = 1.0f;
+	strengthFactor = v[0];
+	if (ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 3.5))
+		valueChanged = true;
+
 	// Scale
-	std::string fieldName = std::string("scale " + std::to_string(i));
+	fieldName = std::string("scale " + std::to_string(i));
 	float scale = 0.001;
-	scale = v[0];
+	scale = v[1];
 	if (ImGui::SliderFloat(fieldName.c_str(), &scale, 0.001, 1.0))
 		valueChanged = true;
 
 	// Offset
 	fieldName = std::string("offset " + std::to_string(i));
 	float offset[2];
-	offset[0] = v[1];
-	offset[1] = v[2];
+	offset[0] = v[2];
+	offset[1] = v[3];
 	if (ImGui::SliderFloat2(fieldName.c_str(), offset, -5000, 5000))
-		valueChanged = true;
-
-	// Strength factor
-	fieldName = std::string("Strength factor " + std::to_string(i));
-	float strengthFactor = 1.0f;
-	strengthFactor = v[3];
-	if (ImGui::SliderFloat(fieldName.c_str(), &strengthFactor, 0.01, 3.5))
 		valueChanged = true;
 
 	// Change scale depending on time
@@ -154,7 +163,8 @@ void UserInterface::printNoiseFields(const int& i)
 
 	if (valueChanged)
 	{
-		std::vector<float> values = { scale, offset[0], offset[1], strengthFactor, (movingScale ? 1.0f : 0.0f), timeMultiplier};
+		//std::vector<float> values = { scale, offset[0], offset[1], strengthFactor, (movingScale ? 1.0f : 0.0f), timeMultiplier};
+		std::vector<float> values = { strengthFactor, scale, offset[0], offset[1], (movingScale ? 1.0f : 0.0f), timeMultiplier };
 		_RDSimulator.setParameterValue(i, values);
 	}
 }

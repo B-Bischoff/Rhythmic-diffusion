@@ -1,13 +1,3 @@
-#version 460 core
-layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
-layout(rgba32f, binding = 0) uniform image2D texture;
-
-layout (location = 0) uniform int channel;
-layout (location = 1) uniform float t;
-layout (location = 2) uniform float scale;
-layout (location = 3) uniform vec2 offset;
-layout (location = 4) uniform float strengthFactor;
-
 vec2 fade(vec2 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 
@@ -44,17 +34,14 @@ float cnoise(vec2 P){
 	return 2.3 * n_xy;
 }
 
-void main()
+float perlinNoise(int currentParameter)
 {
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	vec4 existingPixel = imageLoad(texture, pixel_coords);
 
-	const float SCALE = 0.01;
-	float noiseOutput = cnoise((pixel_coords + offset) * scale);
+	vec2 offset = vec2(offsetX[currentParameter], offsetY[currentParameter]);
+	float noiseOutput = cnoise((pixel_coords + offset) * scale[currentParameter]);
 	noiseOutput = clamp(noiseOutput, 0, 1);
-	noiseOutput = noiseOutput * strengthFactor;
+	noiseOutput = noiseOutput * strengthFactor[currentParameter];
 
-	existingPixel[channel] = noiseOutput;
-
-	imageStore(texture, pixel_coords, existingPixel);
+	return noiseOutput;
 }
