@@ -1,12 +1,3 @@
-#version 460 core
-layout(local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
-layout(rgba32f, binding = 0) uniform image2D texture;
-
-layout (location = 0) uniform int channel;
-layout (location = 1) uniform float scale;
-layout (location = 2) uniform vec2 offset;
-layout (location = 3) uniform float strengthFactor;
-
 const mat2 myt = mat2(.12121212, .13131313, -.13131313, .12121212);
 const vec2 mys = vec2(1e4, 1e6);
 
@@ -37,15 +28,13 @@ float voronoi2d(const in vec2 point) {
 	return pow(1. / res, 0.0625);
 }
 
-void main()
+float voronoi(int currentParameter)
 {
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	vec4 existingPixel = imageLoad(texture, pixel_coords);
 
-	float noiseOutput = voronoi2d((pixel_coords + offset) * scale);
-	noiseOutput = clamp(noiseOutput, 0, 1) * strengthFactor;
+	vec2 offset = vec2(offsetX[currentParameter], offsetY[currentParameter]);
+	float noiseOutput = voronoi2d((pixel_coords + offset) * scale[currentParameter]);
+	noiseOutput = clamp(noiseOutput, 0, 1) * strengthFactor[currentParameter];
 
-	existingPixel[channel] = noiseOutput;
-
-	imageStore(texture, pixel_coords, existingPixel);
+	return noiseOutput;
 }

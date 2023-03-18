@@ -78,6 +78,7 @@ void ReactionDiffusionSimulator::initShaders()
 		"src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
 		"src/shaders/parameters/number.comp",
 		"src/shaders/parameters/perlin.comp",
+		"src/shaders/parameters/voronoi.comp",
 		"src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
 	};
 	_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);

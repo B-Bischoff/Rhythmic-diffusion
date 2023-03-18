@@ -4,6 +4,8 @@ float applyParameter(int currentParameter)
 		return number(currentParameter);
 	else if (type[currentParameter] == 1)
 		return perlinNoise(currentParameter);
+	else if (type[currentParameter] == 2)
+		return voronoi(currentParameter);
 
 	return 0;
 }

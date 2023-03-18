@@ -163,7 +163,6 @@ void UserInterface::printNoiseFields(const int& i)
 
 	if (valueChanged)
 	{
-		//std::vector<float> values = { scale, offset[0], offset[1], strengthFactor, (movingScale ? 1.0f : 0.0f), timeMultiplier};
 		std::vector<float> values = { strengthFactor, scale, offset[0], offset[1], (movingScale ? 1.0f : 0.0f), timeMultiplier };
 		_RDSimulator.setParameterValue(i, values);
 	}

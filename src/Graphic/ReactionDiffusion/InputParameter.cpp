@@ -58,10 +58,10 @@ void InputParameter::changeType(const int& parameterIndex, const int& newTypeInd
 
 void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 {
-	if (!_needToApplyChanges)
+	if (!_needToApplyChanges) // Check if there is a need to write data on paramTexture
 		return;
 
-	std::cout << "input param" << std::endl;
+	bool parameterNeedTime = false;
 
 	_computeShader.useProgram();
 
@@ -81,6 +81,13 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 		offsetX[i] = param.size() > 2 ? param[2] : 0;
 		offsetY[i] = param.size() > 3 ? param[3] : 0;
 		type[i] = (int)_parameters[i].type;
+
+		float timeMultiplier = param.size() > 5 ? param[5] : 0;
+		if (param.size() > 4 && param[4] == 1.0) // Moving scale
+		{
+			parameterNeedTime = true;
+			scale[i] = sin(glfwGetTime() * timeMultiplier) * scale[i];
+		}
 	}
 
 	const GLuint programId = _computeShader.getProgramID();
@@ -88,6 +95,7 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 	glUniform1fv(glGetUniformLocation(programId, "scale"), PARAMETER_NUMBER, scale);
 	glUniform1fv(glGetUniformLocation(programId, "offsetX"), PARAMETER_NUMBER, offsetX);
 	glUniform1fv(glGetUniformLocation(programId, "offsetY"), PARAMETER_NUMBER, offsetY);
+	glUniform1f(glGetUniformLocation(programId, "time"), glfwGetTime());
 	glUniform1iv(glGetUniformLocation(programId, "type"), PARAMETER_NUMBER, type);
 
 	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
@@ -99,7 +107,8 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 	delete[] offsetY;
 	delete[] type;
 
-	_needToApplyChanges = false;
+	if (!parameterNeedTime) // Need to write on the param texture each frame to apply modifications
+		_needToApplyChanges = false;
 }
 
 void InputParameter::applyPerlinNoiseSettings(Parameter& parameter, const int parameterIndex)
