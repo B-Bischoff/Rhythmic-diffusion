@@ -13,6 +13,7 @@
 #include "../src/vendor/imgui/imgui.h"
 #include "../src/vendor/imgui/imgui_impl_glfw.h"
 #include "../src/vendor/imgui/imgui_impl_opengl3.h"
+#include "../src/vendor/imgui/imfilebrowser.h"
 
 #include "../external/kissfft/kiss_fftr.h"
 #include "../external/kissfft/kiss_fft.h"
@@ -24,6 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <map>
 #include <exception>
 #include <cmath>
 #include <complex>

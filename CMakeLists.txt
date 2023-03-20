@@ -59,6 +59,8 @@ add_executable(Rythmic-diffusion
 	src/UserInterface.cpp
 	src/Adapter.hpp
 	src/Adapter.cpp
+	src/Preset.hpp
+	src/Preset.cpp
 
 	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp
 	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.cpp
@@ -101,6 +103,7 @@ add_executable(Rythmic-diffusion
 	src/vendor/imgui/imgui_internal.h
 	src/vendor/imgui/imgui_tables.cpp
 	src/vendor/imgui/imgui_widgets.cpp
+	src/vendor/imgui/imfilebrowser.h
 
 	# STK
 	src/vendor/stk/WvIn.h

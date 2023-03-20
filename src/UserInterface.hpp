@@ -15,6 +15,7 @@ private:
 	GLFWwindow& _window;
 	const int WIN_WIDTH, WIN_HEIGHT, UI_WIDTH;
 	ReactionDiffusionSimulator& _RDSimulator;
+	ImGui::FileBrowser _fileDialog;
 
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;

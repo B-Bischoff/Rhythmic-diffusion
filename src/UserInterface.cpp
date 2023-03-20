@@ -16,6 +16,9 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(&_window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
+
+	_fileDialog.SetTitle("Select audio file");
+	_fileDialog.SetTypeFilters({".wav"});
 }
 
 void UserInterface::createNewFrame()
@@ -44,37 +47,63 @@ void UserInterface::update()
 
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
-	// SPEED
-	static float speed = 1.0f;
-	if (ImGui::SliderFloat("Speed", &speed, 0.00f, 2.0))
-		_RDSimulator.setSimulationSpeed(speed);
 
-	// COLORS
-	static float color1[3] = {0.0f, 0.0f, 0.0f};
-	static float color2[3] = {1.0f, 1.0f, 1.0f};
-	if (ImGui::ColorEdit3("Color A", color1))
-		_RDSimulator.setSimulationColorA(glm::vec3(color1[0], color1[1], color1[2]));
-	if (ImGui::ColorEdit3("Color B", color2))
-		_RDSimulator.setSimulationColorB(glm::vec3(color2[0], color2[1], color2[2]));
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+	if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+	{
+		if (ImGui::BeginTabItem("Global"))
+		{
+			// SPEED
+			static float speed = 1.0f;
+			if (ImGui::SliderFloat("Speed", &speed, 0.00f, 2.0))
+				_RDSimulator.setSimulationSpeed(speed);
 
-	//ImGui::Separator();
+			// COLORS
+			static float color1[3] = {0.0f, 0.0f, 0.0f};
+			static float color2[3] = {1.0f, 1.0f, 1.0f};
+			if (ImGui::ColorEdit3("Color A", color1))
+				_RDSimulator.setSimulationColorA(glm::vec3(color1[0], color1[1], color1[2]));
+			if (ImGui::ColorEdit3("Color B", color2))
+				_RDSimulator.setSimulationColorB(glm::vec3(color2[0], color2[1], color2[2]));
+			if (ImGui::Button("Reset"))
+				_RDSimulator.resetSimulation();
+			ImGui::EndTabItem();
+		}
 
-	for (int i = 0; i < 4; i++)
-		printOptionsFields(i);
+		if (ImGui::BeginTabItem("RD"))
+		{
+			for (int i = 0; i < 4; i++)
+				printOptionsFields(i);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Audio"))
+		{
+			printAudioPlayer();
+			ImGui::EndTabItem();
+		}
 
-	if (ImGui::Button("Reset"))
-		_RDSimulator.resetSimulation();
+		if (ImGui::BeginTabItem("Hooks"))
+		{
+			printAdapterHook();
+			ImGui::EndTabItem();
+		}
 
-	// Plot as lines and plot as histogram
-	//IMGUI_DEMO_MARKER("Widgets/Plotting/PlotLines, PlotHistogram");
-	//static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
-	//ImGui::PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr));
-
-	printAudioPlayer();
-	printAdapterHook();
-	printInitialConditions();
+		if (ImGui::BeginTabItem("Shapes"))
+		{
+			printInitialConditions();
+			ImGui::EndTabItem();
+		}
+	}
 
 	ImGui::End();
+
+	_fileDialog.Display();
+	if (_fileDialog.HasSelected())
+	{
+		_audioPlayer.stopPlaying();
+		_audioPlayer.playWavFile(_fileDialog.GetSelected());
+		_fileDialog.ClearSelected();
+	}
 }
 
 void UserInterface::printOptionsFields(const int& i)
@@ -223,11 +252,13 @@ void UserInterface::printAudioPlayer()
 	"Le-Wanski-Clapotis.wav",
 	"Pawlowski-Demonic-Dimensions-_POSS001_.wav",
 	"Caravel-HÖR-Nov-29-2022.wav",
-	"Jacques-Brel-La-valse-à-mille-temps.wav"};
+	"Jacques-Brel-La-valse-à-mille-temps.wav",
+	"Cassie-Raptor-HÖR-Jan-25-2023.wav",
+	};
 
 	// Play
 	static int fileToPlay = 0;
-	ImGui::Combo("fileList", &fileToPlay, "mush\0hualun\0daxj\0skone\0IHM-daydream\0IHM-shades\0IHM-izanami\0IHM-moon\0codeine\0dahlia\0antarctica\0sunshine\0chariotOfFire\0iNoLongFear\0OLord\0digitalBaptism\0xaoc\0panoramic\0milyWay\0thosewhoride\0alt236\0asys\0hilo\0jeffmills\0clapotis\0pawloski\0caravel\0jacques\0");
+	ImGui::Combo("fileList", &fileToPlay, "mush\0hualun\0daxj\0skone\0IHM-daydream\0IHM-shades\0IHM-izanami\0IHM-moon\0codeine\0dahlia\0antarctica\0sunshine\0chariotOfFire\0iNoLongFear\0OLord\0digitalBaptism\0xaoc\0panoramic\0milyWay\0thosewhoride\0alt236\0asys\0hilo\0jeffmills\0clapotis\0pawloski\0caravel\0jacques\0Cassie-Raptor\0");
 	if (ImGui::Button("play file"))
 	{
 		_audioPlayer.stopPlaying();
@@ -265,6 +296,9 @@ void UserInterface::printAudioPlayer()
 			ARRAY_2[i] = outputFreq[i];
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
+
+	if (ImGui::Button("open file explorer"))
+		_fileDialog.Open();
 }
 
 void UserInterface::printAdapterHook()
