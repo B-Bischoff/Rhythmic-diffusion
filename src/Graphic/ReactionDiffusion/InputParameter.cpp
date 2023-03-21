@@ -148,6 +148,11 @@ std::vector<float>& InputParameter::getParameterValue(const int& index)
 	return _parameters.at(index).parameters;
 }
 
+std::vector<Parameter>& InputParameter::getParametersValue()
+{
+	return _parameters;
+}
+
 InputParameterType InputParameter::getParameterType(const int& parameterIndex)
 {
 	if (parameterIndex < 0 || parameterIndex >= (int)_parameters.size())

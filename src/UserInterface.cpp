@@ -1,8 +1,9 @@
 #include "UserInterface.hpp"
 #include "vendor/imgui/imgui.h"
+#include <cstring>
 
-UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter)
-	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter)
+UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter, Preset& presetManager)
+	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter), _presetManager(presetManager)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	const char* glsl_version = "#version 100";
@@ -91,6 +92,12 @@ void UserInterface::update()
 		if (ImGui::BeginTabItem("Shapes"))
 		{
 			printInitialConditions();
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Preset"))
+		{
+			printPresets();
 			ImGui::EndTabItem();
 		}
 	}
@@ -430,5 +437,35 @@ void UserInterface::printInitialConditions()
 			_RDSimulator.removeInitialConditionsShape(i);
 			return;
 		}
+	}
+}
+
+void UserInterface::printPresets()
+{
+	const int presetNameMaxLength = 64;
+	static char presetNameBuffer[presetNameMaxLength] = "";
+	ImGui::SetNextItemWidth(200);
+	ImGui::InputText("preset name (leave blank for generic name)", presetNameBuffer, presetNameMaxLength);
+
+	if (ImGui::Button("Save preset"))
+	{
+		_presetManager.addPreset(std::string(presetNameBuffer));
+		memset(presetNameBuffer, 0, size_t(presetNameMaxLength));
+	}
+
+	std::vector<std::string> presetNames = _presetManager.getPresetNames();
+
+	for (int i = 0; i < (int)presetNames.size(); i++)\
+	{
+		std::string buttonText;
+		buttonText = ("Load " + std::to_string(i));
+		if (ImGui::Button(buttonText.c_str()))
+			_presetManager.applyPreset(presetNames[i]);
+		ImGui::SameLine();
+		ImGui::Text("%s", presetNames[i].c_str());
+		ImGui::SameLine();
+		buttonText = ("Erase " + std::to_string(i));
+		if (ImGui::Button(buttonText.c_str()))
+			_presetManager.removePreset(presetNames[i]);
 	}
 }

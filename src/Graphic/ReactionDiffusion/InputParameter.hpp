@@ -36,5 +36,6 @@ public:
 	void setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues);
 	void execShader(const glm::vec2& SCREEN_DIMENSION);
 	std::vector<float>& getParameterValue(const int& index);
+	std::vector<Parameter>& getParametersValue();
 	InputParameterType getParameterType(const int& parameterIndex);
 };

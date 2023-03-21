@@ -41,7 +41,6 @@ Application::Application(const int& width, const int& height)
 		exit(1);
 	}
 
-
 	loop();
 }
 
@@ -57,43 +56,19 @@ void Application::loop()
 
 	int fCounter = 0;
 
-	const std::string downloadPath = "../../Downloads/wav/";
-	//const std::string file = downloadPath + "Le-Wanski-M.U.S.H..wav";
-	//const std::string file = downloadPath + "花伦HuaLun-坏孩子的天空.wav";
-	//const std::string file = downloadPath + "Dax-J-Reign-Of-Terror-_EDLX051_.wav";
-	//const std::string file = downloadPath + "Sköne-Fin-de-ce-qui-est-relatif-à-la-Nature_-au-Temps_-à-la-Conscience-et-aux-Perspectives-_2h44_.wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Daydream-_ARTS020_.wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Shades-of-Night-_ARTS020_.wav";
-	//const std::string file = downloadPath + "I-Hate-Models-Izanami-_ARTSBOX001_.wav";
-	const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
-	//const std::string file = downloadPath + "Mandragora-Codeine-_Original-Mix_.wav";
-	//const std::string file = downloadPath + "BICEP-_-HAMMER-DAHLIA.wav";
-	//const std::string file = downloadPath + "UICIDEBOY_-ANTARCTICA.wav";
-	//const std::string file = downloadPath + "Sunshine.wav";
-	//const std::string file = downloadPath + "UICIDEBOY_-CHARIOT-OF-FIRE.wav";
-	//const std::string file = downloadPath + "UICIDEBOY_-I-NO-LONGER-FEAR-THE-RAZOR-GUARDING-MY-HEEL-I-_-II-_-III-_-IV.wav";
-	//const std::string file = downloadPath + "UICIDEBOY_-O-Lord_-I-Have-My-Doubts.wav";
-	//const std::string file = downloadPath + "Digital-Baptism.wav";
-	//const std::string file = downloadPath + "Xaoc.wav";
-	//const std::string file = downloadPath + "Panoramic-Feelings.wav";
-	//const std::string file = downloadPath + "MilkyWay-_Explore_.wav";
-	//const std::string file = downloadPath + "Those-Who-Ride-With-Giants-Those-Who-Ride-With-Giants-_Deluxe_-_Full-Album_.wav";
-	//const std::string file = downloadPath + "ALT236-ALL-SEEING-EYE-Music-Video-by-DON-TANCREDO.wav";
-	//const std::string file = downloadPath + "A-S-Y-S-_-Kai-Tracid-Rave-The-Planet-_Original-Mix_.wav";
-	//const std::string file = downloadPath + "HI-LO-x-Space-92-Mercury-_Original-Mix_.wav";
-	//const std::string file = downloadPath + "Jeff-Mills-Flying-Machines.wav";
-	//const std::string file = downloadPath + "Le-Wanski-Clapotis.wav";
-	//const std::string file = downloadPath + "Pawlowski-Demonic-Dimensions-_POSS001_.wav";
-	//const std::string file = downloadPath + "Caravel-HÖR-Nov-29-2022.wav";
 
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
 	Adapter adapter(RDSimulator, audioAnalyzer);
 
-	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter);
+	Preset presetManager(RDSimulator, adapter);
+	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter, presetManager);
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 
+	// Default playing song
+	const std::string downloadPath = "../../Downloads/wav/";
+	const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
 	audioPlayer.playWavFile(file.c_str());
 
 	RDSimulator.setSimulationSpeed(1.0);

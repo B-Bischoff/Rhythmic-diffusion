@@ -9,6 +9,7 @@ class AudioAnalyzer;
 class ReactionDiffusionSimulator;
 class Adapter;
 struct AdapterHook;
+class Preset;
 
 class UserInterface {
 private:
@@ -20,6 +21,7 @@ private:
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
 	Adapter& _adapter;
+	Preset& _presetManager;
 
 	void printOptionsFields(const int& i);
 	void printNumberTypeFields(const int& i, const float& min, const float& max);
@@ -28,15 +30,23 @@ private:
 	void printAudioPlayer();
 	void printAdapterHook();
 	void printInitialConditions();
+	void printPresets();
 
 	std::string getFieldNameFromIndex(const int& index) const;
 
 public:
-	UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWidth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adpter);
+	UserInterface(GLFWwindow& window,
+			const int& winWidth,
+			const int& winHeight,
+			const int& uiWidth,
+			ReactionDiffusionSimulator& RDSimulator,
+			AudioPlayer& audioPlayer,
+			AudioAnalyzer& audioAnalyzer,
+			Adapter& Adapter,
+			Preset& presetManager);
 
 	void createNewFrame();
 	void update();
 	void render();
 	void shutdown();
-
 };

@@ -6,6 +6,7 @@
 #include "./Audio/AudioAnalyzer.hpp"
 #include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"
 #include "./Adapter.hpp"
+#include "./Preset.hpp"
 
 class Application {
 private:

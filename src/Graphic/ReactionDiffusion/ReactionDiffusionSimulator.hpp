@@ -70,6 +70,7 @@ public:
 	bool getParameterPreview(const int& parameterIndex) const;
 	void setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues);
 	const std::vector<float>& getParameterValue(const int& parameterIndex);
+	const std::vector<Parameter>& getParametersValue();
 	void setParameterType(const int& parameterIndex, const InputParameterType& type);
 	InputParameterType getParameterType(const int& parameterIndex);
 };

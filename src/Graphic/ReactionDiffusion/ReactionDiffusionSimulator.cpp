@@ -223,6 +223,11 @@ const std::vector<float>& ReactionDiffusionSimulator::getParameterValue(const in
 	return _inputParameter.getParameterValue(parameterIndex);
 }
 
+const std::vector<Parameter>& ReactionDiffusionSimulator::getParametersValue()
+{
+	return _inputParameter.getParametersValue();
+}
+
 void ReactionDiffusionSimulator::setParameterType(const int& parameterIndex, const InputParameterType& type)
 {
 	_inputParameter.changeType(parameterIndex, type);
