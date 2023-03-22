@@ -14,6 +14,12 @@ enum InputParameterType { Number, PerlinNoise, Voronoi };
 struct Parameter {
 	std::vector<float> parameters;
 	InputParameterType type;
+
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(CEREAL_NVP(parameters), CEREAL_NVP(type));
+	}
 };
 
 class InputParameter {

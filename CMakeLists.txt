@@ -28,6 +28,7 @@ include_directories(
 	external/glm-0.9.9.8/
 	external/glew-2.2.0/include
 	external/stk-4.6.2/
+	external/cereal/include
 	.
 )
 

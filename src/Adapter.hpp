@@ -24,6 +24,13 @@ struct AdapterHook {
 
 	AdapterHook(const AudioTrigger audioTrigger, const int reactionPropertie, const int propertieIndex, const ActionMode actionMode, const double simulationInitialValue, const double value)
 		: audioTrigger(audioTrigger), reactionPropertie(reactionPropertie), propertieIndex(propertieIndex), actionMode(actionMode), simulationInitialValue(simulationInitialValue), value(value) {}
+	AdapterHook() {};
+
+	template<class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(CEREAL_NVP(audioTrigger), CEREAL_NVP(reactionPropertie), CEREAL_NVP(propertieIndex), CEREAL_NVP(actionMode), CEREAL_NVP(simulationInitialValue), CEREAL_NVP(value));
+	}
 };
 
 class Adapter {

@@ -21,6 +21,10 @@
 #include "../src/vendor/stk/FileWvIn.h"
 #include "../src/vendor/stk/RtAudio.h"
 
+#include <cereal/types/vector.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/archives/xml.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,6 +35,7 @@
 #include <complex>
 #include <cstdlib>
 #include <signal.h>
+#include <filesystem>
 
 #include <thread>
 #include <mutex> 

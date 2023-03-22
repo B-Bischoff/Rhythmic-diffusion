@@ -3,6 +3,7 @@
 Preset::Preset(ReactionDiffusionSimulator& RDSsimulator, Adapter& adapter)
 	: _RDSsimulator(RDSsimulator), _adapter(adapter)
 {
+	loadExistingPresets();
 }
 
 void Preset::addPreset(std::string presetName)
@@ -12,17 +13,28 @@ void Preset::addPreset(std::string presetName)
 		std::cerr << "[Preset] a preset named \"" << presetName << "\" already exists. Canceling add preset method." << std::endl;
 		return;
 	}
-	std::cout << _adapter.getHooks().size() << std::endl;
 
 	if (presetName.empty() || presetName.find_first_not_of(' ') == std::string::npos)
 		presetName = createGenericName();
 
+	// Create preset in map
 	_presets[presetName] = PresetSettings();
-
 	PresetSettings& presetSettings = _presets[presetName];
 	presetSettings.hooks = _adapter.getHooks();
 	presetSettings.parameters = _RDSsimulator.getParametersValue();
 	presetSettings.shapes = _RDSsimulator.getInitialConditionsShapes();
+
+	// Save to a local file
+	const std::string presetFile = PRESET_DIRECTORY + presetName + PRESET_EXTENSION;
+	std::ofstream os(presetFile);
+	if (!os.is_open())
+	{
+		std::cerr << "[Preset] could not save preset settings to " << presetFile << std::endl;
+		return;
+	}
+
+	cereal::XMLOutputArchive archive(os);
+	archive(CEREAL_NVP(presetSettings));
 }
 
 void Preset::removePreset(const std::string& presetName)
@@ -33,11 +45,9 @@ void Preset::removePreset(const std::string& presetName)
 		return;
 	}
 	_presets.erase(presetName);
-}
 
-bool Preset::presetExists(const std::string& presetName) const
-{
-	return _presets.find(presetName) != _presets.end();
+	const std::string presetFile = PRESET_DIRECTORY + presetName + PRESET_EXTENSION;
+	remove(presetFile.c_str());
 }
 
 void Preset::applyPreset(const std::string& presetName)
@@ -92,6 +102,40 @@ std::vector<std::string> Preset::getPresetNames() const
 		presetNames.push_back(it->first);
 
 	return presetNames;
+}
+
+void Preset::loadExistingPresets()
+{
+	_presets.clear();
+	for (const auto & entry : std::filesystem::directory_iterator(PRESET_DIRECTORY))
+	{
+		const std::string fileName = entry.path();
+
+		if (fileName.length() - fileName.rfind(PRESET_EXTENSION) != PRESET_EXTENSION.length()) // Check file extension
+			continue;
+
+		std::ifstream ifs(fileName);
+		if (!ifs.is_open())
+		{
+			std::cerr << "[Preset] could not load: " << fileName << std::endl;
+			continue;
+		}
+
+		std::string presetName = fileName;
+		presetName.erase(presetName.end() - PRESET_EXTENSION.length(), presetName.end()); // remove file extension from prestName
+		presetName.erase(presetName.begin(), presetName.begin() + PRESET_DIRECTORY.length()); // remove folder from presetName
+
+		// Load archive data
+		cereal::XMLInputArchive archive(ifs);
+		PresetSettings presetSettings;
+		archive(presetSettings);
+		_presets[presetName] = presetSettings;
+	}
+}
+
+bool Preset::presetExists(const std::string& presetName) const
+{
+	return _presets.find(presetName) != _presets.end();
 }
 
 std::string Preset::createGenericName() const
