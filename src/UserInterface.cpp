@@ -463,6 +463,11 @@ void UserInterface::printPresets()
 			_presetManager.applyPreset(presetNames[i]);
 		ImGui::SameLine();
 		ImGui::Text("%s", presetNames[i].c_str());
+
+		// Do not create erase button when name contains "preset"
+		if (presetNames[i].find("preset") != std::string::npos)
+			continue;
+
 		ImGui::SameLine();
 		buttonText = ("Erase " + std::to_string(i));
 		if (ImGui::Button(buttonText.c_str()))

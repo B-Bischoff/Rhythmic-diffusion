@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic">
+			<value0>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>5</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>250</simulationInitialValue>
+				<value>150</value>
+			</value0>
+			<value1>
+				<audioTrigger>1</audioTrigger>
+				<reactionPropertie>4</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>100</simulationInitialValue>
+				<value>150</value>
+			</value1>
+			<value2>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>1</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.80000001192092896</simulationInitialValue>
+				<value>0.75</value>
+			</value2>
+			<value3>
+				<audioTrigger>1</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.037999998778104782</simulationInitialValue>
+				<value>0.012000000104308128</value>
+			</value3>
+		</hooks>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.80000001192092896</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.012000000104308128</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.037999998778104782</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>0</shape>
+				<radius>100</radius>
+				<borderSize>15</borderSize>
+				<rotationAngle>0</rotationAngle>
+			</value0>
+			<value1>
+				<shape>3</shape>
+				<radius>250</radius>
+				<borderSize>15</borderSize>
+				<rotationAngle>45</rotationAngle>
+			</value1>
+		</shapes>
+	</presetSettings>
+</cereal>
+

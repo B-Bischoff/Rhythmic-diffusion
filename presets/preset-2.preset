@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic">
+			<value0>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>0.048999998718500137</simulationInitialValue>
+				<value>0.0060000000521540642</value>
+			</value0>
+			<value1>
+				<audioTrigger>1</audioTrigger>
+				<reactionPropertie>1</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>0.164000004529953</simulationInitialValue>
+				<value>0.44999998807907104</value>
+			</value1>
+		</hooks>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.5</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.164000004529953</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.024000000208616257</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.054999999701976776</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>3</shape>
+				<radius>200</radius>
+				<borderSize>10</borderSize>
+				<rotationAngle>0</rotationAngle>
+			</value0>
+		</shapes>
+	</presetSettings>
+</cereal>
+
