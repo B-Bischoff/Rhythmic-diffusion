@@ -105,6 +105,8 @@ add_executable(Rythmic-diffusion
 	src/vendor/imgui/imgui_tables.cpp
 	src/vendor/imgui/imgui_widgets.cpp
 	src/vendor/imgui/imfilebrowser.h
+	src/vendor/imgui/imgui_color_gradient.h
+	src/vendor/imgui/imgui_color_gradient.cpp
 
 	# STK
 	src/vendor/stk/WvIn.h

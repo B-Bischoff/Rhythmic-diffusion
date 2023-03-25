@@ -20,6 +20,13 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 
 	_fileDialog.SetTitle("Select audio file");
 	_fileDialog.SetTypeFilters({".wav"});
+
+	_draggingMark = new ImGradientMark();
+	_selectedMark = new ImGradientMark();
+}
+
+UserInterface::~UserInterface()
+{
 }
 
 void UserInterface::createNewFrame()
@@ -473,4 +480,23 @@ void UserInterface::printPresets()
 		if (ImGui::Button(buttonText.c_str()))
 			_presetManager.removePreset(presetNames[i]);
 	}
+	//_gradientWidget.widget("gradient editor");
+	//ImGG::ColorRGBA color = _gradientWidget.gradient().at(ImGG::RelativePosition(0.5, ImGG::WrapMode::Clamp));
+
+	ImGui::GradientEditor(&_gradient, _draggingMark, _selectedMark);
+
+	//const glm::vec4 color = _gradientWidget.gradient().at({0.5f});
+
+	std::list<ImGradientMark*> markList = _gradient.getMarks();
+	const int markListSize = (int)markList.size();
+	for (int i = 0; i < markListSize; i++)
+	{
+		ImGradientMark* mark = markList.front();
+		std::cout << "[" << i << "]: "<< mark->position << " | " << mark->color[0] << " " << mark->color[1] << " " << mark->color[2] << " " << mark->color[3] << std::endl;
+
+		markList.pop_front();
+	}
+
+	std::cout << "============================================" << std::endl << std::endl;
+
 }

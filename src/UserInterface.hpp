@@ -18,6 +18,10 @@ private:
 	ReactionDiffusionSimulator& _RDSimulator;
 	ImGui::FileBrowser _fileDialog;
 
+	ImGradient _gradient;
+	ImGradientMark* _draggingMark;
+	ImGradientMark* _selectedMark;
+
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
 	Adapter& _adapter;
@@ -44,6 +48,7 @@ public:
 			AudioAnalyzer& audioAnalyzer,
 			Adapter& Adapter,
 			Preset& presetManager);
+	~UserInterface();
 
 	void createNewFrame();
 	void update();

@@ -14,6 +14,7 @@
 #include "../src/vendor/imgui/imgui_impl_glfw.h"
 #include "../src/vendor/imgui/imgui_impl_opengl3.h"
 #include "../src/vendor/imgui/imfilebrowser.h"
+#include "../src/vendor/imgui/imgui_color_gradient.h"
 
 #include "../external/kissfft/kiss_fftr.h"
 #include "../external/kissfft/kiss_fft.h"
@@ -30,6 +31,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <list>
 #include <exception>
 #include <cmath>
 #include <complex>
