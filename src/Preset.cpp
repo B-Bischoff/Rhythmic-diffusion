@@ -141,12 +141,12 @@ bool Preset::presetExists(const std::string& presetName) const
 std::string Preset::createGenericName() const
 {
 	int i = 0;
-	std::string presetName = "preset " + std::to_string(i);
+	std::string presetName = "unnamed-" + std::to_string(i);
 
 	while (presetExists(presetName))
 	{
 		i++;
-		presetName = "preset " + std::to_string(i);
+		presetName = "unnamed-" + std::to_string(i);
 	}
 	return presetName;
 }

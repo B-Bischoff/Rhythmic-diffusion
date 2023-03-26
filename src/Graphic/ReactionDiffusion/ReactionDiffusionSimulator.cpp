@@ -69,11 +69,6 @@ void ReactionDiffusionSimulator::initShaders()
 
 	_colorOutputShader = ComputeShader("src/shaders/display.cs");
 
-	//_diffusionRateAShader = InputParameter(&_parametersTexture);
-	//_diffusionRateBShader = InputParameter(&_parametersTexture);
-	//_feedRateShader = InputParameter(&_parametersTexture);
-	//_killRateShader = InputParameter(&_parametersTexture);
-
 	std::vector<std::string> inputParametersShadersfiles {
 		"src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
 		"src/shaders/parameters/number.comp",
@@ -82,6 +77,8 @@ void ReactionDiffusionSimulator::initShaders()
 		"src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
 	};
 	_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);
+
+	_postProcessing = PostProcessing(&_finalTexture, "src/shaders/display.cs");
 }
 
 void ReactionDiffusionSimulator::processSimulation()
@@ -115,12 +112,6 @@ void ReactionDiffusionSimulator::processInputParameters()
 	_parametersTexture.useTexture(0);
 
 	_inputParameter.execShader(_screenDimensions);
-
-	// Thread input shaders ?
-	//_diffusionRateAShader.execShader(0, _screenDimensions);
-	//_diffusionRateBShader.execShader(1, _screenDimensions);
-	//_feedRateShader.execShader(2, _screenDimensions);
-	//_killRateShader.execShader(3, _screenDimensions);
 }
 
 void ReactionDiffusionSimulator::processDiffusionReaction()
@@ -141,13 +132,7 @@ void ReactionDiffusionSimulator::applyPostProcessing()
 		_compute0Texture.useTexture(0);
 	_finalTexture.useTexture(1);
 
-	// Apply color computation to the image
-	_colorOutputShader.useProgram();
-	_colorOutputShader.setVec3("colorA", _colorA);
-	_colorOutputShader.setVec3("colorB", _colorB);
-	_colorOutputShader.setVec4("visualizeChannels", _parameterTexturesPreview);
-	glDispatchCompute(ceil(_screenDimensions.x/8),ceil(_screenDimensions.y/4),1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+	_postProcessing.execShader(_screenDimensions);
 }
 
 void ReactionDiffusionSimulator::printRendering()
@@ -197,21 +182,6 @@ void ReactionDiffusionSimulator::removeInitialConditionsShape(const int& index)
 
 // --------------------- Reaction diffusion parameters methods ---------------------
 
-void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& preview)
-{
-	if (parameterIndex < 0 || parameterIndex > 3)
-		return;
-
-	_parameterTexturesPreview[parameterIndex] = static_cast<float>(preview);
-}
-
-bool ReactionDiffusionSimulator::getParameterPreview(const int& parameterIndex) const
-{
-	if (parameterIndex < 0 || parameterIndex > 3)
-		return false;
-
-	return static_cast<bool>(_parameterTexturesPreview[parameterIndex]);
-}
 
 void ReactionDiffusionSimulator::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
 {
@@ -236,4 +206,21 @@ void ReactionDiffusionSimulator::setParameterType(const int& parameterIndex, con
 InputParameterType ReactionDiffusionSimulator::getParameterType(const int& parameterIndex)
 {
 	return _inputParameter.getParameterType(parameterIndex);
+}
+
+// --------------------- Post processing methods ---------------------
+
+void ReactionDiffusionSimulator::setPostProcessingGradient(const std::vector<glm::vec4>& gradient)
+{
+	_postProcessing.setGradient(gradient);
+}
+
+void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& value)
+{
+	_postProcessing.setParameterPreview(parameterIndex, value);
+}
+
+bool ReactionDiffusionSimulator::getParameterPreview(const int& parameterIndex) const
+{
+	return _postProcessing.getParameterPreview(parameterIndex);
 }

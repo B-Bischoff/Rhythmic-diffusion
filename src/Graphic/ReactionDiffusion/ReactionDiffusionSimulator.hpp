@@ -4,6 +4,7 @@
 
 #include "./InputParameter.hpp"
 #include "./InitialConditions.hpp"
+#include "./PostProcessing.hpp"
 #include "../OpenGlHelper/Shader.hpp"
 #include "../OpenGlHelper/ComputeShader.hpp"
 #include "../OpenGlHelper/Object.hpp"
@@ -24,6 +25,7 @@ private:
 	InitialConditions _initialConditions;
 	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;
 	InputParameter _inputParameter;
+	PostProcessing _postProcessing;
 
 	Object _plane;
 
@@ -66,11 +68,14 @@ public:
 	void removeInitialConditionsShape(const int& index);
 
 	// Reaction diffusion parameters methods
-	void setParameterPreview(const int& parameterIndex, const bool& preview);
-	bool getParameterPreview(const int& parameterIndex) const;
 	void setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues);
 	const std::vector<float>& getParameterValue(const int& parameterIndex);
 	const std::vector<Parameter>& getParametersValue();
 	void setParameterType(const int& parameterIndex, const InputParameterType& type);
 	InputParameterType getParameterType(const int& parameterIndex);
+
+	// Post processing methods
+	void setPostProcessingGradient(const std::vector<glm::vec4>& gradient);
+	void setParameterPreview(const int& parameterIndex, const bool& value);
+	bool getParameterPreview(const int& parameterIndex) const;
 };

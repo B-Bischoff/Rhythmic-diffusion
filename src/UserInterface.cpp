@@ -480,23 +480,42 @@ void UserInterface::printPresets()
 		if (ImGui::Button(buttonText.c_str()))
 			_presetManager.removePreset(presetNames[i]);
 	}
-	//_gradientWidget.widget("gradient editor");
-	//ImGG::ColorRGBA color = _gradientWidget.gradient().at(ImGG::RelativePosition(0.5, ImGG::WrapMode::Clamp));
 
-	ImGui::GradientEditor(&_gradient, _draggingMark, _selectedMark);
+	// ====================================== TO MOVE IN ANOTHER UI SECTION ======================================
 
-	//const glm::vec4 color = _gradientWidget.gradient().at({0.5f});
-
-	std::list<ImGradientMark*> markList = _gradient.getMarks();
-	const int markListSize = (int)markList.size();
-	for (int i = 0; i < markListSize; i++)
+	bool updateGradient = false;
+	if (ImGui::Button("Remove selected mark"))
 	{
-		ImGradientMark* mark = markList.front();
-		std::cout << "[" << i << "]: "<< mark->position << " | " << mark->color[0] << " " << mark->color[1] << " " << mark->color[2] << " " << mark->color[3] << std::endl;
+		_gradient.removeMark(_selectedMark);
+		updateGradient = true;
+	}
+	if (ImGui::GradientEditor(&_gradient, _draggingMark, _selectedMark))
+		updateGradient = true;
 
-		markList.pop_front();
+	if (updateGradient)
+	{
+		std::list<ImGradientMark*> markList = _gradient.getMarks();
+		std::vector<glm::vec4> gradient;
+
+		const int markListSize = (int)markList.size();
+		for (int i = 0; i < markListSize; i++)
+		{
+			ImGradientMark* mark = markList.front();
+
+			glm::vec4 colorAndPosition(mark->color[0], mark->color[1], mark->color[2], mark->position);
+			gradient.push_back(colorAndPosition);
+
+			markList.pop_front();
+		}
+
+		if (_gradient.getMarks().size() >= 10)
+			_gradient.getMarks().pop_back();
+
+		_RDSimulator.setPostProcessingGradient(gradient);
 	}
 
-	std::cout << "============================================" << std::endl << std::endl;
+
+
+	//std::cout << "============================================" << std::endl << std::endl;
 
 }
