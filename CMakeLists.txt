@@ -69,6 +69,8 @@ add_executable(Rythmic-diffusion
 	src/Graphic/ReactionDiffusion/InputParameter.cpp
 	src/Graphic/ReactionDiffusion/InitialConditions.hpp
 	src/Graphic/ReactionDiffusion/InitialConditions.cpp
+	src/Graphic/ReactionDiffusion/PostProcessing.hpp
+	src/Graphic/ReactionDiffusion/PostProcessing.cpp
 
 	src/Graphic/OpenGlHelper/Shader.hpp
 	src/Graphic/OpenGlHelper/Shader.cpp
