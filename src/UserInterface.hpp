@@ -54,4 +54,6 @@ public:
 	void update();
 	void render();
 	void shutdown();
+
+	ImGradient& getGradient();
 };

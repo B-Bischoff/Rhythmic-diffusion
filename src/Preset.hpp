@@ -1,17 +1,22 @@
-# pragma once
+#pragma once
 
 #include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"
 #include "./Adapter.hpp"
+
+namespace glm {
+	template<class Archive> void serialize(Archive& archive, glm::vec4& v) { archive(v.x, v.y, v.z, v.w); }
+};
 
 struct PresetSettings {
 	std::vector<AdapterHook> hooks; // Stored in adapter
 	std::vector<Parameter> parameters; // Stored in RDS
 	std::vector<InitialConditionsShape> shapes; // Stored in RDS
+	std::vector<glm::vec4> gradient; // Stored in PostProcessing
 
 	template<class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(CEREAL_NVP(hooks), CEREAL_NVP(parameters), CEREAL_NVP(shapes));
+		archive(CEREAL_NVP(hooks), CEREAL_NVP(parameters), CEREAL_NVP(shapes), CEREAL_NVP(gradient));
 	}
 };
 
@@ -19,6 +24,7 @@ class Preset {
 private:
 	ReactionDiffusionSimulator& _RDSsimulator;
 	Adapter& _adapter;
+	ImGradient* _UIGradient;
 
 	const std::string PRESET_EXTENSION = ".preset";
 	const std::string PRESET_DIRECTORY = "presets/";
@@ -36,6 +42,8 @@ public:
 	void removePreset(const std::string& presetName);
 	void applyPreset(const std::string& presetName);
 	std::vector<std::string> getPresetNames() const;
+
+	void setUIGradient(ImGradient& uiGradient);
 
 	template<class Archive>
 	void serialize(Archive& archive);

@@ -23,6 +23,7 @@ public:
 	void execShader(const glm::vec2& SCREEN_DIMENSIONSS);
 
 	void setGradient(const std::vector<glm::vec4>& gradient);
+	const std::vector<glm::vec4>& getGradient() const;
 	bool getParameterPreview(const int& parameterIndex) const;
 	void setParameterPreview(const int& parameterIndex, const bool& value);
 };

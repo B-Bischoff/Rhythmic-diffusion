@@ -76,6 +76,7 @@ public:
 
 	// Post processing methods
 	void setPostProcessingGradient(const std::vector<glm::vec4>& gradient);
+	const std::vector<glm::vec4>& getPostProcessingGradient() const;
 	void setParameterPreview(const int& parameterIndex, const bool& value);
 	bool getParameterPreview(const int& parameterIndex) const;
 };

@@ -36,6 +36,12 @@ void PostProcessing::setGradient(const std::vector<glm::vec4>& gradient)
 	_gradient = gradient;
 }
 
+const std::vector<glm::vec4>& PostProcessing::getGradient() const
+{
+	return _gradient;
+}
+
+
 bool PostProcessing::getParameterPreview(const int& parameterIndex) const
 {
 	if (parameterIndex >= 0 && parameterIndex <= 3)

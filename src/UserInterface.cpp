@@ -519,3 +519,8 @@ void UserInterface::printPresets()
 	//std::cout << "============================================" << std::endl << std::endl;
 
 }
+
+ImGradient& UserInterface::getGradient()
+{
+	return _gradient;
+}

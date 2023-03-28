@@ -1,54 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cereal>
 	<presetSettings>
-		<hooks size="dynamic">
-			<value0>
-				<audioTrigger>0</audioTrigger>
-				<reactionPropertie>2</reactionPropertie>
-				<propertieIndex>0</propertieIndex>
-				<actionMode>0</actionMode>
-				<simulationInitialValue>0.0020000000949949026</simulationInitialValue>
-				<value>0.004999999888241291</value>
-			</value0>
-			<value1>
-				<audioTrigger>1</audioTrigger>
-				<reactionPropertie>1</reactionPropertie>
-				<propertieIndex>0</propertieIndex>
-				<actionMode>0</actionMode>
-				<simulationInitialValue>0.10000000149011612</simulationInitialValue>
-				<value>0.30000001192092896</value>
-			</value1>
-			<value2>
-				<audioTrigger>2</audioTrigger>
-				<reactionPropertie>0</reactionPropertie>
-				<propertieIndex>0</propertieIndex>
-				<actionMode>1</actionMode>
-				<simulationInitialValue>0.63999998569488525</simulationInitialValue>
-				<value>0.40000000596046448</value>
-			</value2>
-		</hooks>
+		<hooks size="dynamic"/>
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.25272053480148315</value0>
+					<value0>0.32844999432563782</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.10000000149011612</value0>
+					<value0>0.09384000301361084</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
 			<value2>
 				<parameters size="dynamic">
-					<value0>0.0048012891784310341</value0>
+					<value0>0.0017600000137463212</value0>
 				</parameters>
 				<type>0</type>
 			</value2>
 			<value3>
 				<parameters size="dynamic">
-					<value0>0.023000000044703484</value0>
+					<value0>0.012609999626874924</value0>
 				</parameters>
 				<type>0</type>
 			</value3>

@@ -30,13 +30,13 @@
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.40000000596046448</value0>
+					<value0>0.79474574327468872</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.46000000834465027</value0>
+					<value0>0.22315257787704468</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
@@ -67,6 +67,20 @@
 				<rotationAngle>45</rotationAngle>
 			</value1>
 		</shapes>
+		<gradient size="dynamic">
+			<value0>
+					<value0>0</value0>
+					<value1>0</value1>
+					<value2>0</value2>
+					<value3>0</value3>
+			</value0>
+			<value1>
+					<value0>1</value0>
+					<value1>1</value1>
+					<value2>1</value2>
+					<value3>1</value3>
+			</value1>
+		</gradient>
 	</presetSettings>
 </cereal>
 

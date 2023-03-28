@@ -215,6 +215,11 @@ void ReactionDiffusionSimulator::setPostProcessingGradient(const std::vector<glm
 	_postProcessing.setGradient(gradient);
 }
 
+const std::vector<glm::vec4>& ReactionDiffusionSimulator::getPostProcessingGradient() const
+{
+	return _postProcessing.getGradient();
+}
+
 void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, const bool& value)
 {
 	_postProcessing.setParameterPreview(parameterIndex, value);

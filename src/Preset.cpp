@@ -4,6 +4,7 @@ Preset::Preset(ReactionDiffusionSimulator& RDSsimulator, Adapter& adapter)
 	: _RDSsimulator(RDSsimulator), _adapter(adapter)
 {
 	loadExistingPresets();
+	_UIGradient = nullptr;
 }
 
 void Preset::addPreset(std::string presetName)
@@ -23,6 +24,7 @@ void Preset::addPreset(std::string presetName)
 	presetSettings.hooks = _adapter.getHooks();
 	presetSettings.parameters = _RDSsimulator.getParametersValue();
 	presetSettings.shapes = _RDSsimulator.getInitialConditionsShapes();
+	presetSettings.gradient = std::vector<glm::vec4>(_RDSsimulator.getPostProcessingGradient());
 
 	// Save to a local file
 	const std::string presetFile = PRESET_DIRECTORY + presetName + PRESET_EXTENSION;
@@ -91,6 +93,22 @@ void Preset::applyPreset(const std::string& presetName)
 		InitialConditionsShape& shape = presetSettings.shapes[i];
 		_RDSsimulator.addInitialConditionsShape(shape);
 	}
+
+	// Gradient
+	_RDSsimulator.setPostProcessingGradient(presetSettings.gradient);
+
+	// Update gradient UI
+	if (_UIGradient == nullptr)
+		return;
+
+	_UIGradient->getMarks().clear();
+	for (int i = 0; i < (int)presetSettings.gradient.size(); i++)
+	{
+		glm::vec4& gradientElem = presetSettings.gradient[i];
+		ImColor color(gradientElem.x, gradientElem.y, gradientElem.z, 1.0);
+		_UIGradient->addMark(gradientElem.w, color);
+
+	}
 }
 
 std::vector<std::string> Preset::getPresetNames() const
@@ -149,4 +167,9 @@ std::string Preset::createGenericName() const
 		presetName = "unnamed-" + std::to_string(i);
 	}
 	return presetName;
+}
+
+void Preset::setUIGradient(ImGradient &uiGradient)
+{
+	_UIGradient = &uiGradient;
 }
