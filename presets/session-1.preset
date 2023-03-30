@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic">
+			<value0>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.012600000016391277</simulationInitialValue>
+				<value>0.004999999888241291</value>
+			</value0>
+			<value1>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>2</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.0017500000540167093</simulationInitialValue>
+				<value>0.001500000013038516</value>
+			</value1>
+		</hooks>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.0029299999587237835</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.026399999856948853</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.0017500000540167093</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.012600000016391277</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>3</shape>
+				<radius>200</radius>
+				<borderSize>10</borderSize>
+				<rotationAngle>0</rotationAngle>
+			</value0>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>0</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0</value3>
+			</value0>
+			<value1>
+				<value0>0.63996243476867676</value0>
+				<value1>0.255912184715271</value1>
+				<value2>0.8649061918258667</value2>
+				<value3>0.14591437578201294</value3>
+			</value1>
+			<value2>
+				<value0>0.72672677040100098</value0>
+				<value1>0.62852048873901367</value1>
+				<value2>0</value2>
+				<value3>0.22373539209365845</value3>
+			</value2>
+			<value3>
+				<value0>1</value0>
+				<value1>1</value1>
+				<value2>1</value2>
+				<value3>1</value3>
+			</value3>
+		</gradient>
+	</presetSettings>
+</cereal>
+
