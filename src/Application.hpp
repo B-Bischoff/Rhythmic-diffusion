@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../inc/include.hpp"
-#include "./UserInterface.hpp"
+#include "./UserInterface/UserInterface.hpp"
 #include "./Audio/AudioPlayer.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
 #include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"

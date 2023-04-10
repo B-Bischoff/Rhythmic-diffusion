@@ -56,12 +56,25 @@ add_executable(Rythmic-diffusion
 	src/main.cpp
 	src/Application.hpp
 	src/Application.cpp
-	src/UserInterface.hpp
-	src/UserInterface.cpp
 	src/Adapter.hpp
 	src/Adapter.cpp
 	src/Preset.hpp
 	src/Preset.cpp
+
+	src/UserInterface/UserInterface.hpp
+	src/UserInterface/UserInterface.cpp
+	src/UserInterface/AudioPlayerUI.hpp
+	src/UserInterface/AudioPlayerUI.cpp
+	src/UserInterface/HooksUI.hpp
+	src/UserInterface/HooksUI.cpp
+	src/UserInterface/InitialConditionsUI.hpp
+	src/UserInterface/InitialConditionsUI.cpp
+	src/UserInterface/PresetUI.hpp
+	src/UserInterface/PresetUI.cpp
+	src/UserInterface/RDOptionsUI.hpp
+	src/UserInterface/RDOptionsUI.cpp
+	src/UserInterface/GradientUI.hpp
+	src/UserInterface/GradientUI.cpp
 
 	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp
 	src/Graphic/ReactionDiffusion/ReactionDiffusionSimulator.cpp

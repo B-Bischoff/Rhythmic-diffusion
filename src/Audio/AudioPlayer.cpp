@@ -3,8 +3,7 @@
 AudioPlayer::AudioPlayer()
 {
 	_wavFileName = std::string();
-	_audioSamples.reserve(2048); // Change 2048 to a "sampleNb" variable
-
+	_audioSamples.reserve(2048);
 
 	// Set the global sample rate before creating class instances.
 	stk::Stk::setSampleRate((stk::StkFloat)44100.0);
@@ -16,14 +15,16 @@ AudioPlayer::AudioPlayer()
 
 AudioPlayer::~AudioPlayer()
 {
-	stopPlaying();
+	if (isPlaying())
+		stopPlaying();
 }
 
 int AudioPlayer::playWavFile(const std::string& wavFileName)
 {
 	_wavFileName = wavFileName;
 
-	// check if not already playing something
+	if (isPlaying())
+		stopPlaying();
 	_audioPlayingThread = std::thread(&AudioPlayer::startPlaying, this);
 
 	return 0;
@@ -56,6 +57,9 @@ void AudioPlayer::startPlaying()
 
 	try {
 		dac.openStream(&parameters, NULL, format, (unsigned int)stk::Stk::sampleRate(), &bufferFrames, tick, (void *)&callbackData );
+		stk::Stk::sleep(100);
+		input.setRate((stk::StkFloat)0.0);
+		_isPlaying = false;
 	}
 	catch ( RtAudioError &error ) {
 		error.printMessage();

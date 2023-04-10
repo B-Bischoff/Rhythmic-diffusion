@@ -1,7 +1,14 @@
 #pragma once
 
-#include "../inc/include.hpp"
-#include "./Application.hpp"
+#include "../../inc/include.hpp"
+#include "../Application.hpp"
+
+#include "AudioPlayerUI.hpp"
+#include "HooksUI.hpp"
+#include "InitialConditionsUI.hpp"
+#include "PresetUI.hpp"
+#include "RDOptionsUI.hpp"
+#include "GradientUI.hpp"
 
 class InputParameter;
 class AudioPlayer;
@@ -27,16 +34,18 @@ private:
 	Adapter& _adapter;
 	Preset& _presetManager;
 
-	void printOptionsFields(const int& i);
-	void printNumberTypeFields(const int& i, const float& min, const float& max);
-	void printNoiseFields(const int& i);
+	AudioPlayerUI _audioPlayerUI;
+	HooksUI _hooksUI;
+	InitialConditionsUI _initialConditionsUI;
+	PresetUI _presetUI;
+	RDOptionsUI _RDOptionsUI;
+	GradientUI _gradientUI;
 
 	void printAudioPlayer();
 	void printAdapterHook();
 	void printInitialConditions();
 	void printPresets();
-
-	std::string getFieldNameFromIndex(const int& index) const;
+	void printGradient();
 
 public:
 	UserInterface(GLFWwindow& window,

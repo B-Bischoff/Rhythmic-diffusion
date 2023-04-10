@@ -67,11 +67,6 @@ void Application::loop()
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 
-	// Default playing song
-	const std::string downloadPath = "../../Downloads/wav/";
-	const std::string file = downloadPath + "I-HATE-MODELS-Sorrows-of-the-Moon-_ARTSCORE002_.wav";
-	audioPlayer.playWavFile(file.c_str());
-
 	RDSimulator.setSimulationSpeed(1.0);
 	RDSimulator.setSimulationColorA(glm::vec3(0.015, 0.004, 0.12));
 	RDSimulator.setSimulationColorB(glm::vec3(1.0));
@@ -80,20 +75,12 @@ void Application::loop()
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
 	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
 
-	bool firstFrame = true;
-
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		printFps(deltaTime, lastFrame, fCounter);
-
-		if (firstFrame) // To remove -> audioPlayer should not instantly play
-		{
-			firstFrame = false;
-			audioPlayer.togglePause();
-		}
 
 		ui.createNewFrame();
 		ui.update();
