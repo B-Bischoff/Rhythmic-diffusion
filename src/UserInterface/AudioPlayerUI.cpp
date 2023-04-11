@@ -27,8 +27,10 @@ void AudioPlayerUI::print()
 	float audioDuration = _audioPlayer.getWavFileDuration() / 44100.0; // In seconds
 	float currentDuration = _audioPlayer.getCurrentTimestamp() / 44100.0; // In seconds
 	float modifiedDuration = currentDuration;
-	ImGui::SliderFloat("timestamp", &modifiedDuration, 0, audioDuration);
-	if (modifiedDuration != currentDuration)
+
+	ImGui::Text("%s", convertSecondsToHoursMinutesSeconds(currentDuration).c_str());
+	ImGui::SameLine(70);
+	if (ImGui::SliderFloat(convertSecondsToHoursMinutesSeconds(audioDuration).c_str(), &modifiedDuration, 0, audioDuration, ""))
 		_audioPlayer.setTimestamp((modifiedDuration - currentDuration) * 16384);
 
 	// GRAPH
@@ -42,4 +44,29 @@ void AudioPlayerUI::print()
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
 
+}
+
+std::string AudioPlayerUI::convertSecondsToHoursMinutesSeconds(const int& seconds) const
+{
+	int n = seconds;
+	n = n % (24 * 3600);
+	int hour = n / 3600;
+
+	n %= 3600;
+	int minutes = n / 60 ;
+
+	n %= 60;
+	int secondsRemaining = n;
+
+	std::string result;
+	if (seconds >= 3600)
+		result += std::to_string(hour) + ":"; // hours
+	if (minutes < 10)
+		result += "0";
+	result +=  std::to_string(minutes) + ":"; // minutes
+
+	if (secondsRemaining < 10)
+		result += "0";
+	result += std::to_string(secondsRemaining); // seconds
+	return result;
 }

@@ -13,6 +13,8 @@ private:
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
 
+	std::string convertSecondsToHoursMinutesSeconds(const int& seconds) const;
+
 public:
 	AudioPlayerUI(ImGui::FileBrowser& fileBrowser, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer);
 

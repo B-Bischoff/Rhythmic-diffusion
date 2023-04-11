@@ -2,7 +2,7 @@
 
 UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter, Preset& presetManager)
 	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter), _presetManager(presetManager),
-	_audioPlayerUI(_fileDialog, _audioPlayer, _audioAnalyzer),
+	_audioPlayerUI(_fileBrowser, _audioPlayer, _audioAnalyzer),
 	_hooksUI(_RDSimulator, _adapter),
 	_initialConditionsUI(_RDSimulator),
 	_presetUI(_RDSimulator, _presetManager),
@@ -22,8 +22,8 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 	ImGui_ImplGlfw_InitForOpenGL(&_window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	_fileDialog.SetTitle("Select audio file");
-	_fileDialog.SetTypeFilters({".wav"});
+	_fileBrowser.SetTitle("Select audio file");
+	_fileBrowser.SetTypeFilters({".wav"});
 }
 
 UserInterface::~UserInterface()
@@ -61,7 +61,7 @@ void UserInterface::update()
 		_RDSimulator.setSimulationSpeed(speed);
 	ImGui::Separator();
 
-	printAudioPlayer();
+	_audioPlayerUI.print();
 	ImGui::Separator();
 
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
@@ -76,13 +76,13 @@ void UserInterface::update()
 
 		if (ImGui::BeginTabItem("Hooks"))
 		{
-			printAdapterHook();
+			_hooksUI.print();
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem("Shapes"))
 		{
-			printInitialConditions();
+			_initialConditionsUI.print();
 			ImGui::EndTabItem();
 
 		}
@@ -94,7 +94,7 @@ void UserInterface::update()
 
 		if (ImGui::BeginTabItem("Preset"))
 		{
-			printPresets();
+			_presetUI.print();
 			ImGui::EndTabItem();
 		}
 	}
@@ -102,12 +102,12 @@ void UserInterface::update()
 	ImGui::End();
 
 	// File explorer launching audio on selection
-	_fileDialog.Display();
-	if (_fileDialog.HasSelected())
+	_fileBrowser.Display();
+	if (_fileBrowser.HasSelected())
 	{
 		_audioPlayer.stopPlaying();
-		_audioPlayer.playWavFile(_fileDialog.GetSelected());
-		_fileDialog.ClearSelected();
+		_audioPlayer.playWavFile(_fileBrowser.GetSelected());
+		_fileBrowser.ClearSelected();
 	}
 }
 
@@ -122,26 +122,6 @@ void UserInterface::shutdown()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-}
-
-void UserInterface::printAudioPlayer()
-{
-	_audioPlayerUI.print();
-}
-
-void UserInterface::printAdapterHook()
-{
-	_hooksUI.print();
-}
-
-void UserInterface::printInitialConditions()
-{
-	_initialConditionsUI.print();
-}
-
-void UserInterface::printPresets()
-{
-	_presetUI.print();
 }
 
 ImGradient& UserInterface::getGradient()

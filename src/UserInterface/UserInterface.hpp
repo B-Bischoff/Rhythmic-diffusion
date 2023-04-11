@@ -23,11 +23,8 @@ private:
 	GLFWwindow& _window;
 	const int WIN_WIDTH, WIN_HEIGHT, UI_WIDTH;
 	ReactionDiffusionSimulator& _RDSimulator;
-	ImGui::FileBrowser _fileDialog;
-
+	ImGui::FileBrowser _fileBrowser;
 	ImGradient _gradient;
-	ImGradientMark* _draggingMark;
-	ImGradientMark* _selectedMark;
 
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
@@ -40,12 +37,6 @@ private:
 	PresetUI _presetUI;
 	RDOptionsUI _RDOptionsUI;
 	GradientUI _gradientUI;
-
-	void printAudioPlayer();
-	void printAdapterHook();
-	void printInitialConditions();
-	void printPresets();
-	void printGradient();
 
 public:
 	UserInterface(GLFWwindow& window,
