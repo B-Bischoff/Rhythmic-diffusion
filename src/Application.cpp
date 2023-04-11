@@ -63,7 +63,8 @@ void Application::loop()
 
 	Preset presetManager(RDSimulator, adapter);
 	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter, presetManager);
-	presetManager.setUIGradient(ui.getGradient());
+	RDSimulator.setUIGradient(ui.getGradient());
+
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 

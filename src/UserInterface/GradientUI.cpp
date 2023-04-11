@@ -38,5 +38,5 @@ void GradientUI::print()
 	if (_gradient.getMarks().size() >= 10)
 		_gradient.getMarks().pop_back();
 
-	_RDSimulator.setPostProcessingGradient(gradient);
+	_RDSimulator.setPostProcessingGradient(gradient, 0.0);
 }

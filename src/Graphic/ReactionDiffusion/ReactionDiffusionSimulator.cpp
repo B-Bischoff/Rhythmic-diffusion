@@ -124,6 +124,9 @@ void ReactionDiffusionSimulator::processDiffusionReaction()
 
 void ReactionDiffusionSimulator::applyPostProcessing()
 {
+	if (_postProcessing.getSmoothGradientUpdate())
+		_postProcessing.smoothGradientUpdate();
+
 	if (_currentTexture == 1)
 		_compute1Texture.useTexture(0);
 	else
@@ -204,9 +207,9 @@ InputParameterType ReactionDiffusionSimulator::getParameterType(const int& param
 
 // --------------------- Post processing methods ---------------------
 
-void ReactionDiffusionSimulator::setPostProcessingGradient(const std::vector<glm::vec4>& gradient)
+void ReactionDiffusionSimulator::setPostProcessingGradient(const std::vector<glm::vec4>& gradient, const double& duration)
 {
-	_postProcessing.setGradient(gradient);
+	_postProcessing.setGradient(gradient, duration);
 }
 
 const std::vector<glm::vec4>& ReactionDiffusionSimulator::getPostProcessingGradient() const
@@ -222,4 +225,9 @@ void ReactionDiffusionSimulator::setParameterPreview(const int& parameterIndex, 
 bool ReactionDiffusionSimulator::getParameterPreview(const int& parameterIndex) const
 {
 	return _postProcessing.getParameterPreview(parameterIndex);
+}
+
+void ReactionDiffusionSimulator::setUIGradient(ImGradient& uiGradient)
+{
+	_postProcessing.setUIGradient(uiGradient);
 }

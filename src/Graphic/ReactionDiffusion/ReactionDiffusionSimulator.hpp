@@ -72,8 +72,9 @@ public:
 	InputParameterType getParameterType(const int& parameterIndex);
 
 	// Post processing methods
-	void setPostProcessingGradient(const std::vector<glm::vec4>& gradient);
+	void setPostProcessingGradient(const std::vector<glm::vec4>& gradient, const double& duration);
 	const std::vector<glm::vec4>& getPostProcessingGradient() const;
 	void setParameterPreview(const int& parameterIndex, const bool& value);
 	bool getParameterPreview(const int& parameterIndex) const;
+	void setUIGradient(ImGradient& uiGradient);
 };

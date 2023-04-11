@@ -24,7 +24,6 @@ class Preset {
 private:
 	ReactionDiffusionSimulator& _RDSsimulator;
 	Adapter& _adapter;
-	ImGradient* _UIGradient;
 
 	const std::string PRESET_EXTENSION = ".preset";
 	const std::string PRESET_DIRECTORY = "presets/";
@@ -42,8 +41,6 @@ public:
 	void removePreset(const std::string& presetName);
 	void applyPreset(const std::string& presetName);
 	std::vector<std::string> getPresetNames() const;
-
-	void setUIGradient(ImGradient& uiGradient);
 
 	template<class Archive>
 	void serialize(Archive& archive);
