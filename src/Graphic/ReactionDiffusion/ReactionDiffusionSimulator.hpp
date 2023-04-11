@@ -34,7 +34,6 @@ private:
 
 	// Simulation properties
 	float _simulationSpeed;
-	glm::vec3 _colorA, _colorB;
 	glm::vec4 _parameterTexturesPreview; // each component represents as a boolean if the input param should be printed
 
 	void initPlane();
@@ -58,8 +57,6 @@ public:
 	// Global settings
 	void resetSimulation();
 	void setSimulationSpeed(const float& speed);
-	void setSimulationColorA(const glm::vec3& color);
-	void setSimulationColorB(const glm::vec3& color);
 
 	// Initial conditions methods
 	void addInitialConditionsShape(InitialConditionsShape shape);

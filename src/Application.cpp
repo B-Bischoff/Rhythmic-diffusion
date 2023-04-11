@@ -68,8 +68,6 @@ void Application::loop()
 	float lastFrame = 0.0f;
 
 	RDSimulator.setSimulationSpeed(1.0);
-	RDSimulator.setSimulationColorA(glm::vec3(0.015, 0.004, 0.12));
-	RDSimulator.setSimulationColorB(glm::vec3(1.0));
 	RDSimulator.setParameterValue(0, std::vector<float>(1, 0.387));
 	RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));

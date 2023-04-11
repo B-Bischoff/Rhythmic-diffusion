@@ -5,8 +5,6 @@ ReactionDiffusionSimulator::ReactionDiffusionSimulator(GLFWwindow* window, const
 {
 	_init = true;
 	_currentTexture = 0;
-	_colorA = glm::vec3(0.05);
-	_colorB = glm::vec3(0.9);
 	_parameterTexturesPreview = glm::vec4(0);
 
 	initPlane();
@@ -153,10 +151,6 @@ void ReactionDiffusionSimulator::resetSimulation()
 }
 
 void ReactionDiffusionSimulator::setSimulationSpeed(const float& speed) { _simulationSpeed = speed; }
-
-void ReactionDiffusionSimulator::setSimulationColorA(const glm::vec3& color) { _colorA = color; }
-
-void ReactionDiffusionSimulator::setSimulationColorB(const glm::vec3& color) { _colorB = color; }
 
 // --------------------- Initial conditions methods ---------------------
 
