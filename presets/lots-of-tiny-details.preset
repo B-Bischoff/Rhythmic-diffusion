@@ -38,17 +38,35 @@
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-					<value0>0</value0>
-					<value1>0</value1>
-					<value2>0</value2>
-					<value3>0</value3>
+				<value0>3.4051552683093055e-42</value0>
+				<value1>-1.0545199357280509e-14</value1>
+				<value2>-8.3608250531219674e-14</value2>
+				<value3>9.4587646341925152e-43</value3>
 			</value0>
 			<value1>
-					<value0>1</value0>
-					<value1>1</value1>
-					<value2>1</value2>
-					<value3>1</value3>
+				<value0>0.015745395794510841</value0>
+				<value1>0</value1>
+				<value2>0.29129129648208618</value2>
+				<value3>0.10505836457014084</value3>
 			</value1>
+			<value2>
+				<value0>1</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0.16731517016887665</value3>
+			</value2>
+			<value3>
+				<value0>1</value0>
+				<value1>1</value1>
+				<value2>1</value2>
+				<value3>0.24902722239494324</value3>
+			</value3>
+			<value4>
+				<value0>1</value0>
+				<value1>1</value1>
+				<value2>1</value2>
+				<value3>1</value3>
+			</value4>
 		</gradient>
 	</presetSettings>
 </cereal>

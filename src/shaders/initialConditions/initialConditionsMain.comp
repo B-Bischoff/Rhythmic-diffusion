@@ -8,25 +8,40 @@ bool insideAnyShape(int currentShape)
 		return insideHexagon(currentShape);
 	else if (shapes[currentShape] == 3)
 		return insideSquare(currentShape);
+	else if (shapes[currentShape] == 4)
+		return insideRectangle(currentShape);
 
 	return false;
 }
 
+// Preliminary check to avoid executing "insideAnyShape" for every pixels
+bool isInsideShapeBound(int currentShape, ivec2 pixel_coords)
+{
+	const vec2 imageSize = imageSize(texture);
+	const vec2 center = imageSize / 2.0;
+	vec2 topLeftBound = center - radius[currentShape];
+	vec2 bottomRightBound = center + radius[currentShape];
+
+	return (!(pixel_coords.x < topLeftBound.x
+	|| pixel_coords.y < topLeftBound.y
+	|| pixel_coords.x > bottomRightBound.x
+	|| pixel_coords.y > bottomRightBound.y)
+	);
+}
+
 void main()
 {
-	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	//vec4 existingPixel = imageLoad(texture, pixel_coords);
-
 	int currentShape = 0;
+	const ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 
 	while (currentShape < MAX_SHAPE && shapes[currentShape] != -1)
 	{
-		if (insideAnyShape(currentShape))
+		if (isInsideShapeBound(currentShape, pixel_coords) && insideAnyShape(currentShape))
 		{
-			//vec4 existingPixel = 1.0;
-			imageStore(texture, pixel_coords, vec4(1.0, 1.0, 1.0, 1.0));
+			imageStore(texture, pixel_coords, vec4(1.0));
 			break;
 		}
+
 
 		currentShape++;
 	}

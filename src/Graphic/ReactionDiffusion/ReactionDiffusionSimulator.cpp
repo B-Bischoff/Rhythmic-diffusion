@@ -61,6 +61,7 @@ void ReactionDiffusionSimulator::initShaders()
 		"src/shaders/initialConditions/hexagon.comp",
 		"src/shaders/initialConditions/circle.comp",
 		"src/shaders/initialConditions/square.comp",
+		"src/shaders/initialConditions/rectangle.comp",
 		"src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
 	};
 	_initialConditions = InitialConditions(initialConditionsShadersfiles);

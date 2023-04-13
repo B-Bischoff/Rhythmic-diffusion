@@ -8,7 +8,7 @@ InitialConditionsUI::InitialConditionsUI(ReactionDiffusionSimulator& RDSimulator
 void InitialConditionsUI::print()
 {
 	static int shape = 0;
-	const char* shapesElements = "circle\0triangle\0hexagon\0square\0";
+	const char* shapesElements = "circle\0triangle\0hexagon\0square\0rectangle\0";
 	ImGui::Combo("shape shape", &shape, shapesElements);
 
 	static float radius = 0;

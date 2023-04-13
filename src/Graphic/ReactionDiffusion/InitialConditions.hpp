@@ -6,7 +6,7 @@
 
 #define MAX_SHAPE 16 // The same value should be present in glslSpec.comp
 
-enum Shape { None = -1, Circle, Triangle, Hexagon, Square};
+enum Shape { None = -1, Circle, Triangle, Hexagon, Square, Rectangle};
 
 struct InitialConditionsShape {
 	Shape shape;
