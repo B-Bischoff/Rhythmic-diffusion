@@ -12,7 +12,7 @@ void InitialConditionsUI::print()
 	ImGui::Combo("shape shape", &shape, shapesElements);
 
 	static float radius = 0;
-	ImGui::SliderFloat("shape radius", &radius, 0, 1000);
+	ImGui::SliderFloat("shape radius", &radius, 0, 2000);
 
 	static float borderSize = 0;
 	ImGui::SliderFloat("shape border", &borderSize, 0, 1000);

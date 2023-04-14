@@ -89,7 +89,6 @@ void PostProcessing::smoothGradientUpdate()
 
 	if (elapsedTime.count() >= 5.0)
 	{
-		std::cout << "finished smooth update " << std::endl;
 		_smoothGradientUpdate = false;
 
 		// Clean colors on the same position (happens if the old gradient has more colors than the new one)

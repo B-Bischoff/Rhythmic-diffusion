@@ -11,10 +11,10 @@ bool insideRectangle(int currentShape)
 	const vec2 center = imageSize / 2.0;
 
 	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(center.x - width, center.y - height); // Top left corner
-	vec2 v2 = vec2(center.x + width, center.y - height); // Top right corner
-	vec2 v3 = vec2(center.x - width, center.y + height); // Bottom left corner
-	vec2 v4 = vec2(center.x + width, center.y + height); // Bottom right corner
+	vec2 v1 = vec2(center.x - width / 2, center.y - height / 2); // Top left corner
+	vec2 v2 = vec2(center.x + width / 2, center.y - height / 2); // Top right corner
+	vec2 v3 = vec2(center.x - width / 2, center.y + height / 2); // Bottom left corner
+	vec2 v4 = vec2(center.x + width / 2, center.y + height / 2); // Bottom right corner
 
 	float theta = radians(angle[currentShape]);
 	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));
