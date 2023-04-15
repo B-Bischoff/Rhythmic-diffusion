@@ -15,12 +15,14 @@ private:
 	// vector containing audio data used by the frequency analyzer
 	std::vector<float> _audioSamples;
 	std::string _wavFileName;
+	std::string _wavFileNameWithoutPath;
 	std::thread _audioPlayingThread;
 
 
 	double _frameRead;
 	bool _isPlaying;
 	bool _songFinished;
+	bool _streamOpened;
 
 	double _volume; // Percentage
 
@@ -41,8 +43,10 @@ public:
 	double getCurrentTimestamp() const;
 	unsigned long getWavFileDuration();
 	std::string getFileName() const;
+	std::string getFileNameWithoutPath() const;
 	double getVolume() const;
 	bool isPlaying() const;
+	bool getStreamOpened() const;
 
 	AudioAnalyzer* _audioAnalyzer; // TO PASS IN PRIVATE
 };

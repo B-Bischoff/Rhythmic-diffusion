@@ -11,6 +11,7 @@ AudioPlayer::AudioPlayer()
 
 	_volume = 10.0;
 	_isPlaying = false;
+	_streamOpened = false;
 }
 
 AudioPlayer::~AudioPlayer()
@@ -22,6 +23,13 @@ AudioPlayer::~AudioPlayer()
 int AudioPlayer::playWavFile(const std::string& wavFileName)
 {
 	_wavFileName = wavFileName;
+
+	if (_wavFileName.find("\\") == std::string::npos)
+		_wavFileNameWithoutPath = wavFileName;
+
+	size_t lastSlash = _wavFileName.find_last_of("\\/");
+	std::cout << lastSlash << std::endl;
+	_wavFileNameWithoutPath = wavFileName.substr(lastSlash + 1, _wavFileName.length() - lastSlash);
 
 	if (isPlaying())
 		stopPlaying();
@@ -71,6 +79,7 @@ void AudioPlayer::startPlaying()
 
 	try {
 		dac.startStream();
+		_streamOpened = true;
 	}
 	catch ( RtAudioError &error ) {
 		error.printMessage();
@@ -86,6 +95,7 @@ void AudioPlayer::startPlaying()
 	// is automatically stopped.	But we should still close it.
 	try {
 		dac.closeStream();
+		_streamOpened = false;
 	}
 	catch ( RtAudioError &error ) {
 		error.printMessage();
@@ -187,6 +197,11 @@ std::string AudioPlayer::getFileName() const
 	return _wavFileName;
 }
 
+std::string AudioPlayer::getFileNameWithoutPath() const
+{
+	return _wavFileNameWithoutPath;
+}
+
 void AudioPlayer::setVolume(const double& newVolume)
 {
 	_volume = newVolume;
@@ -200,4 +215,9 @@ double AudioPlayer::getVolume() const
 bool AudioPlayer::isPlaying() const
 {
 	return _isPlaying;
+}
+
+bool AudioPlayer::getStreamOpened() const
+{
+	return _streamOpened;
 }

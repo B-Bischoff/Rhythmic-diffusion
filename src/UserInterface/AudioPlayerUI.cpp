@@ -12,10 +12,16 @@ void AudioPlayerUI::print()
 		_fileBrowser.Open();
 
 	// PAUSE / RESUME
-	ImGui::Text("audio file: %s", _audioPlayer.getFileName().c_str());
+	ImGui::SameLine();
+	ImGui::Text("audio file: %s", _audioPlayer.getFileNameWithoutPath().c_str());
 	const std::string pauseResumeText = _audioPlayer.isPlaying() ? "Pause" : "Resume";
 	if (ImGui::Button(pauseResumeText.c_str()))
-		_audioPlayer.togglePause();
+	{
+		if (_audioPlayer.getStreamOpened())
+			_audioPlayer.togglePause();
+		else if (!_audioPlayer.getFileName().empty())
+			_audioPlayer.playWavFile(_audioPlayer.getFileName());
+	}
 
 	// VOLUME
 	float volume = _audioPlayer.getVolume();
@@ -31,7 +37,12 @@ void AudioPlayerUI::print()
 	ImGui::Text("%s", convertSecondsToHoursMinutesSeconds(currentDuration).c_str());
 	ImGui::SameLine(70);
 	if (ImGui::SliderFloat(convertSecondsToHoursMinutesSeconds(audioDuration).c_str(), &modifiedDuration, 0, audioDuration, ""))
-		_audioPlayer.setTimestamp((modifiedDuration - currentDuration) * 16384);
+	{
+		if (_audioPlayer.getStreamOpened())
+			_audioPlayer.setTimestamp((modifiedDuration - currentDuration) * 16384);
+		else if (!_audioPlayer.getFileName().empty())
+			_audioPlayer.playWavFile(_audioPlayer.getFileName());
+	}
 
 	// GRAPH
 	const int ARRAY_SIZE = _audioAnalyzer.getOutputArraySize();
@@ -44,6 +55,7 @@ void AudioPlayerUI::print()
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
 
+	ImGui::Text("\n\n");
 }
 
 std::string AudioPlayerUI::convertSecondsToHoursMinutesSeconds(const int& seconds) const
