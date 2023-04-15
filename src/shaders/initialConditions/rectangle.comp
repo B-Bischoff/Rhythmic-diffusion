@@ -8,7 +8,7 @@ bool insideRectangle(int currentShape)
 	const float height = border[currentShape];
 
 	const vec2 imageSize = imageSize(texture);
-	const vec2 center = imageSize / 2.0;
+	const vec2 center = imageSize / 2.0 + offset[currentShape];
 
 	// Define the coordinates of the triangle's vertices
 	vec2 v1 = vec2(center.x - width / 2, center.y - height / 2); // Top left corner

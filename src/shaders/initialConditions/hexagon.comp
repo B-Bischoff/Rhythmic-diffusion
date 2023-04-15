@@ -6,18 +6,19 @@
 bool insideTriangle(int currentShape, float triangleAngle, float hexagonRadius)
 {
 	const vec2 imageSize = imageSize(texture);
+	vec2 center = imageSize / 2.0 + offset[currentShape];
 
 	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(imageSize.x / 2.0, imageSize.y / 2.0); // Top vertex
+	vec2 v1 = vec2(imageSize.x / 2.0, imageSize.y / 2.0) + offset[currentShape]; // Top vertex
 
 	// Things go crazy when you put anything but 60
 	float x = cos(radians(60.0)) * hexagonRadius;
 	float y = sin(radians(60.0)) * hexagonRadius;
-	vec2 v2 = vec2(imageSize.x / 2.0 - x, imageSize.y / 2.0 - y); // Left vertex
-	vec2 v3 = vec2(imageSize.x / 2.0 + x, imageSize.y / 2.0 - y); // Right vertex
+	vec2 v2 = vec2(center.x - x, center.y - y); // Left vertex
+	vec2 v3 = vec2(center.x + x, center.y - y); // Right vertex
 
 	// The triangle's pivot point is its top vertex
-	vec2 center = v1;
+	//center = v1 + offset[currentShape];
 
 	float theta = radians(triangleAngle + angle[currentShape]);
 	mat2 rotationMatrix = mat2(cos(theta), -sin(theta), sin(theta), cos(theta));

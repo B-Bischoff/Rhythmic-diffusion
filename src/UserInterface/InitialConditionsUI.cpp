@@ -56,6 +56,13 @@ void InitialConditionsUI::print()
 		if (ImGui::SliderFloat(str.c_str(), &shapeAngle, 0, 360))
 			shapes[i].rotationAngle = shapeAngle;
 
+		float offset[2];
+		offset[0] = shapes[i].offset.x;
+		offset[1] = shapes[i].offset.y;
+		str = "offset " + std::to_string(i);
+		if (ImGui::SliderFloat2(str.c_str(), offset, -1000, 1000))
+			shapes[i].offset = glm::vec2(offset[0], offset[1]);
+
 		str = "erase shape " + std::to_string(i);
 		if (ImGui::Button(str.c_str()))
 		{

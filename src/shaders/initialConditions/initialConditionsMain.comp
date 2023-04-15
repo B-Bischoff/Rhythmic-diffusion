@@ -18,7 +18,7 @@ bool insideAnyShape(int currentShape)
 bool isInsideShapeBound(int currentShape, ivec2 pixel_coords)
 {
 	const vec2 imageSize = imageSize(texture);
-	const vec2 center = imageSize / 2.0;
+	const vec2 center = imageSize / 2.0 + offset[currentShape];
 	vec2 topLeftBound = center - radius[currentShape];
 	vec2 bottomRightBound = center + radius[currentShape];
 

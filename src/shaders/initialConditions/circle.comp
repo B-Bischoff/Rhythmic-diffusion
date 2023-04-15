@@ -1,9 +1,9 @@
-bool insidePlainCircle(float circleRadius)
+bool insidePlainCircle(float circleRadius, int currentShape)
 {
 	const vec2 imageSize = imageSize(texture);
 
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
-	ivec2 center = ivec2(imageSize.x / 2.0, imageSize.y / 2.0);
+	ivec2 center = ivec2(imageSize.x / 2.0, imageSize.y / 2.0) + offset[currentShape];
 	int x = center.x - pixel_coords.x;
 	x = x * x;
 	int y = center.y - pixel_coords.y;
@@ -14,13 +14,13 @@ bool insidePlainCircle(float circleRadius)
 
 bool insideCircle(int currentShape)
 {
-	bool insideLargerCircle = insidePlainCircle(radius[currentShape]);
+	bool insideLargerCircle = insidePlainCircle(radius[currentShape], currentShape);
 
 	// If border is equal to 0, consider the circle as plain
 	if (insideLargerCircle && border[currentShape] == 0)
 		return insideLargerCircle;
 
-	if (insidePlainCircle(radius[currentShape] - border[currentShape]))
+	if (insidePlainCircle(radius[currentShape] - border[currentShape], currentShape))
 		return false;
 
 	return insideLargerCircle;

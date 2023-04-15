@@ -1,7 +1,7 @@
 bool insidePlainSquare(int currentShape, float squareRadius)
 {
 	const vec2 imageSize = imageSize(texture);
-	const vec2 center = imageSize / 2.0;
+	const vec2 center = imageSize / 2.0 + offset[currentShape];
 
 	// Define the coordinates of the triangle's vertices
 	vec2 v1 = center - squareRadius / 2.0; // Top left corner

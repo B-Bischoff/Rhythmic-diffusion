@@ -14,4 +14,5 @@ uniform int shapes[MAX_SHAPE]; // The value indicates the shapes to be rendered
 uniform float radius[MAX_SHAPE];
 uniform float border[MAX_SHAPE];
 uniform float angle[MAX_SHAPE];
+uniform ivec2 offset[MAX_SHAPE];
 uniform float time;

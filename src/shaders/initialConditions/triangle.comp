@@ -1,14 +1,15 @@
 bool insidePlainTriangle(int currentShape, float triangleRadius)
 {
 	const vec2 imageSize = imageSize(texture);
+	const vec2 triangleCenter = (imageSize / 2.0) + offset[currentShape];
 
 	// Define the coordinates of the triangle's vertices
-	vec2 v1 = vec2(imageSize.x / 2.0, imageSize.y / 2.0 + triangleRadius); // Top vertex
+	vec2 v1 = vec2(triangleCenter.x, triangleCenter.y + triangleRadius); // Top vertex
 
 	float x = cos(radians(30.0)) * triangleRadius;
 	float y = sin(radians(30.0)) * triangleRadius;
-	vec2 v2 = vec2(imageSize.x / 2.0 - x, imageSize.y / 2.0 - y); // Left vertex
-	vec2 v3 = vec2(imageSize.x / 2.0 + x, imageSize.y / 2.0 - y); // Right vertex
+	vec2 v2 = vec2(triangleCenter.x - x, triangleCenter.y - y); // Left vertex
+	vec2 v3 = vec2(triangleCenter.x + x, triangleCenter.y - y); // Right vertex
 
 	// Calculate the center point of the triangle
 	vec2 center = (v1 + v2 + v3) / 3.0;

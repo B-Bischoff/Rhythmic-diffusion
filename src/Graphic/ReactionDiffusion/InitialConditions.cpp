@@ -23,6 +23,7 @@ void InitialConditions::execShader(const glm::vec2& screenDimensions)
 	float radius[MAX_SHAPE];
 	float borderSize[MAX_SHAPE];
 	float rotationAngle[MAX_SHAPE];
+	int offset[MAX_SHAPE][2];
 
 	for (int i = 0; i < (int)_shapes.size(); i++)
 	{
@@ -30,6 +31,8 @@ void InitialConditions::execShader(const glm::vec2& screenDimensions)
 		radius[i] = _shapes[i].radius;
 		borderSize[i] = _shapes[i].borderSize;
 		rotationAngle[i] = _shapes[i].rotationAngle;
+		offset[i][0] = _shapes[i].offset.x;
+		offset[i][1] = _shapes[i].offset.y;
 	}
 
 	const GLuint programId = _computeShader.getProgramID();
@@ -37,6 +40,7 @@ void InitialConditions::execShader(const glm::vec2& screenDimensions)
 	glUniform1fv(glGetUniformLocation(programId, "border"), MAX_SHAPE, borderSize);
 	glUniform1fv(glGetUniformLocation(programId, "angle"), MAX_SHAPE, rotationAngle);
 	glUniform1iv(glGetUniformLocation(programId, "shapes"), MAX_SHAPE, shapes);
+	glUniform2iv(glGetUniformLocation(programId, "offset"), MAX_SHAPE, &offset[0][0]);
 
 	glDispatchCompute(ceil(screenDimensions.x/8),ceil(screenDimensions.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);

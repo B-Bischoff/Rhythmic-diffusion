@@ -11,6 +11,7 @@ enum Shape { None = -1, Circle, Triangle, Hexagon, Square, Rectangle};
 struct InitialConditionsShape {
 	Shape shape;
 	float radius, borderSize, rotationAngle;
+	glm::vec2 offset;
 
 	InitialConditionsShape(const Shape shape, const float radius, const float borderSize, const float rotationAngle)
 		: shape(shape), radius(radius), borderSize(borderSize), rotationAngle(rotationAngle) { }
