@@ -54,21 +54,25 @@ void UserInterface::update()
 
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
+	ImGui::Text("\nGeneral properties");
 	if (ImGui::Button("clear simulation"))
 		_RDSimulator.resetSimulation();
 	static float speed = 1.0f;
 	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 10.0))
 		_RDSimulator.setSimulationSpeed(speed);
+	ImGui::Text("\n");
 	ImGui::Separator();
 
 	_audioPlayerUI.print();
 	ImGui::Separator();
 
+	ImGui::Text("\n");
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 	if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
 	{
 		if (ImGui::BeginTabItem("Reaction diffusion"))
 		{
+			ImGui::Text("\n");
 			for (int i = 0; i < 4; i++)
 				_RDOptionsUI.print(i);
 			ImGui::EndTabItem();

@@ -7,6 +7,8 @@ HooksUI::HooksUI(ReactionDiffusionSimulator& RDSimulator, Adapter& adapter)
 
 void HooksUI::print()
 {
+	ImGui::Text("\n");
+
 	// Clear hooks
 	if (ImGui::Button("clear hooks"))
 		_adapter.clearHooks();
@@ -35,6 +37,10 @@ void HooksUI::print()
 
 	if (ImGui::Button("add hook"))
 		_adapter.createHook((AudioTrigger)audioTrigger, propertie, propertieIndex, (ActionMode)actionMode, initialValue, value);
+
+	ImGui::Text("\n");
+	ImGui::Separator();
+	ImGui::Text("\n");
 
 	// Print existing hooks
 	std::vector<AdapterHook>& hooks = _adapter.getHooks();

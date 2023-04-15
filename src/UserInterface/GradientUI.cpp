@@ -9,6 +9,7 @@ GradientUI::GradientUI(ReactionDiffusionSimulator& RDSimulator, ImGradient& grad
 
 void GradientUI::print()
 {
+	ImGui::Text("\n");
 	bool updateGradient = false;
 	if (ImGui::Button("Remove selected mark"))
 	{

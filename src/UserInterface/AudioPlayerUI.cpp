@@ -7,6 +7,7 @@ AudioPlayerUI::AudioPlayerUI(ImGui::FileBrowser& fileBrowser, AudioPlayer& audio
 
 void AudioPlayerUI::print()
 {
+	ImGui::Text("\nAudio player section");
 	// File explorer
 	if (ImGui::Button("open file explorer"))
 		_fileBrowser.Open();
@@ -24,6 +25,8 @@ void AudioPlayerUI::print()
 	}
 
 	// VOLUME
+	ImGui::Text(" ");
+	ImGui::SameLine(70.0f);
 	float volume = _audioPlayer.getVolume();
 	ImGui::SliderFloat("volume", &volume, 0, 100);
 	if (volume != _audioPlayer.getVolume())

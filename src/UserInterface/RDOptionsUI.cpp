@@ -89,9 +89,15 @@ void RDOptionsUI::printNoiseFields(const int& i)
 	if (ImGui::SliderFloat(fieldName.c_str(), &timeMultiplier, 0.0, 1.0))
 		valueChanged = true;
 
+	// Base value
+	fieldName = std::string("Base value" + std::to_string(i));
+	float baseValue = v[6];
+	if (ImGui::SliderFloat(fieldName.c_str(), &baseValue, 0.0, 1.0))
+		valueChanged = true;
+
 	if (valueChanged)
 	{
-		std::vector<float> values = { strengthFactor, scale, offset[0], offset[1], (movingScale ? 1.0f : 0.0f), timeMultiplier };
+		std::vector<float> values = { strengthFactor, scale, offset[0], offset[1], (movingScale ? 1.0f : 0.0f), timeMultiplier, baseValue};
 		_RDSimulator.setParameterValue(i, values);
 	}
 }

@@ -7,6 +7,7 @@ InitialConditionsUI::InitialConditionsUI(ReactionDiffusionSimulator& RDSimulator
 
 void InitialConditionsUI::print()
 {
+	ImGui::Text("\n");
 	static int shape = 0;
 	const char* shapesElements = "circle\0triangle\0hexagon\0square\0rectangle\0";
 	ImGui::Combo("shape shape", &shape, shapesElements);
@@ -22,6 +23,10 @@ void InitialConditionsUI::print()
 
 	if (ImGui::Button("add shape"))
 		_RDSimulator.addInitialConditionsShape(InitialConditionsShape((Shape)shape, radius, borderSize, angle));
+
+	ImGui::Text("\n");
+	ImGui::Separator();
+	ImGui::Text("\n");
 
 	// Print existing shapes
 	std::vector<InitialConditionsShape>& shapes = _RDSimulator.getInitialConditionsShapes();

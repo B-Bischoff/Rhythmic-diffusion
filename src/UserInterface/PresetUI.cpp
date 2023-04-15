@@ -7,6 +7,7 @@ PresetUI::PresetUI(ReactionDiffusionSimulator& RDSimulator, Preset& presetManage
 
 void PresetUI::print()
 {
+	ImGui::Text("\n");
 	const std::string presetSwitchText = _presetManager.getAutomaticPresetSwitchState() ? "Disable switch" : "Enable switch";
 
 	static float presetSwitchDelay = 5.0;
