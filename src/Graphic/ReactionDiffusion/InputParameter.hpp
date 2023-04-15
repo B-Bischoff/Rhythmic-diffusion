@@ -30,8 +30,6 @@ private:
 	Texture* _parametersTexture;
 	bool _needToApplyChanges;
 
-	void applyPerlinNoiseSettings(Parameter& parameter, const int parameterIndex);
-
 public:
 	InputParameter();
 	~InputParameter();

@@ -35,6 +35,7 @@ float voronoi(int currentParameter)
 	vec2 offset = vec2(offsetX[currentParameter], offsetY[currentParameter]);
 	float noiseOutput = voronoi2d((pixel_coords + offset) * scale[currentParameter]);
 	noiseOutput = clamp(noiseOutput, 0, 1) * strengthFactor[currentParameter];
+	noiseOutput += baseValue[currentParameter];
 
 	return noiseOutput;
 }

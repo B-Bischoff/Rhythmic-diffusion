@@ -9,6 +9,7 @@ uniform float scale[PARAMETER_NUMBER];
 uniform float offsetX[PARAMETER_NUMBER];
 uniform float offsetY[PARAMETER_NUMBER];
 uniform int type[PARAMETER_NUMBER]; // The value indicates the method to apply parameter
+uniform float baseValue[PARAMETER_NUMBER]; // The minimum value noise should produce
 //  0 : number (every pixel is set to the same value)
 //  1 : perlin noise
 //  2 : voronoi

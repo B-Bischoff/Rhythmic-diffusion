@@ -42,6 +42,7 @@ float perlinNoise(int currentParameter)
 	float noiseOutput = cnoise((pixel_coords + offset) * scale[currentParameter]);
 	noiseOutput = clamp(noiseOutput, 0, 1);
 	noiseOutput = noiseOutput * strengthFactor[currentParameter];
+	noiseOutput += baseValue[currentParameter];
 
 	return noiseOutput;
 }

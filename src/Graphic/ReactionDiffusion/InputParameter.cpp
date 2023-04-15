@@ -71,6 +71,7 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 	float* offsetX = new float[PARAMETER_NUMBER];
 	float* offsetY = new float[PARAMETER_NUMBER];
 	int* type = new int[PARAMETER_NUMBER];
+	float* baseValue = new float[PARAMETER_NUMBER];
 
 	for (int i = 0; i < (int)_parameters.size(); i++)
 	{
@@ -88,6 +89,7 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 			parameterNeedTime = true;
 			scale[i] = sin(glfwGetTime() * timeMultiplier) * scale[i];
 		}
+		baseValue[i] = param.size() > 6 ? param[6] : 0;
 	}
 
 	const GLuint programId = _computeShader.getProgramID();
@@ -97,6 +99,7 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 	glUniform1fv(glGetUniformLocation(programId, "offsetY"), PARAMETER_NUMBER, offsetY);
 	glUniform1f(glGetUniformLocation(programId, "time"), glfwGetTime());
 	glUniform1iv(glGetUniformLocation(programId, "type"), PARAMETER_NUMBER, type);
+	glUniform1fv(glGetUniformLocation(programId, "baseValue"), PARAMETER_NUMBER, baseValue);
 
 	glDispatchCompute(ceil(SCREEN_DIMENSION.x/8),ceil(SCREEN_DIMENSION.y/4),1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
@@ -106,29 +109,10 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 	delete[] offsetX;
 	delete[] offsetY;
 	delete[] type;
+	delete[] baseValue;
 
 	if (!parameterNeedTime) // Need to write on the param texture each frame to apply modifications
 		_needToApplyChanges = false;
-}
-
-void InputParameter::applyPerlinNoiseSettings(Parameter& parameter, const int parameterIndex)
-{
-	//if (_parameters.size() < 6)
-	//	return;
-
-		//float& scale = _parameters[0];
-		//float offset[2] { _parameters[1], _parameters[2] };
-		//float& strengthFactor = _parameters[3];
-		//bool movingScale = _parameters[4] == 1.0;
-		//float timeMultiplier = _parameters[5];
-
-	//if (movingScale)
-	//	_computeShader.setFloat("scale", sin(glfwGetTime() * timeMultiplier) * scale);
-	//else
-	//	_computeShader.setFloat("scale", scale);
-
-	//_computeShader.setVec2("offset", glm::vec2(offset[0], offset[1]));
-	//_computeShader.setFloat("strengthFactor", strengthFactor);
 }
 
 void InputParameter::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
