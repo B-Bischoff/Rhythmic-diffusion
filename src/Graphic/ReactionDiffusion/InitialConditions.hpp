@@ -13,14 +13,14 @@ struct InitialConditionsShape {
 	float radius, borderSize, rotationAngle;
 	glm::vec2 offset;
 
-	InitialConditionsShape(const Shape shape, const float radius, const float borderSize, const float rotationAngle)
-		: shape(shape), radius(radius), borderSize(borderSize), rotationAngle(rotationAngle) { }
+	InitialConditionsShape(const Shape shape, const float radius, const float borderSize, const float rotationAngle, const glm::vec2 offset)
+		: shape(shape), radius(radius), borderSize(borderSize), rotationAngle(rotationAngle), offset(offset) { }
 	InitialConditionsShape() {}
 
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(CEREAL_NVP(shape), CEREAL_NVP(radius), CEREAL_NVP(borderSize), CEREAL_NVP(rotationAngle));
+		archive(CEREAL_NVP(shape), CEREAL_NVP(radius), CEREAL_NVP(borderSize), CEREAL_NVP(rotationAngle), CEREAL_NVP(offset));
 	}
 };
 

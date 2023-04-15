@@ -21,8 +21,11 @@ void InitialConditionsUI::print()
 	static float angle = 0;
 	ImGui::SliderFloat("shape angle", &angle, 0, 360);
 
+	float offset[2] = { 0, 0 };
+	ImGui::SliderFloat2("shape offset", offset, -1000, 1000);
+
 	if (ImGui::Button("add shape"))
-		_RDSimulator.addInitialConditionsShape(InitialConditionsShape((Shape)shape, radius, borderSize, angle));
+		_RDSimulator.addInitialConditionsShape(InitialConditionsShape((Shape)shape, radius, borderSize, angle, glm::vec2(offset[0], offset[1])));
 
 	ImGui::Text("\n");
 	ImGui::Separator();

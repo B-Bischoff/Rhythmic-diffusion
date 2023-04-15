@@ -38,6 +38,8 @@ void Preset::addPreset(std::string presetName)
 		return;
 	}
 
+	_currentPreset = presetName;
+
 	cereal::XMLOutputArchive archive(os);
 	archive(CEREAL_NVP(presetSettings));
 }
@@ -132,6 +134,7 @@ void Preset::loadExistingPresets()
 	for (const auto & entry : std::filesystem::directory_iterator(PRESET_DIRECTORY))
 	{
 		const std::string fileName = entry.path();
+		std::cout << "loading: " << fileName<< std::endl;
 
 		if (fileName.length() - fileName.rfind(PRESET_EXTENSION) != PRESET_EXTENSION.length()) // Check file extension
 			continue;
