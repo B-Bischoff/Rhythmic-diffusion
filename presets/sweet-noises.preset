@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic"/>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.22499999403953552</value0>
+					<value1>0.0099999997764825821</value1>
+					<value2>-960</value2>
+					<value3>-540</value3>
+					<value4>1</value4>
+					<value5>0.029999999329447746</value5>
+					<value6>0.056000001728534698</value6>
+				</parameters>
+				<type>1</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.029330000281333923</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.0017500000540167093</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.039999999105930328</value0>
+					<value1>0.013000000268220901</value1>
+					<value2>0</value2>
+					<value3>0</value3>
+					<value4>0</value4>
+					<value5>0</value5>
+					<value6>0.008999999612569809</value6>
+				</parameters>
+				<type>2</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>4</shape>
+				<radius>2000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
+			</value0>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>3.4065565667736303e-42</value0>
+				<value1>-1.0547837017878259e-14</value1>
+				<value2>-8.3629162080621489e-14</value2>
+				<value3>9.4587646341925152e-43</value3>
+			</value0>
+			<value1>
+				<value0>0.015499194152653217</value0>
+				<value1>-0.00025013979757204652</value1>
+				<value2>0.29111403226852417</value2>
+				<value3>0.10483450442552567</value3>
+			</value1>
+			<value2>
+				<value0>1.0002501010894775</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0.16710688173770905</value3>
+			</value2>
+			<value3>
+				<value0>1.0002501010894775</value0>
+				<value1>1.0002501010894775</value1>
+				<value2>1.0002501010894775</value2>
+				<value3>0.24883937835693359</value3>
+			</value3>
+			<value4>
+				<value0>1.0002501010894775</value0>
+				<value1>1.0002501010894775</value1>
+				<value2>1.0002501010894775</value2>
+				<value3>1</value3>
+			</value4>
+		</gradient>
+	</presetSettings>
+</cereal>
+

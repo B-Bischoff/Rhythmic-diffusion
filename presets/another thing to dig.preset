@@ -34,12 +34,20 @@
 				<radius>100</radius>
 				<borderSize>15</borderSize>
 				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value0>
 			<value1>
 				<shape>3</shape>
 				<radius>250</radius>
 				<borderSize>15</borderSize>
 				<rotationAngle>45</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value1>
 		</shapes>
 		<gradient size="dynamic">

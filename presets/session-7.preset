@@ -59,18 +59,30 @@
 				<radius>451.61300659179688</radius>
 				<borderSize>30</borderSize>
 				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value0>
 			<value1>
 				<shape>3</shape>
 				<radius>319.64801025390625</radius>
 				<borderSize>15</borderSize>
 				<rotationAngle>45</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value1>
 			<value2>
 				<shape>1</shape>
 				<radius>451</radius>
 				<borderSize>30</borderSize>
 				<rotationAngle>60</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value2>
 		</shapes>
 		<gradient size="dynamic">

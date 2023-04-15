@@ -30,7 +30,7 @@
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.5</value0>
+					<value0>0.34999999403953552</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
@@ -55,9 +55,9 @@
 		</parameters>
 		<shapes size="dynamic">
 			<value0>
-				<shape>3</shape>
+				<shape>1</shape>
 				<radius>200</radius>
-				<borderSize>10</borderSize>
+				<borderSize>20</borderSize>
 				<rotationAngle>0</rotationAngle>
 				<offset>
 					<value0>0</value0>
@@ -67,28 +67,28 @@
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-				<value0>0</value0>
-				<value1>0</value1>
-				<value2>0</value2>
-				<value3>0</value3>
+				<value0>-4.9780200849034589e-14</value0>
+				<value1>-4.4158409764349926e-06</value1>
+				<value2>-2.4507899070158601e-05</value2>
+				<value3>1.0675992034858695e-10</value3>
 			</value0>
 			<value1>
-				<value0>0.25647458434104919</value0>
-				<value1>0.038092147558927536</value1>
-				<value2>0.3843843936920166</value2>
-				<value3>0.15758754312992096</value3>
+				<value0>0.2565172016620636</value0>
+				<value1>0.038098186254501343</value1>
+				<value2>0.38443690538406372</value2>
+				<value3>0.1576053649187088</value3>
 			</value1>
 			<value2>
-				<value0>0.098082870244979858</value0>
-				<value1>0.69069069623947144</value1>
-				<value2>0.039408795535564423</value2>
-				<value3>0.38521400094032288</value3>
+				<value0>0.097958177328109741</value0>
+				<value1>0.6907312273979187</value1>
+				<value2>0.039403922855854034</value2>
+				<value3>0.38525289297103882</value3>
 			</value2>
 			<value3>
-				<value0>0.098039217293262482</value0>
-				<value1>0.69019609689712524</value1>
-				<value2>0.039215687662363052</value2>
-				<value3>1</value3>
+				<value0>0.09794953465461731</value0>
+				<value1>0.69030630588531494</value1>
+				<value2>0.039217468351125717</value2>
+				<value3>1.0000994205474854</value3>
 			</value3>
 		</gradient>
 	</presetSettings>

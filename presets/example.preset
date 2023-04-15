@@ -5,25 +5,25 @@
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.2903200089931488</value0>
+					<value0>0.38699999451637268</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.07038000226020813</value0>
+					<value0>0.27599999308586121</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
 			<value2>
 				<parameters size="dynamic">
-					<value0>0.0017600000137463212</value0>
+					<value0>0.013000000268220901</value0>
 				</parameters>
 				<type>0</type>
 			</value2>
 			<value3>
 				<parameters size="dynamic">
-					<value0>0.012900000438094139</value0>
+					<value0>0.037999998778104782</value0>
 				</parameters>
 				<type>0</type>
 			</value3>
@@ -31,37 +31,27 @@
 		<shapes size="dynamic">
 			<value0>
 				<shape>0</shape>
-				<radius>100</radius>
-				<borderSize>15</borderSize>
+				<radius>0</radius>
+				<borderSize>0</borderSize>
 				<rotationAngle>0</rotationAngle>
 				<offset>
 					<value0>0</value0>
 					<value1>0</value1>
 				</offset>
 			</value0>
-			<value1>
-				<shape>3</shape>
-				<radius>250</radius>
-				<borderSize>15</borderSize>
-				<rotationAngle>45</rotationAngle>
-				<offset>
-					<value0>0</value0>
-					<value1>0</value1>
-				</offset>
-			</value1>
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-					<value0>0</value0>
-					<value1>0</value1>
-					<value2>0</value2>
-					<value3>0</value3>
+				<value0>0</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0</value3>
 			</value0>
 			<value1>
-					<value0>1</value0>
-					<value1>1</value1>
-					<value2>1</value2>
-					<value3>1</value3>
+				<value0>1</value0>
+				<value1>1</value1>
+				<value2>1</value2>
+				<value3>1</value3>
 			</value1>
 		</gradient>
 	</presetSettings>

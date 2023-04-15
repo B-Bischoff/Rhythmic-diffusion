@@ -59,6 +59,10 @@
 				<radius>200</radius>
 				<borderSize>10</borderSize>
 				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
 			</value0>
 		</shapes>
 		<gradient size="dynamic">

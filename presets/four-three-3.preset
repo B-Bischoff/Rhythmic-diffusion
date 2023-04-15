@@ -24,70 +24,86 @@
 				<propertieIndex>0</propertieIndex>
 				<actionMode>1</actionMode>
 				<simulationInitialValue>0.63999998569488525</simulationInitialValue>
-				<value>0.40000000596046448</value>
+				<value>0.62000000476837158</value>
 			</value2>
+			<value3>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.018999999389052391</simulationInitialValue>
+				<value>0.0080000003799796104</value>
+			</value3>
 		</hooks>
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.25272053480148315</value0>
+					<value0>0.019999980926513672</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.10000000149011612</value0>
+					<value0>0.23961344361305237</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
 			<value2>
 				<parameters size="dynamic">
-					<value0>0.0048012891784310341</value0>
+					<value0>0.0020000000949949026</value0>
 				</parameters>
 				<type>0</type>
 			</value2>
 			<value3>
 				<parameters size="dynamic">
-					<value0>0.023000000044703484</value0>
+					<value0>0.010999999009072781</value0>
 				</parameters>
 				<type>0</type>
 			</value3>
 		</parameters>
 		<shapes size="dynamic">
 			<value0>
-				<shape>0</shape>
-				<radius>100</radius>
-				<borderSize>15</borderSize>
+				<shape>1</shape>
+				<radius>200</radius>
+				<borderSize>20</borderSize>
 				<rotationAngle>0</rotationAngle>
 				<offset>
 					<value0>0</value0>
 					<value1>0</value1>
 				</offset>
 			</value0>
-			<value1>
-				<shape>3</shape>
-				<radius>250</radius>
-				<borderSize>15</borderSize>
-				<rotationAngle>45</rotationAngle>
-				<offset>
-					<value0>0</value0>
-					<value1>0</value1>
-				</offset>
-			</value1>
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-					<value0>0</value0>
-					<value1>0</value1>
-					<value2>0</value2>
-					<value3>0</value3>
+				<value0>0.066666670143604279</value0>
+				<value1>0.066666670143604279</value1>
+				<value2>0.066666670143604279</value2>
+				<value3>0.01167332474142313</value3>
 			</value0>
 			<value1>
-					<value0>1</value0>
-					<value1>1</value1>
-					<value2>1</value2>
-					<value3>1</value3>
+				<value0>0.066066086292266846</value0>
+				<value1>0.065669290721416473</value1>
+				<value2>0.065669290721416473</value2>
+				<value3>0.042827866971492767</value3>
 			</value1>
+			<value2>
+				<value0>0.024213356897234917</value0>
+				<value1>0.26468956470489502</value1>
+				<value2>0.53753757476806641</value2>
+				<value3>0.14208626747131348</value3>
+			</value2>
+			<value3>
+				<value0>0.49849849939346313</value0>
+				<value1>0.090102776885032654</value1>
+				<value2>0.058382701128721237</value2>
+				<value3>0.36193504929542542</value3>
+			</value3>
+			<value4>
+				<value0>1.0000364780426025</value0>
+				<value1>1.0001895427703857</value1>
+				<value2>1.0001912117004395</value2>
+				<value3>1</value3>
+			</value4>
 		</gradient>
 	</presetSettings>
 </cereal>
