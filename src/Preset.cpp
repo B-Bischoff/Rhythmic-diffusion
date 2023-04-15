@@ -3,7 +3,11 @@
 Preset::Preset(ReactionDiffusionSimulator& RDSsimulator, Adapter& adapter)
 	: _RDSsimulator(RDSsimulator), _adapter(adapter)
 {
+	_automaticPresetSwitch = false;
 	loadExistingPresets();
+	if (_presets.size() >= 1)
+		_currentPreset = _presets.begin()->first;
+	_presetSwitchDelay = 0;
 }
 
 void Preset::addPreset(std::string presetName)
@@ -95,6 +99,20 @@ void Preset::applyPreset(const std::string& presetName)
 
 	// Gradient
 	_RDSsimulator.setPostProcessingGradient(presetSettings.gradient, 5.0);
+
+	_currentPreset = presetName;
+}
+
+void Preset::overwritePreset(const std::string& presetName)
+{
+	if (!presetExists(presetName))
+	{
+		std::cerr << "[Preset] preset named \"" << presetName << "\" does not exists. Canceling overwrite preset method." << std::endl;
+		return;
+	}
+
+	removePreset(presetName);
+	addPreset(presetName);
 }
 
 std::vector<std::string> Preset::getPresetNames() const
@@ -153,4 +171,70 @@ std::string Preset::createGenericName() const
 		presetName = "unnamed-" + std::to_string(i);
 	}
 	return presetName;
+}
+
+void Preset::updateAutomaticPresetSwitch()
+{
+	if (!_automaticPresetSwitch)
+		return;
+	if (_presets.size() == 0)
+		return;
+
+	std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+	std::chrono::duration<double> elapsedTime = currentTime - _previousTime;
+
+	if (elapsedTime.count() < _presetSwitchDelay)
+		return;
+	if (_adapter.getRatios() != glm::vec3(0)) // Switch preset when all 3 ratios are equal to 0
+		return;
+
+	// temporary four three manual switch
+	//static int index = 0;
+
+	//// 40 30 35 30 20 25 30 xx
+	//if (index == 0) _presetSwitchDelay = 40;
+	//else if (index == 1) _presetSwitchDelay = 30;
+	//else if (index == 2) _presetSwitchDelay = 35;
+	//else if (index == 3) _presetSwitchDelay = 30;
+	//else if (index == 4) _presetSwitchDelay = 20;
+	//else if (index == 5) _presetSwitchDelay = 25;
+	//else if (index == 6) _presetSwitchDelay = 31;
+	//else if (index == 7) _presetSwitchDelay = 60;
+
+	//const std::string presetName = "0four-three-" + std::to_string(index);
+	//index++;
+	//applyPreset(presetName);
+
+	std::map<std::string, PresetSettings>::iterator it = _presets.find(_currentPreset);
+	if (it == _presets.end())
+		it = _presets.begin();
+
+	applyPreset(it->first);
+	it++;
+	if (it == _presets.end())
+		it = _presets.begin();
+	_currentPreset = it->first;
+
+	_previousTime = currentTime;
+}
+
+void Preset::setAutomaticSwitchDelay(const float& switchDelay)
+{
+	_automaticPresetSwitch = true;
+	_presetSwitchDelay = switchDelay;
+}
+
+void Preset::stopAutomaticPresetSwitch()
+{
+	_automaticPresetSwitch = false;
+}
+
+bool Preset::getAutomaticPresetSwitchState() const
+{
+	return _automaticPresetSwitch;
+}
+
+std::string Preset::getCurrentPreset() const
+{
+	return _currentPreset;
 }

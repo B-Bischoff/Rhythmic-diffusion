@@ -62,6 +62,7 @@ void Application::loop()
 	Adapter adapter(RDSimulator, audioAnalyzer);
 
 	Preset presetManager(RDSimulator, adapter);
+
 	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter, presetManager);
 	RDSimulator.setUIGradient(ui.getGradient());
 
@@ -74,6 +75,9 @@ void Application::loop()
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
 	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
 
+	// Change this to true to autoplay
+	bool isFirstFrame = false;
+
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -81,10 +85,20 @@ void Application::loop()
 
 		printFps(deltaTime, lastFrame, fCounter);
 
+		if (isFirstFrame)
+		{
+			isFirstFrame = false;
+			audioPlayer.playWavFile("/home/brice/Downloads/four-three.wav");
+			stk::Stk::sleep(500);
+			audioPlayer.togglePause();
+		}
+
 		ui.createNewFrame();
 		ui.update();
 
 		adapter.update();
+
+		presetManager.updateAutomaticPresetSwitch();
 
 		RDSimulator.processSimulation();
 		RDSimulator.printRendering();

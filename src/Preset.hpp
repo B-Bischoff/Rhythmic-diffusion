@@ -25,6 +25,12 @@ private:
 	ReactionDiffusionSimulator& _RDSsimulator;
 	Adapter& _adapter;
 
+	// Automatic preset switch
+	bool _automaticPresetSwitch;
+	std::string _currentPreset;
+	double _presetSwitchDelay;
+	std::chrono::system_clock::time_point _previousTime;
+
 	const std::string PRESET_EXTENSION = ".preset";
 	const std::string PRESET_DIRECTORY = "presets/";
 	std::map<std::string, PresetSettings> _presets;
@@ -40,7 +46,14 @@ public:
 	void addPreset(std::string presetName);
 	void removePreset(const std::string& presetName);
 	void applyPreset(const std::string& presetName);
+	void overwritePreset(const std::string& presetName);
 	std::vector<std::string> getPresetNames() const;
+
+	void updateAutomaticPresetSwitch();
+	void setAutomaticSwitchDelay(const float& switchDelay);
+	void stopAutomaticPresetSwitch();
+	bool getAutomaticPresetSwitchState() const;
+	std::string getCurrentPreset() const;
 
 	template<class Archive>
 	void serialize(Archive& archive);

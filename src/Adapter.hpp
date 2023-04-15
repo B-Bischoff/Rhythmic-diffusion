@@ -58,4 +58,5 @@ public:
 	void clearHooks();
 	void removeHook(const int& index);
 	std::vector<AdapterHook>& getHooks();
+	glm::vec3 getRatios() const;
 };

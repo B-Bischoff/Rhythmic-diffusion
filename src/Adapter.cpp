@@ -197,3 +197,8 @@ std::vector<AdapterHook>& Adapter::getHooks()
 {
 	return _hooks;
 }
+
+glm::vec3 Adapter::getRatios() const
+{
+	return glm::vec3(_bassRatio, _snareRatio, _leadRatio);
+}
