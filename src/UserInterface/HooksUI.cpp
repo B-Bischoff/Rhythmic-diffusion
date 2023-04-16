@@ -24,7 +24,7 @@ void HooksUI::print()
 	ImGui::Combo("propertie", &propertie, items, ITEMS_NUMBER);
 
 	static int propertieIndex = 0;
-	ImGui::SliderInt("propertie index", &propertieIndex, 0, 4);
+	ImGui::SliderInt("propertie index", &propertieIndex, 0, 8);
 
 	static int actionMode = 0;
 	ImGui::Combo("action mode", &actionMode, "add\0subtract\0multiply\0divide\0");

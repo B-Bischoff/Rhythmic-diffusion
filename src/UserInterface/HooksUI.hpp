@@ -10,7 +10,7 @@ class ReactionDiffusionSimulator;
 
 class HooksUI {
 private:
-	ReactionDiffusionSimulator _RDSimulator;
+	ReactionDiffusionSimulator& _RDSimulator;
 	Adapter& _adapter;
 
 public:

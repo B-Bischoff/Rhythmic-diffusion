@@ -180,7 +180,6 @@ void ReactionDiffusionSimulator::removeInitialConditionsShape(const int& index)
 
 // --------------------- Reaction diffusion parameters methods ---------------------
 
-
 void ReactionDiffusionSimulator::setParameterValue(const int& parameterIndex, const std::vector<float>& parameterValues)
 {
 	_inputParameter.setParameterValue(parameterIndex, parameterValues);
