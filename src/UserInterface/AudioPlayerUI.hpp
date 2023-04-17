@@ -13,10 +13,13 @@ private:
 	AudioPlayer& _audioPlayer;
 	AudioAnalyzer& _audioAnalyzer;
 
+	float* _histogramValues;
+
 	std::string convertSecondsToHoursMinutesSeconds(const int& seconds) const;
 
 public:
 	AudioPlayerUI(ImGui::FileBrowser& fileBrowser, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer);
+	~AudioPlayerUI();
 
 	void print();
 };

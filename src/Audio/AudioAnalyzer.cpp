@@ -12,7 +12,7 @@ AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArra
 
 	_instantEnergyHistory = std::vector<std::vector<float>>(_outputArraySize, std::vector<float>(_historySize, 0));
 
-	// Pre-calculating split index // CHANGE SPLIT INDEX NAME
+	// Pre-calculating split index
 
 	// fftOutSize can be less than _samples to exclude frequencies from the analysis
 	// when fftOutSize = _samples, analyse range: [0 - 44100]Hz
@@ -26,36 +26,45 @@ AudioAnalyzer::AudioAnalyzer(int samplingRate, int samplesNumber, int outputArra
 
 	for (int i = 0; i < _outputArraySize; i++)
 		_splitIndex.push_back(roundf(slopeCoeff * i + firstSubbandWidth));
+
+	// Allocate buffers
+	_instantEnergy = new float[_outputArraySize];
+	_localAverageEnergy = new float[_outputArraySize];
+	_variance = new float[_outputArraySize];
+	_sensitivity = new float[_outputArraySize];
+}
+
+AudioAnalyzer::~AudioAnalyzer()
+{
+	delete[] _instantEnergy;
+	delete[] _localAverageEnergy;
+	delete[] _variance;
+	delete[] _sensitivity;
 }
 
 void AudioAnalyzer::analyzeSignal(std::vector<float>& audioData)
 {
 	if ((int)audioData.size() < _samples) return;
 
-	//std::lock_guard<std::mutex> guard(_outputArrayMutex);
 	applyWindowFunction(audioData);
 	shiftAudioData(audioData);
 	computeFFT(_inputArray);
 	divideFFTOuputInSubbands();
 
 	findBeats();
-
-	//displayOutputArrayInTerminal();
 }
 
 void AudioAnalyzer::applyWindowFunction(std::vector<float>& audioData)
 {
 	// Applying Hanning function
 	for (int i = 0; i < _samples; i++)
-	{
 		_inputArray[i] = (audioData[i] * (0.5 * (1 - cos(2 * 3.1415 * i / (_samples - 1)))));
-	}
 }
 
 void AudioAnalyzer::shiftAudioData(std::vector<float>& audioData)
 {
+	// Shift the audio data half way through the vector
 	audioData.erase(audioData.begin(), audioData.begin() + _samples / 2);
-	//audioData.clear();
 }
 
 void AudioAnalyzer::computeFFT(std::vector<float>& audioData)
@@ -95,25 +104,6 @@ void AudioAnalyzer::divideFFTOuputInSubbands()
 				_outputArray[i] = magnitude;
 			fftIndex++;
 		}
-		//_outputArray[i] *= (sampleNumber * 0.05);
-	}
-}
-
-void AudioAnalyzer::displayOutputArrayInTerminal() const
-{
-	system("clear");
-	const int HEIGHT = 50;
-	for (int i = HEIGHT; i >= 0; i--)
-	{
-		for (int j = 0; j < _outputArraySize; j++)
-		{
-			if (i == 0) {std::cout << "-"; continue; }
-			if ((_outputArray[j]*2) > i)
-				std::cout << "O";
-			else
-				std::cout << " ";
-		}
-		std::cout << std::endl;
 	}
 }
 
@@ -122,132 +112,89 @@ void AudioAnalyzer::findBeats()
 	const int bandNumber = _outputArraySize;
 
 	// calculate instant energy
-	float* instantEnergy = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
-		instantEnergy[i] = _outputArray[i];
+		_instantEnergy[i] = _outputArray[i];
 
 	// calculate local average energy
-	float* localAverageEnergy = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
-		localAverageEnergy[i] = 0;
+		_localAverageEnergy[i] = 0;
 
 	for (int j = 0; j < bandNumber; j++)
 	{
 		for (int i = 0; i < _historySize; i++)
-			localAverageEnergy[j] += _instantEnergyHistory[j][i];
+			_localAverageEnergy[j] += _instantEnergyHistory[j][i];
 
-		localAverageEnergy[j] /= _historySize;
+		_localAverageEnergy[j] /= _historySize;
 	}
 
 	// calculate variance
-	float* variance = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
-		variance[i] = 0;
+		_variance[i] = 0;
 
 	for (int j = 0; j < bandNumber; j++)
 	{
 		for (int i = 0; i < _historySize; i++)
 		{
-			float temp = (_instantEnergyHistory[j][i] - localAverageEnergy[j]);
-			variance[j] += temp * temp;
+			float temp = (_instantEnergyHistory[j][i] - _localAverageEnergy[j]);
+			_variance[j] += temp * temp;
 		}
-		variance[j] /= _historySize;
+		_variance[j] /= _historySize;
 	}
 
 	// calculate sensitivity
-	float* sensitivity = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
 	{
 		float sensCoeff = -0.0025714;
-		sensitivity[i] = (sensCoeff * variance[i]) + 1.5142857; // Linear degression
+		_sensitivity[i] = (sensCoeff * _variance[i]) + 1.5142857; // Linear degression
 	}
 
-	// Noise filter
+	// Noise filtering
 	for (int i = 0; i < bandNumber; i++)
 	{
-		bool beat = instantEnergy[i] > localAverageEnergy[i] * sensitivity[i];
-		float delta = instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1];
-		float ratio = instantEnergy[i] / _instantEnergyHistory[i][_historySize - 1];
+		bool beat = _instantEnergy[i] > _localAverageEnergy[i] * _sensitivity[i];
+		float delta = _instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1];
+		float ratio = _instantEnergy[i] / _instantEnergyHistory[i][_historySize - 1];
 
-		// Noise filters
 		if (delta < 0)
 			beat = false;
-		if (beat && (ratio < 1.5 || instantEnergy[i] < 1.5)) // Noise filter
+		if (beat && (ratio < 1.5 || _instantEnergy[i] < 1.5))
 			beat = false;
-		if (instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1] < 1)
+		if (_instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1] < 1)
 			beat = false;
 	}
 
 	_groups.clear();
 	for (int i = 0; i < bandNumber; i++)
 	{
-		bool beat = instantEnergy[i] > localAverageEnergy[i] * sensitivity[i];
-		float delta = instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1];
-		float ratio = instantEnergy[i] / _instantEnergyHistory[i][_historySize - 1];
+		bool beat = _instantEnergy[i] > _localAverageEnergy[i] * _sensitivity[i];
+		float delta = _instantEnergy[i] - _instantEnergyHistory[i][_historySize - 1];
 
-		const std::string white = "\033[39m";
-		const std::string red = "\033[31m";
-		//const std::string green = "\033[32m";
-		//const std::string blue = "\033[34m";
-		//const std::string orange = "\033[33m";
-
+		if (!beat)
+			continue;
 
 		// Group dispatch
-		int grpIndex = -1;
-		if (beat)
-		{
-			bool groupFound = false;
+		bool groupFound = false;
 
-			for (int j = 0; j < (int)_groups.size(); j++)
+		for (int j = 0; j < (int)_groups.size(); j++)
+		{
+			// add current frequency to existing group
+			if (_groups[j].canJoinGroup(_instantEnergy[i], delta, i))
 			{
-				// add current frequency to group
-				if (_groups[j].canJoinGroup(instantEnergy[i], delta, i))
-				{
-					_groups[j].addToGroup(instantEnergy[i], delta, i);
-					groupFound = true;
-					grpIndex = j;
-					break;
-				}
-			}
-			if (!groupFound)
-			{
-				grpIndex = _groups.size();
-				_groups.push_back(SoundGroup(1, instantEnergy[i], delta, i));
+				_groups[j].addToGroup(_instantEnergy[i], delta, i);
+				groupFound = true;
+				break;
 			}
 		}
-
-		//std::string color = white.c_str();
-		//if (beat) color = red.c_str();
-		//	std::cout << color;
-
-		//std::cout << "[" << (i < 10 ? " " : "") << i << "]: " << (beat ? "0 " : "  ");
-		//std::cout << std::fixed << std::setprecision(2) << ((instantEnergy[i] - history[i][_historySize-1])) << " ";
-		//std::cout << std::fixed << std::setprecision(2) << instantEnergy[i] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << grpIndex << " ";
-		//std::cout << std::fixed << std::setprecision(2) << (instantEnergy[i] / history[i][_historySize-1]) << " ";
-		//std::cout << std::fixed << std::setprecision(2) << sensitivity[i] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << variance[i] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << instantEnergy[i] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << localAverageEnergy[i] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << history[i][_historySize-1] << " ";
-		//std::cout << std::fixed << std::setprecision(2) << delta << " ";
-		//if ((32 - i - 1) % 8 == 0)
-		//	std::cout << std::endl;
+		if (!groupFound) // Create a new group
+			_groups.push_back(SoundGroup(1, _instantEnergy[i], delta, i));
 	}
 
 	// update history
 	for (int i = 0; i < bandNumber; i++)
 	{
 		_instantEnergyHistory[i].erase(_instantEnergyHistory[i].begin());
-		_instantEnergyHistory[i].push_back(instantEnergy[i]);
+		_instantEnergyHistory[i].push_back(_instantEnergy[i]);
 	}
-
-	//std::cout << std::endl << "-------------------------------------" << std::endl;
-
-	delete[] instantEnergy;
-	delete[] localAverageEnergy;
-	delete[] variance;
-	delete[] sensitivity;
 }
 
 std::vector<SoundGroup>& AudioAnalyzer::getGroups() { return _groups; }

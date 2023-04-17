@@ -18,6 +18,11 @@ private:
 
 	std::vector<int> _splitIndex;
 
+	float* _instantEnergy;
+	float* _localAverageEnergy;
+	float* _variance;
+	float* _sensitivity;
+
 	const int _historySize;
 	std::vector<std::vector<float>> _instantEnergyHistory;
 
@@ -30,13 +35,11 @@ private:
 
 	void findBeats();
 
-	void displayOutputArrayInTerminal() const;
-
 public:
-	std::mutex _outputArrayMutex; // MOVE IN PRIVATE
 	AudioAnalyzer(int samplingRate = 44100,
 				int samplesNumber = 2048,
 				int outputArraySize = 64);
+	~AudioAnalyzer();
 
 	void analyzeSignal(std::vector<float>& audioData);
 

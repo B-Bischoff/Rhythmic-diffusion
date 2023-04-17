@@ -28,7 +28,6 @@ int AudioPlayer::playWavFile(const std::string& wavFileName)
 		_wavFileNameWithoutPath = wavFileName;
 
 	size_t lastSlash = _wavFileName.find_last_of("\\/");
-	std::cout << lastSlash << std::endl;
 	_wavFileNameWithoutPath = wavFileName.substr(lastSlash + 1, _wavFileName.length() - lastSlash);
 
 	if (isPlaying())

@@ -3,6 +3,12 @@
 AudioPlayerUI::AudioPlayerUI(ImGui::FileBrowser& fileBrowser, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer)
 	: _fileBrowser(fileBrowser), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer)
 {
+	_histogramValues = new float[_audioAnalyzer.getOutputArraySize()];
+}
+
+AudioPlayerUI::~AudioPlayerUI()
+{
+	delete[] _histogramValues;
 }
 
 void AudioPlayerUI::print()
@@ -49,15 +55,13 @@ void AudioPlayerUI::print()
 
 	// GRAPH
 	const int ARRAY_SIZE = _audioAnalyzer.getOutputArraySize();
-	float* ARRAY_2 = new float[ARRAY_SIZE];
 	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
 	if ((int)outputFreq.size() >= ARRAY_SIZE)
 	{
 		for (int i = 0; i < ARRAY_SIZE; i++)
-			ARRAY_2[i] = outputFreq[i];
-		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
+			_histogramValues[i] = outputFreq[i];
+		ImGui::PlotHistogram("Histogram", _histogramValues, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
-	delete[] ARRAY_2;
 
 	ImGui::Text("\n\n");
 }
