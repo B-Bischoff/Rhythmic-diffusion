@@ -133,7 +133,7 @@ void Preset::loadExistingPresets()
 	_presets.clear();
 	for (const auto & entry : std::filesystem::directory_iterator(PRESET_DIRECTORY))
 	{
-		const std::string fileName = entry.path();
+		const std::string fileName = entry.path().u8string();
 		std::cout << "loading: " << fileName<< std::endl;
 
 		if (fileName.length() - fileName.rfind(PRESET_EXTENSION) != PRESET_EXTENSION.length()) // Check file extension

@@ -48,7 +48,7 @@ void AudioAnalyzer::applyWindowFunction(std::vector<float>& audioData)
 	// Applying Hanning function
 	for (int i = 0; i < _samples; i++)
 	{
-		_inputArray[i] = (audioData[i] * (0.5 * (1 - cos(2 * M_PI * i / (_samples - 1)))));
+		_inputArray[i] = (audioData[i] * (0.5 * (1 - cos(2 * 3.1415 * i / (_samples - 1)))));
 	}
 }
 
@@ -122,12 +122,12 @@ void AudioAnalyzer::findBeats()
 	const int bandNumber = _outputArraySize;
 
 	// calculate instant energy
-	float instantEnergy[bandNumber];
+	float* instantEnergy = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
 		instantEnergy[i] = _outputArray[i];
 
 	// calculate local average energy
-	float localAverageEnergy[bandNumber];
+	float* localAverageEnergy = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
 		localAverageEnergy[i] = 0;
 
@@ -140,7 +140,7 @@ void AudioAnalyzer::findBeats()
 	}
 
 	// calculate variance
-	float variance[bandNumber];
+	float* variance = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
 		variance[i] = 0;
 
@@ -155,7 +155,7 @@ void AudioAnalyzer::findBeats()
 	}
 
 	// calculate sensitivity
-	float sensitivity[bandNumber];
+	float* sensitivity = new float[bandNumber];
 	for (int i = 0; i < bandNumber; i++)
 	{
 		float sensCoeff = -0.0025714;
@@ -243,6 +243,11 @@ void AudioAnalyzer::findBeats()
 	}
 
 	//std::cout << std::endl << "-------------------------------------" << std::endl;
+
+	delete[] instantEnergy;
+	delete[] localAverageEnergy;
+	delete[] variance;
+	delete[] sensitivity;
 }
 
 std::vector<SoundGroup>& AudioAnalyzer::getGroups() { return _groups; }

@@ -44,8 +44,13 @@ void ReactionDiffusionSimulator::initTextures()
 
 void ReactionDiffusionSimulator::initShaders()
 {
+#ifdef WIN32
+	const std::string pathPrefix = "../../../";
+#elif
+	const std::string pahtPrefix = "";
+#endif
 	try {
-		_shader = Shader("src/shaders/shader.vert", "src/shaders/shader.frag");
+		_shader = Shader(pathPrefix + "src/shaders/shader.vert", pathPrefix + "src/shaders/shader.frag");
 	}
 	catch (const std::invalid_argument& e)
 	{
@@ -53,31 +58,31 @@ void ReactionDiffusionSimulator::initShaders()
 		exit (1);
 	}
 
-	_diffusionReactionShader = ComputeShader("src/shaders/reactionDiffusion/grayScott.comp");
+	_diffusionReactionShader = ComputeShader(pathPrefix + "src/shaders/reactionDiffusion/grayScott.comp");
 
 	std::vector<std::string> initialConditionsShadersfiles {
-		"src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
-		"src/shaders/initialConditions/triangle.comp",
-		"src/shaders/initialConditions/hexagon.comp",
-		"src/shaders/initialConditions/circle.comp",
-		"src/shaders/initialConditions/square.comp",
-		"src/shaders/initialConditions/rectangle.comp",
-		"src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
+		pathPrefix + "src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
+		pathPrefix + "src/shaders/initialConditions/triangle.comp",
+		pathPrefix + "src/shaders/initialConditions/hexagon.comp",
+		pathPrefix + "src/shaders/initialConditions/circle.comp",
+		pathPrefix + "src/shaders/initialConditions/square.comp",
+		pathPrefix + "src/shaders/initialConditions/rectangle.comp",
+		pathPrefix + "src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
 	};
 	_initialConditions = InitialConditions(initialConditionsShadersfiles);
 
-	_colorOutputShader = ComputeShader("src/shaders/display.cs");
+	_colorOutputShader = ComputeShader(pathPrefix + "src/shaders/display.cs");
 
 	std::vector<std::string> inputParametersShadersfiles {
-		"src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
-		"src/shaders/parameters/number.comp",
-		"src/shaders/parameters/perlin.comp",
-		"src/shaders/parameters/voronoi.comp",
-		"src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
+		pathPrefix + "src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
+		pathPrefix + "src/shaders/parameters/number.comp",
+		pathPrefix + "src/shaders/parameters/perlin.comp",
+		pathPrefix + "src/shaders/parameters/voronoi.comp",
+		pathPrefix + "src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
 	};
 	_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);
 
-	_postProcessing = PostProcessing(&_finalTexture, "src/shaders/display.cs");
+	_postProcessing = PostProcessing(&_finalTexture, pathPrefix + "src/shaders/display.cs");
 }
 
 void ReactionDiffusionSimulator::processSimulation()

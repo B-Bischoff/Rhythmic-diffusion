@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
+IF (WIN32)
+	set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+ENDIF()
 project(Rythmic-diffusion)
 
 find_package(OpenGL REQUIRED)
@@ -13,9 +16,6 @@ cmake_policy(SET CMP0026 OLD)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-modules-fe2273")
 include(CreateLaunchers)
 include(MSVCMultipleProcessCompile) # /MP
-
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
 
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)

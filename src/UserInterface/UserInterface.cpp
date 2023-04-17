@@ -101,6 +101,7 @@ void UserInterface::update()
 			_presetUI.print();
 			ImGui::EndTabItem();
 		}
+		ImGui::EndTabBar();
 	}
 
 	ImGui::End();
@@ -110,7 +111,7 @@ void UserInterface::update()
 	if (_fileBrowser.HasSelected())
 	{
 		_audioPlayer.stopPlaying();
-		_audioPlayer.playWavFile(_fileBrowser.GetSelected());
+		_audioPlayer.playWavFile(_fileBrowser.GetSelected().u8string());
 		_fileBrowser.ClearSelected();
 	}
 }
