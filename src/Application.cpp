@@ -83,6 +83,8 @@ void Application::loop()
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		ui.createNewFrame();
+
 		printFps(deltaTime, lastFrame, fCounter);
 
 		if (isFirstFrame)
@@ -93,7 +95,6 @@ void Application::loop()
 			audioPlayer.togglePause();
 		}
 
-		ui.createNewFrame();
 		ui.update();
 
 		adapter.update();

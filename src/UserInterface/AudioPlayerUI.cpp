@@ -49,7 +49,7 @@ void AudioPlayerUI::print()
 
 	// GRAPH
 	const int ARRAY_SIZE = _audioAnalyzer.getOutputArraySize();
-	float ARRAY_2[ARRAY_SIZE];
+	float* ARRAY_2 = new float[ARRAY_SIZE];
 	const std::vector<float>& outputFreq = _audioAnalyzer.getFrequencies();
 	if ((int)outputFreq.size() >= ARRAY_SIZE)
 	{
@@ -57,6 +57,7 @@ void AudioPlayerUI::print()
 			ARRAY_2[i] = outputFreq[i];
 		ImGui::PlotHistogram("Histogram", ARRAY_2, ARRAY_SIZE, 0, NULL, 0.0f, 50.0f, ImVec2(500, 80.0f));
 	}
+	delete[] ARRAY_2;
 
 	ImGui::Text("\n\n");
 }

@@ -33,7 +33,11 @@ private:
 	std::chrono::system_clock::time_point _previousTime;
 
 	const std::string PRESET_EXTENSION = ".preset";
-	const std::string PRESET_DIRECTORY = "presets/";
+#ifdef WIN32
+	const std::string PRESET_DIRECTORY = "../../../presets/";
+#elif
+	const std::string PRESET_DIRECTORY = "./presets";
+#endif
 	std::map<std::string, PresetSettings> _presets;
 
 	void loadExistingPresets();
