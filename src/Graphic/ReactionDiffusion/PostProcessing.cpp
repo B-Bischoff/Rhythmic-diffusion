@@ -83,7 +83,7 @@ void PostProcessing::smoothGradientUpdate()
 
 	for (int i = 0; i < (int)_oldGradient.size(); i++)
 	{
-		const glm::vec4& targetedColor = i <= _newGradient.size() - 1 ? _newGradient[i] : _newGradient[_newGradient.size() - 1];
+		const glm::vec4& targetedColor = i <= (int)(_newGradient.size() - 1) ? _newGradient[i] : _newGradient[_newGradient.size() - 1];
 		_gradient[i] = glm::mix(_oldGradient[i], targetedColor, elapsedTime.count() / 5.0);
 	}
 
