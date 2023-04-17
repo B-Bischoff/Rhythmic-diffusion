@@ -35,8 +35,8 @@ private:
 	const std::string PRESET_EXTENSION = ".preset";
 #ifdef WIN32
 	const std::string PRESET_DIRECTORY = "../../../presets/";
-#elif
-	const std::string PRESET_DIRECTORY = "./presets";
+#else
+	const std::string PRESET_DIRECTORY = "presets/";
 #endif
 	std::map<std::string, PresetSettings> _presets;
 

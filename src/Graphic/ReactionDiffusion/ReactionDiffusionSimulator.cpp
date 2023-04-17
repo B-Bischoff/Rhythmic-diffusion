@@ -46,8 +46,8 @@ void ReactionDiffusionSimulator::initShaders()
 {
 #ifdef WIN32
 	const std::string pathPrefix = "../../../";
-#elif
-	const std::string pahtPrefix = "";
+#else
+	const std::string pathPrefix = "";
 #endif
 	try {
 		_shader = Shader(pathPrefix + "src/shaders/shader.vert", pathPrefix + "src/shaders/shader.frag");
