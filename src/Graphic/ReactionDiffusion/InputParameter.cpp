@@ -44,11 +44,11 @@ void InputParameter::changeType(const int& parameterIndex, const int& newTypeInd
 			_parameters[parameterIndex].type = Number;
 			break;
 		case 1: // Perlin Noise
-			parameters = std::vector<float>(6, 0);
+			parameters = std::vector<float>(7, 0);
 			_parameters[parameterIndex].type = PerlinNoise;
 			break;
 		case 2: // Voronoi
-			parameters = std::vector<float>(6, 0);
+			parameters = std::vector<float>(7, 0);
 			_parameters[parameterIndex].type = Voronoi;
 			break;
 		default:

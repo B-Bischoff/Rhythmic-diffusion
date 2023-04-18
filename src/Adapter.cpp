@@ -149,6 +149,8 @@ void Adapter::applyHook(const AdapterHook& hook)
 	if (hook.reactionPropertie >= 0 && hook.reactionPropertie < REACTION_DIFFUSION_PARAMETER_NB)
 	{
 		std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
+		if (hook.propertieIndex >= newVector.size())
+			return;
 		newVector[hook.propertieIndex] = newValue;
 		_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
 	}
