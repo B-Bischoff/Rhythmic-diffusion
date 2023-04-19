@@ -3,10 +3,10 @@
 UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter, Preset& presetManager)
 	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter), _presetManager(presetManager),
 	_audioPlayerUI(_fileBrowser, _audioPlayer, _audioAnalyzer),
-	_hooksUI(_RDSimulator, _adapter),
-	_initialConditionsUI(_RDSimulator),
+	_hooksUI(_RDSimulator, _adapter, _slidersRanges),
+	_initialConditionsUI(_RDSimulator, _slidersRanges),
 	_presetUI(_RDSimulator, _presetManager),
-	_RDOptionsUI(_RDSimulator),
+	_RDOptionsUI(_RDSimulator, _slidersRanges),
 	_gradientUI(_RDSimulator, _gradient)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -24,6 +24,17 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 
 	_fileBrowser.SetTitle("Select audio file");
 	_fileBrowser.SetTypeFilters({".wav"});
+
+	_slidersRanges["RDA"] = { 0.0, 1.0 };
+	_slidersRanges["RDB"] = { 0.0, 1.0 };
+	_slidersRanges["FeedRate"] = { 0.0, 0.06 };
+	_slidersRanges["KillRate"] = { 0.0, 0.06 };
+	_slidersRanges["NoiseScale"] = { 0.0, 1.0 };
+	_slidersRanges["NoiseOffset"] = { -5000.0, 5000.0 };
+	_slidersRanges["ShapesRadius"] = { 0.0, 1000.0 };
+	_slidersRanges["ShapesBorder"] = { 0.0, 1000.0 };
+	_slidersRanges["ShapesAngle"] = { -360.0, 360.0 };
+	_slidersRanges["ShapesOffset"] = { -2000.0, 2000.0 };
 }
 
 UserInterface::~UserInterface()

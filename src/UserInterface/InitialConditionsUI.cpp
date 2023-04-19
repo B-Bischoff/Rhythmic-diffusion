@@ -1,7 +1,7 @@
 #include "./InitialConditionsUI.hpp"
 
-InitialConditionsUI::InitialConditionsUI(ReactionDiffusionSimulator& RDSimulator)
-	: _RDSimulator(RDSimulator)
+InitialConditionsUI::InitialConditionsUI(ReactionDiffusionSimulator& RDSimulator, const std::map<std::string, glm::vec2>& slidersRanges)
+	: _RDSimulator(RDSimulator), _slidersRanges(slidersRanges)
 {
 }
 
@@ -13,16 +13,16 @@ void InitialConditionsUI::print()
 	ImGui::Combo("shape shape", &shape, shapesElements);
 
 	static float radius = 0;
-	ImGui::SliderFloat("shape radius", &radius, 0, 2000);
+	ImGui::SliderFloat("shape radius", &radius, _slidersRanges.at("ShapesRadius")[0], _slidersRanges.at("ShapesRadius")[1]);
 
 	static float borderSize = 0;
-	ImGui::SliderFloat("shape border", &borderSize, 0, 1000);
+	ImGui::SliderFloat("shape border", &borderSize, _slidersRanges.at("ShapesBorder")[0], _slidersRanges.at("ShapesBorder")[1]);
 
 	static float angle = 0;
-	ImGui::SliderFloat("shape angle", &angle, 0, 360);
+	ImGui::SliderFloat("shape angle", &angle, _slidersRanges.at("ShapesAngle")[0], _slidersRanges.at("ShapesAngle")[1]);
 
-	float offset[2] = { 0, 0 };
-	ImGui::SliderFloat2("shape offset", offset, -1000, 1000);
+	static float offset[2] = { 0, 0 };
+	ImGui::SliderFloat2("shape offset", offset, _slidersRanges.at("ShapesOffset")[0], _slidersRanges.at("ShapesOffset")[1]);
 
 	if (ImGui::Button("add shape"))
 		_RDSimulator.addInitialConditionsShape(InitialConditionsShape((Shape)shape, radius, borderSize, angle, glm::vec2(offset[0], offset[1])));
@@ -46,24 +46,24 @@ void InitialConditionsUI::print()
 
 		float shapeRadius = shapes[i].radius;
 		str = "radius " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &shapeRadius, 0, 1000))
+		if (ImGui::SliderFloat(str.c_str(), &shapeRadius, _slidersRanges.at("ShapesRadius")[0], _slidersRanges.at("ShapesRadius")[1]))
 			shapes[i].radius = shapeRadius;
 
 		float shapeBorder = shapes[i].borderSize;
 		str = "border " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &shapeBorder, 0, 1000))
+		if (ImGui::SliderFloat(str.c_str(), &shapeBorder, _slidersRanges.at("ShapesBorder")[0], _slidersRanges.at("ShapesBorder")[1]))
 			shapes[i].borderSize = shapeBorder;
 
 		float shapeAngle = shapes[i].rotationAngle;
 		str = "angle " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &shapeAngle, 0, 360))
+		if (ImGui::SliderFloat(str.c_str(), &shapeAngle, _slidersRanges.at("ShapesAngle")[0], _slidersRanges.at("ShapesAngle")[1]))
 			shapes[i].rotationAngle = shapeAngle;
 
 		float offset[2];
 		offset[0] = shapes[i].offset.x;
 		offset[1] = shapes[i].offset.y;
 		str = "offset " + std::to_string(i);
-		if (ImGui::SliderFloat2(str.c_str(), offset, -1000, 1000))
+		if (ImGui::SliderFloat2(str.c_str(), offset, _slidersRanges.at("ShapesOffset")[0], _slidersRanges.at("ShapesOffset")[1]))
 			shapes[i].offset = glm::vec2(offset[0], offset[1]);
 
 		str = "erase shape " + std::to_string(i);

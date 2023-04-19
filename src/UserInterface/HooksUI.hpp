@@ -13,8 +13,13 @@ private:
 	ReactionDiffusionSimulator& _RDSimulator;
 	Adapter& _adapter;
 
+	const std::map<std::string, glm::vec2>& _slidersRanges;
+
+	void displayPropertieIndex(AdapterHook& hook, const int& i);
+	glm::vec2 getSliderRangesFromHookPropertie(const int& index, const int& propertieIndex) const;
+
 public:
-	HooksUI(ReactionDiffusionSimulator& RDSimulator, Adapter& adapter);
+	HooksUI(ReactionDiffusionSimulator& RDSimulator, Adapter& adapter, std::map<std::string, glm::vec2>& slidersRanges);
 
 	void print();
 };

@@ -37,6 +37,8 @@ void InputParameter::changeType(const int& parameterIndex, const int& newTypeInd
 
 	parameters.clear();
 
+	_needToApplyChanges = true;
+
 	switch (newTypeIndex)
 	{
 		case 0: // Number
@@ -45,10 +47,12 @@ void InputParameter::changeType(const int& parameterIndex, const int& newTypeInd
 			break;
 		case 1: // Perlin Noise
 			parameters = std::vector<float>(7, 0);
+			parameters[1] = 0.001; // Scale
 			_parameters[parameterIndex].type = PerlinNoise;
 			break;
 		case 2: // Voronoi
 			parameters = std::vector<float>(7, 0);
+			parameters[1] = 0.001; // Scale
 			_parameters[parameterIndex].type = Voronoi;
 			break;
 		default:
@@ -83,13 +87,13 @@ void InputParameter::execShader(const glm::vec2& SCREEN_DIMENSION)
 		offsetY[i] = param.size() > 3 ? param[3] : 0;
 		type[i] = (int)_parameters[i].type;
 
-		float timeMultiplier = param.size() > 5 ? param[5] : 0;
-		if (param.size() > 4 && param[4] == 1.0) // Moving scale
+		float timeMultiplier = param.size() > 4 ? param[4] : 0;
+		if (param.size() > 6 && param[6] == 1.0) // Moving scale
 		{
 			parameterNeedTime = true;
 			scale[i] = sin(glfwGetTime() * timeMultiplier) * scale[i];
 		}
-		baseValue[i] = param.size() > 6 ? param[6] : 0;
+		baseValue[i] = param.size() > 5 ? param[5] : 0;
 	}
 
 	const GLuint programId = _computeShader.getProgramID();

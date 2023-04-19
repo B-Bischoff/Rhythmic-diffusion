@@ -123,7 +123,7 @@ void Adapter::modifyReactionDiffusion()
 		}
 		catch (...)
 		{
-			std::cerr << "[AdapterHook] invalid hooks, removing it" << std::endl;
+			std::cerr << "[AdapterHook] invalid hook, removing it" << std::endl;
 			removeHook(i);
 		}
 	}
@@ -149,7 +149,7 @@ void Adapter::applyHook(const AdapterHook& hook)
 	if (hook.reactionPropertie >= 0 && hook.reactionPropertie < REACTION_DIFFUSION_PARAMETER_NB)
 	{
 		std::vector<float> newVector = _RDSimulator.getParameterValue(hook.reactionPropertie);
-		if (hook.propertieIndex >= newVector.size())
+		if (hook.propertieIndex >= (int)newVector.size())
 			return;
 		newVector[hook.propertieIndex] = newValue;
 		_RDSimulator.setParameterValue(hook.reactionPropertie, newVector);
@@ -162,6 +162,8 @@ void Adapter::applyHook(const AdapterHook& hook)
 			case 0: shape.radius = newValue; break;
 			case 1: shape.borderSize = newValue; break;
 			case 2: shape.rotationAngle = newValue; break;
+			case 3: shape.offset.x = newValue; break;
+			case 4: shape.offset.y = newValue; break;
 		}
 	}
 }

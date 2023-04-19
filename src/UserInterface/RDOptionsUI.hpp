@@ -9,12 +9,16 @@ class RDOptionsUI {
 private:
 	ReactionDiffusionSimulator& _RDSimulator;
 
-	void printNumberTypeFields(const int& i, const float& min, const float& max);
+	const std::map<std::string, glm::vec2>& _slidersRanges;
+
+	void printNumberTypeFields(const int& i);
 	void printNoiseFields(const int& i);
 	std::string getFieldNameFromIndex(const int& index) const;
 
+	glm::vec2 getSliderRangeFromOptionIndex(const int& optionIndex) const;
+
 public:
-	RDOptionsUI(ReactionDiffusionSimulator& RDSimulator);
+	RDOptionsUI(ReactionDiffusionSimulator& RDSimulator, const std::map<std::string, glm::vec2>& slidersRanges);
 
 	void print(const int& i);
 };

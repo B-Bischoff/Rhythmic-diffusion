@@ -6,9 +6,9 @@ layout(rgba32f, binding = 2) uniform image2D paramTexture;
 
 #define MAX_COLOR 10
 
-/* 
- * vec4 is used to keep track of a color and its gradient position as follows
- *	x : Red | y : Blue | z : Green | w : Gradient position (between 0 and 1)
+/*
+* vec4 is used to keep track of a color and its gradient position as follows
+*	x : Red | y : Blue | z : Green | w : Gradient position (between 0 and 1)
 */
 uniform vec4 gradient[10];
 uniform int colorNumber;
@@ -60,13 +60,13 @@ vec4 visualizeParamTexture(vec4 paramPixel)
 	if (visualizeChannels.y == 1)
 		pixel.g = paramPixel.y;
 	if (visualizeChannels.z == 1)
-		pixel.b = paramPixel.z;
+		pixel.b = paramPixel.z * 10;
 	if (visualizeChannels.w == 1)
 	{
 		if (pixel.r < paramPixel.w)
-			pixel.r = paramPixel.w;
+			pixel.r = paramPixel.w * 10; // as the feed and kill rate (channel r & g) are used with low values, the visualize strength is amplified
 		if (pixel.g < paramPixel.w)
-			pixel.g = paramPixel.w;
+			pixel.g = paramPixel.w * 10;
 	}
 	return pixel;
 }

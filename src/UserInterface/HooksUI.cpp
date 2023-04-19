@@ -1,7 +1,7 @@
 #include "./HooksUI.hpp"
 
-HooksUI::HooksUI(ReactionDiffusionSimulator& RDSimulator, Adapter& adapter)
-	: _RDSimulator(RDSimulator), _adapter(adapter)
+HooksUI::HooksUI(ReactionDiffusionSimulator& RDSimulator, Adapter& adapter, std::map<std::string, glm::vec2>& slidersRanges)
+	: _RDSimulator(RDSimulator), _adapter(adapter), _slidersRanges(slidersRanges)
 {
 }
 
@@ -59,24 +59,28 @@ void HooksUI::print()
 		if (ImGui::Combo(str.c_str(), &hookPropertie, items, ITEMS_NUMBER))
 			hooks[i].reactionPropertie = hookPropertie;
 
-		int hookPropertieIndex = hooks[i].propertieIndex;
-		str = "hook propertie index " + std::to_string(i);
-		if (ImGui::SliderInt(str.c_str(), &hookPropertieIndex, 0, 4))
-			hooks[i].propertieIndex = hookPropertieIndex;
+		displayPropertieIndex(hooks[i], i);
+		//int hookPropertieIndex = hooks[i].propertieIndex;
+		//str = "hook propertie index " + std::to_string(i);
+		//if (ImGui::SliderInt(str.c_str(), &hookPropertieIndex, 0, 4))
+		//	hooks[i].propertieIndex = hookPropertieIndex;
 
 		int hookActionMode = hooks[i].actionMode;
 		str = "hook action mode " + std::to_string(i);
 		if (ImGui::Combo(str.c_str(), &hookActionMode, "add\0subtract\0multiply\0divide\0"))
 			hooks[i].actionMode = (ActionMode)hookActionMode;
 
+		glm::vec2 sliderValue = getSliderRangesFromHookPropertie(hooks[i].reactionPropertie, hooks[i].propertieIndex);
+
 		float hookInitialValue = hooks[i].simulationInitialValue;
 		str = "hook initial value " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, 0.0, 3.0))
+		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, sliderValue[0], sliderValue[1]))
 			hooks[i].simulationInitialValue = hookInitialValue;
+
 
 		float hookValue = hooks[i].value;
 		str = "hook value " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &hookValue, 0.0, 3.0))
+		if (ImGui::SliderFloat(str.c_str(), &hookValue, sliderValue[0], sliderValue[1]))
 			hooks[i].value = hookValue;
 
 		str = "erase hook " + std::to_string(i);
@@ -86,4 +90,65 @@ void HooksUI::print()
 			return;
 		}
 	}
+}
+
+void HooksUI::displayPropertieIndex(AdapterHook& hook, const int& i)
+{
+	if (hook.reactionPropertie <= 3) // Rd parameter
+	{
+		// Number does not have any 'subproperties'
+		if (_RDSimulator.getParameterType(hook.reactionPropertie) == Number)
+			return;
+
+		// Noise options
+		std::string str = "hook propertie index " + std::to_string(i);
+		const char* noiseElements = "strength\0scale\0offset X\0offset Y\0time multiplier\0base value\0";
+		ImGui::Combo(str.c_str(), &hook.propertieIndex, noiseElements);
+	}
+	else // Shape
+	{
+		std::string str = "shape propertie index " + std::to_string(i);
+		const char* shapeElements = "radius\0border\0angle\0offset X\0offset Y\0";
+		ImGui::Combo(str.c_str(), &hook.propertieIndex, shapeElements);
+	}
+}
+
+glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int& propertieIndex) const
+{
+	if (index <= 3) // RD parameters
+	{
+		InputParameterType parameterType = _RDSimulator.getParameterType(index);
+		if (parameterType == Number || propertieIndex == 0 || propertieIndex == 5) // strength
+		{
+			switch (index) {
+				case 0: return _slidersRanges.at("RDA");
+				case 1: return _slidersRanges.at("RDB");
+				case 2: return _slidersRanges.at("FeedRate");
+				case 3: return _slidersRanges.at("KillRate");
+				default:return glm::vec2(0, 1);
+			}
+		}
+		else // Noise property
+		{
+			switch (propertieIndex) {
+				case 0: return _slidersRanges.at("NoiseScale");
+				case 1: return _slidersRanges.at("NoiseOffset");
+				case 2: return _slidersRanges.at("NoiseOffset");
+				case 3: return glm::vec2(0, 1); // Time multiplier
+			}
+		}
+	}
+	else // Shapes
+	{
+		switch (propertieIndex) {
+			case 0: return _slidersRanges.at("ShapesRadius");
+			case 1: return _slidersRanges.at("ShapesBorder");
+			case 2: return _slidersRanges.at("ShapesAngle");
+			case 3: return _slidersRanges.at("ShapesOffset");
+			case 4: return _slidersRanges.at("ShapesOffset");
+		}
+	}
+
+	// temp
+	return glm::vec2(0);
 }
