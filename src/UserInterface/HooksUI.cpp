@@ -24,16 +24,40 @@ void HooksUI::print()
 	ImGui::Combo("propertie", &propertie, items, ITEMS_NUMBER);
 
 	static int propertieIndex = 0;
-	ImGui::SliderInt("propertie index", &propertieIndex, 0, 8);
+//	ImGui::SliderInt("propertie index", &propertieIndex, 0, 8);
+	// --------------------
+
+	if (propertie <= 3) // Rd parameter
+	{
+		// Number does not have any 'subproperties'
+		if (_RDSimulator.getParameterType(propertie) != Number)
+		{
+			// Noise options
+			std::string str = "hook propertie index";
+			const char* noiseElements = "strength\0scale\0offset X\0offset Y\0time multiplier\0base value\0";
+			ImGui::Combo(str.c_str(), &propertieIndex, noiseElements);
+		}
+		else
+			propertieIndex = 0;
+	}
+	else // Shape
+	{
+		std::string str = "shape propertie index";
+		const char* shapeElements = "radius\0border\0angle\0offset X\0offset Y\0";
+		ImGui::Combo(str.c_str(), &propertieIndex, shapeElements);
+	}
+
+	// ---------------
 
 	static int actionMode = 0;
 	ImGui::Combo("action mode", &actionMode, "add\0subtract\0multiply\0divide\0");
 
+	glm::vec2 valueRange = getSliderRangesFromHookPropertie(propertie, propertieIndex);
 	static float initialValue = 0.0;
-	ImGui::SliderFloat("intial value", &initialValue, 0.0, 1.0);
+	ImGui::SliderFloat("intial value", &initialValue, valueRange[0], valueRange[1]);
 
 	static float value = 0.0;
-	ImGui::SliderFloat("value", &value, 0.0, 10.0);
+	ImGui::SliderFloat("value", &value, valueRange[0], valueRange[1]);
 
 	if (ImGui::Button("add hook"))
 		_adapter.createHook((AudioTrigger)audioTrigger, propertie, propertieIndex, (ActionMode)actionMode, initialValue, value);
