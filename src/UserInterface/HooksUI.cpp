@@ -24,8 +24,6 @@ void HooksUI::print()
 	ImGui::Combo("propertie", &propertie, items, ITEMS_NUMBER);
 
 	static int propertieIndex = 0;
-//	ImGui::SliderInt("propertie index", &propertieIndex, 0, 8);
-	// --------------------
 
 	if (propertie <= 3) // Rd parameter
 	{
@@ -47,17 +45,15 @@ void HooksUI::print()
 		ImGui::Combo(str.c_str(), &propertieIndex, shapeElements);
 	}
 
-	// ---------------
-
 	static int actionMode = 0;
-	ImGui::Combo("action mode", &actionMode, "add\0subtract\0multiply\0divide\0");
+	ImGui::Combo("action mode", &actionMode, "add\0subtract\0boolean\0");
 
 	glm::vec2 valueRange = getSliderRangesFromHookPropertie(propertie, propertieIndex);
 	static float initialValue = 0.0;
-	ImGui::SliderFloat("intial value", &initialValue, valueRange[0], valueRange[1]);
+	ImGui::SliderFloat("intial value", &initialValue, valueRange[0], valueRange[1],  "%.5f");
 
 	static float value = 0.0;
-	ImGui::SliderFloat("value", &value, valueRange[0], valueRange[1]);
+	ImGui::SliderFloat("value", &value, valueRange[0], valueRange[1],  "%.5f");
 
 	if (ImGui::Button("add hook"))
 		_adapter.createHook((AudioTrigger)audioTrigger, propertie, propertieIndex, (ActionMode)actionMode, initialValue, value);
@@ -84,27 +80,23 @@ void HooksUI::print()
 			hooks[i].reactionPropertie = hookPropertie;
 
 		displayPropertieIndex(hooks[i], i);
-		//int hookPropertieIndex = hooks[i].propertieIndex;
-		//str = "hook propertie index " + std::to_string(i);
-		//if (ImGui::SliderInt(str.c_str(), &hookPropertieIndex, 0, 4))
-		//	hooks[i].propertieIndex = hookPropertieIndex;
 
 		int hookActionMode = hooks[i].actionMode;
 		str = "hook action mode " + std::to_string(i);
-		if (ImGui::Combo(str.c_str(), &hookActionMode, "add\0subtract\0multiply\0divide\0"))
+		if (ImGui::Combo(str.c_str(), &hookActionMode, "add\0subtract\0boolean\0"))
 			hooks[i].actionMode = (ActionMode)hookActionMode;
 
 		glm::vec2 sliderValue = getSliderRangesFromHookPropertie(hooks[i].reactionPropertie, hooks[i].propertieIndex);
 
 		float hookInitialValue = hooks[i].simulationInitialValue;
 		str = "hook initial value " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, sliderValue[0], sliderValue[1]))
+		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, sliderValue[0], sliderValue[1], "%.5f"))
 			hooks[i].simulationInitialValue = hookInitialValue;
 
 
 		float hookValue = hooks[i].value;
 		str = "hook value " + std::to_string(i);
-		if (ImGui::SliderFloat(str.c_str(), &hookValue, sliderValue[0], sliderValue[1]))
+		if (ImGui::SliderFloat(str.c_str(), &hookValue, sliderValue[0], sliderValue[1], "%.5f"))
 			hooks[i].value = hookValue;
 
 		str = "erase hook " + std::to_string(i);

@@ -85,7 +85,12 @@ void UserInterface::update()
 		{
 			ImGui::Text("\n");
 			for (int i = 0; i < 4; i++)
+			{
 				_RDOptionsUI.print(i);
+				ImGui::Text("\n");
+				ImGui::Separator();
+				ImGui::Text("\n");
+			}
 			ImGui::EndTabItem();
 		}
 

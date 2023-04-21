@@ -7,16 +7,20 @@ RDOptionsUI::RDOptionsUI(ReactionDiffusionSimulator& RDSimulator, const std::map
 
 void RDOptionsUI::print(const int& i)
 {
-	// Input Type ComboBox
-	int inputParameterType = _RDSimulator.getParameterType(i);
-	if (ImGui::Combo(std::string(getFieldNameFromIndex(i) + " type").c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0"))
-		_RDSimulator.setParameterType(i, static_cast<InputParameterType>(inputParameterType));
+	ImGui::Text("%s", getFieldNameFromIndex(i).c_str());
+	ImGui::Text("\n");
 
 	// Parameter preview
-	//ImGui::SameLine();
 	bool showParam = _RDSimulator.getParameterPreview(i);
 	if (ImGui::Checkbox(std::string("Show " + std::to_string(i)).c_str(), &showParam))
 		_RDSimulator.setParameterPreview(i, showParam);
+
+	ImGui::SameLine();
+	// Input Type ComboBox
+	int inputParameterType = _RDSimulator.getParameterType(i);
+	ImGui::SetNextItemWidth(284);
+	if (ImGui::Combo(std::string(getFieldNameFromIndex(i) + " type").c_str(), &inputParameterType, "number input\0Perlin noise\0Voronoi\0"))
+		_RDSimulator.setParameterType(i, static_cast<InputParameterType>(inputParameterType));
 
 	// Print input fields according to input type
 	const InputParameterType& parameterType = _RDSimulator.getParameterType(i);

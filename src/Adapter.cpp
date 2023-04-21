@@ -139,10 +139,8 @@ void Adapter::applyHook(const AdapterHook& hook)
 		newValue = hook.simulationInitialValue + (ratio * hook.value);
 	else if (hook.actionMode == subtract)
 		newValue = hook.simulationInitialValue - (ratio * hook.value);
-	else if (hook.actionMode == multiply)
-		newValue = hook.simulationInitialValue * (1 + ratio);
 	else
-		newValue = hook.simulationInitialValue * (ratio);
+		newValue = ratio >= 1.0 ? hook.value : hook.simulationInitialValue;
 
 	// Reaction diffusion parameter ( rdA, rdB, feedRate or killRate )
 	const int REACTION_DIFFUSION_PARAMETER_NB = 4;

@@ -3,7 +3,7 @@
 #include "./Graphic/ReactionDiffusion/ReactionDiffusionSimulator.hpp"
 #include "./Audio/AudioAnalyzer.hpp"
 
-enum ActionMode { add, subtract, multiply, divide };
+enum ActionMode { add, subtract, boolean};
 enum AudioTrigger { bass, snare, lead };
 
 /*
