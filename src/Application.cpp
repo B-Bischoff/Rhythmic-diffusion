@@ -20,8 +20,7 @@ Application::Application(const int& width, const int& height)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	GLFWmonitor* primary = glfwGetPrimaryMonitor();
-	_window = glfwCreateWindow(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, "Rhythmic-diffusion", primary, NULL);
+	_window = glfwCreateWindow(SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, "Rhythmic-diffusion", NULL, NULL);
 	if (_window == nullptr)
 	{
 		std::cerr << "Failed to initialize GLFW window." << std::endl;

@@ -66,11 +66,37 @@ void UserInterface::update()
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
 	ImGui::Text("\nGeneral properties");
-	if (ImGui::Button("clear simulation"))
-		_RDSimulator.resetSimulation();
+
+	static bool isFullscreen = false;
+	if (ImGui::Button("toggle fullscreen"))
+	{
+		isFullscreen = !isFullscreen;
+		if (isFullscreen)
+		{
+			GLFWmonitor* primary = glfwGetPrimaryMonitor();
+			if (!primary)
+			{
+				std::cerr << "Could not get monitor" << std::endl;
+				exit(1);
+			}
+			glfwSetWindowMonitor(&_window, primary, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
+		}
+		else
+			glfwSetWindowMonitor(&_window, NULL, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
+	}
+
+	ImGui::Text("PUT FPS MANAGEMENT HERE\n");
+
+	// Simulation speed
 	static float speed = 1.0f;
 	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 10.0))
 		_RDSimulator.setSimulationSpeed(speed);
+
+	// Simulation clear
+	if (ImGui::Button("clear simulation"))
+		_RDSimulator.resetSimulation();
+
+
 	ImGui::Text("\n");
 	ImGui::Separator();
 
