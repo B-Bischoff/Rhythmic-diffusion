@@ -9,7 +9,7 @@ It can be decomposed in two parts:
 A documentation on how the project was made is currently beeing done and will soon arrive.
 
 ## Table of contents
-1. [Downloads](#downloads-and-installation)
+1. [Downloads and installation](#downloads-and-installation)
      1. [Windows](#windows)
      2. [Linux](#linux)
      3. [MacOs](#macos)
@@ -19,7 +19,8 @@ A documentation on how the project was made is currently beeing done and will so
     3. [Hooks](#hooks)
     4. [Presets](#presets)
 3. [Examples](#examples)
-    1. [ARTIST NAME AND SONG](#to-fill)
+    1. [All India Radio - Four Three](#all-india-radio---four-three)
+    2. [Turing Complete - Wide Instructions](#turing-complete---wide-instructions)
 
 ## Downloads and installation
 
@@ -31,7 +32,7 @@ Make sure CMake, Git and GCC are installed by typing ```sudo apt install cmake g
 To install the required dependencies, open a terminal and type: 
 ```sudo apt install libsoil-dev libglm-dev libglew-dev libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev libfreetype-dev libgl1-mesa-dev xorg-dev freeglut3-dev libasound2-dev```
 
-To install, build and start the application, you simply have to clone this project and execute the ```start.sh``` file.  
+To install, build and start the application, you simply have to clone this project and execute the bash script with ```./start.sh```.  
 This will create a build directory, compile the source code and launch the newly created executable.
 
 
@@ -41,12 +42,6 @@ Unfortunately, the use of OpenGl has been deprecated by MacOs, making it impossi
 ## Usage
 
 ### Reaction diffusion
-
-reaction diffusion
-gray scott model
-4 parameters
-multiple patterns
-noises
 
 The Gray-Scott reaction diffusion model is used to simulate the evolution of two chemicals on a 2D grid, reacting and diffusing over time.  
 To visualize what is happening, a color gradient is applied to each pixel, depending on their chemicals B concentration.  
@@ -90,26 +85,41 @@ The three things a hook needs are:
 -  an output
 -  an operation
 
-The input will come from the audio. The three available inputs are:
+The input comes from the audio. The three available ones are:
 
--  the bass : sensitive to low frequency sound (from 0 to 80 Hertz roughly)
--  the snare : sensitive to medium sound with spreaded out frequencies (from 2000 to 8000 Hertz roughly)
+-  the bass : sensitive to low frequencies sound (from 0 to 80 Hertz roughly)
+-  the snare : sensitive to higher frequencies (from 2000 to 8000 Hertz roughly)
 -  the lead : any sound that has a high variation and that is not included by the bass or snare
 
 It is really hard to make a perfect audio detection algorithm that works for any kind of music.  
-This one was conceived mostly for techno music, but it was tested with a large variety of music (going from french music to post rock / metal)
+This one was conceived mostly for techno music, but it was tested with a large variety of music (going from french music to post-rock / metal, along with rap)
 
-The output is what is going to be affected by the audio variations.  
-It can be a reaction diffusion propertie or even a shape.
+The output is what's going to be affected by the audio variations.  
+It can be a reaction diffusion property (for noise type parameters, a property like scale or offset must be selected).
+It may also be a shape property such as its size, border or angle.
 
-The operation describes how the output will be affected. 
+Finally, the operation describes how the output will be affected.
 
-// talking about ratios
-Under the hood, the three inputs (bass, snare and lead) are ratios going from 0 to 1.  
-If the 
+An operation uses an initial value (the value set when there is no audio variation).  
+It needs a calculation value (the value that will be added or subtracted from the initial value depending on the intensity of the song variation)  
+And the last thing is the mode. There are three existing modes (addition, subtraction, and boolean).  
+The boolean mode only switches from the initial value to the calculation value when the song variation is important.
 
-// notes
-hooks have :
-- input (bass, snare, lead)
-- output (rd prop, shape prop)
-- operation (a mode, an initial value, an operation value)
+
+### Presets
+
+To avoid having to remember every numbers and parameters off the simulation there is a preset system.  
+A preset will save every settings of the simulation including : reaction diffusion properties, shapes, hooks and gradient
+
+Each preset is saved under an XML type file in the "presets" folder located at the root of the project.  
+The load of existing presets is only done at the application startup.
+
+## Examples
+
+Thanks to the agreement of those wonderful artists here are some demonstrations of the project.
+
+### All India Radio - Four Three  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/C7v6x1xhZ-E/0.jpg)](https://www.youtube.com/watch?v=C7v6x1xhZ-E)
+
+### Turing Complete - Wide Instructions  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/bu7CsP8l2sI/0.jpg)](https://www.youtube.com/watch?v=bu7CsP8l2sI)  
