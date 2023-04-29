@@ -52,7 +52,7 @@ void Application::loop()
 {
 	float previousTime = glfwGetTime();
 	float fps = 0.0;
-	float aimedFps = 500;
+	float aimedFps = 200;
 
 	AudioPlayer audioPlayer;
 	AudioAnalyzer audioAnalyzer;

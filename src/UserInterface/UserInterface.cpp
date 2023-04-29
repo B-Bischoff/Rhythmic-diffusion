@@ -30,7 +30,7 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 	_slidersRanges["RDB"] = { 0.0, 1.0 };
 	_slidersRanges["FeedRate"] = { 0.0, 0.07 };
 	_slidersRanges["KillRate"] = { 0.0, 0.07 };
-	_slidersRanges["NoiseScale"] = { 0.0, 1.0 };
+	_slidersRanges["NoiseScale"] = { 0.0, 0.15 };
 	_slidersRanges["NoiseOffset"] = { -5000.0, 5000.0 };
 	_slidersRanges["ShapesRadius"] = { 0.0, 2000.0 };
 	_slidersRanges["ShapesBorder"] = { 0.0, 2000.0 };
@@ -99,7 +99,8 @@ void UserInterface::update()
 			glfwSetWindowMonitor(&_window, NULL, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
 	}
 
-	ImGui::Text("current fps: %f\n", _fps);
+	ImGui::Text("\n");
+	ImGui::Text("current fps: %.0f\n", _fps);
 	ImGui::SliderFloat("Max Frame Per Second", &_maxFps, 30.0, 1000.0);
 
 	ImGui::Text("\n");

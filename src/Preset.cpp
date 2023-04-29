@@ -5,9 +5,8 @@ Preset::Preset(ReactionDiffusionSimulator& RDSsimulator, Adapter& adapter)
 {
 	_automaticPresetSwitch = false;
 	loadExistingPresets();
-	if (_presets.size() >= 1)
-		_currentPreset = _presets.begin()->first;
-	_presetSwitchDelay = 0;
+	_currentPreset = "";
+	_presetSwitchDelay = 5;
 }
 
 void Preset::addPreset(std::string presetName)
@@ -187,11 +186,9 @@ void Preset::updateAutomaticPresetSwitch()
 
 	if (elapsedTime.count() < _presetSwitchDelay)
 		return;
-	if (_adapter.getRatios() != glm::vec3(0)) // Switch preset when all 3 ratios are equal to 0
-		return;
 
 	// temporary four three manual switch
-	static int index = 0;
+	//static int index = 0;
 
 	//// 40 30 35 30 20 25 30 xx
 	// mush le wanski
@@ -209,29 +206,34 @@ void Preset::updateAutomaticPresetSwitch()
 	//else if (index == 11) _presetSwitchDelay = 45;
 	//else if (index == 12) _presetSwitchDelay = 90;
 
-	if (index == 0) _presetSwitchDelay = 40;
-	else if (index == 1) _presetSwitchDelay = 30;
-	else if (index == 2) _presetSwitchDelay = 35;
-	else if (index == 3) _presetSwitchDelay = 30;
-	else if (index == 4) _presetSwitchDelay = 20;
-	else if (index == 5) _presetSwitchDelay = 25;
-	else if (index == 6) _presetSwitchDelay = 27;
-	else if (index == 7) _presetSwitchDelay = 80;
+	//if (index == 0) _presetSwitchDelay = 40;
+	//else if (index == 1) _presetSwitchDelay = 30;
+	//else if (index == 2) _presetSwitchDelay = 35;
+	//else if (index == 3) _presetSwitchDelay = 30;
+	//else if (index == 4) _presetSwitchDelay = 20;
+	//else if (index == 5) _presetSwitchDelay = 25;
+	//else if (index == 6) _presetSwitchDelay = 27;
+	//else if (index == 7) _presetSwitchDelay = 80;
 
-	const std::string presetName = "four-three-" + std::to_string(index);
-	index++;
-	applyPreset(presetName);
+	//const std::string presetName = "four-three-" + std::to_string(index);
+	//index++;
+	//applyPreset(presetName);
 
-	std::cout << "applied " << presetName << std::endl;
+	//std::cout << "applied " << presetName << std::endl;
 
-	std::map<std::string, PresetSettings>::iterator it = _presets.find(_currentPreset);
-	if (it == _presets.end())
+	std::map<std::string, PresetSettings>::iterator it;
+	if (presetExists(_currentPreset))
+	{
+		it = _presets.find(_currentPreset);
+		it++;
+		if (it == _presets.end())
+			it = _presets.begin();
+	}
+	else
 		it = _presets.begin();
+
 
 	applyPreset(it->first);
-	it++;
-	if (it == _presets.end())
-		it = _presets.begin();
 	_currentPreset = it->first;
 
 	_previousTime = currentTime;
@@ -239,8 +241,12 @@ void Preset::updateAutomaticPresetSwitch()
 
 void Preset::setAutomaticSwitchDelay(const float& switchDelay)
 {
-	_automaticPresetSwitch = true;
 	_presetSwitchDelay = switchDelay;
+}
+
+void Preset::startAutomaticPresetSwitch()
+{
+	_automaticPresetSwitch = true;
 }
 
 void Preset::stopAutomaticPresetSwitch()

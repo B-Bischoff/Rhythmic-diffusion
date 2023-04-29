@@ -8,18 +8,28 @@ PresetUI::PresetUI(ReactionDiffusionSimulator& RDSimulator, Preset& presetManage
 void PresetUI::print()
 {
 	ImGui::Text("\n");
-	const std::string presetSwitchText = _presetManager.getAutomaticPresetSwitchState() ? "Disable switch" : "Enable switch";
+	ImGui::Text("Automatic preset transition");
+	const std::string presetSwitchText = _presetManager.getAutomaticPresetSwitchState() ? "Disable auto transition" : "Enable auto transition";
 
 	static float presetSwitchDelay = 5.0;
-	ImGui::SliderFloat("switch delay", &presetSwitchDelay, 2, 120);
+	ImGui::SetNextItemWidth(200);
+	if (ImGui::SliderFloat("time between transitions (in seconds)", &presetSwitchDelay, 2, 120))
+		_presetManager.setAutomaticSwitchDelay(presetSwitchDelay);
 
 	if (ImGui::Button(presetSwitchText.c_str()))
 	{
 		if (_presetManager.getAutomaticPresetSwitchState())
 			_presetManager.stopAutomaticPresetSwitch();
 		else
+		{
 			_presetManager.setAutomaticSwitchDelay(presetSwitchDelay);
+			_presetManager.startAutomaticPresetSwitch();
+		}
 	}
+
+	ImGui::Text("\n");
+	ImGui::Separator();
+	ImGui::Text("\n");
 
 	ImGui::Text("last preset applied: %s", _presetManager.getCurrentPreset().c_str());
 
@@ -56,6 +66,8 @@ void PresetUI::print()
 	std::vector<std::string> presetNames = _presetManager.getPresetNames();
 
 	static int presetIndex = 0;
+
+	ImGui::Text("\n");
 	for (int i = 0; i < (int)presetNames.size(); i++)\
 	{
 		std::string buttonText;
@@ -78,19 +90,19 @@ void PresetUI::print()
 		}
 
 	}
-		if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("The preset '%s' will be entirely deleted.\nThis operation cannot be undone!\n\n", presetNames[presetIndex].c_str());
-			ImGui::Separator();
+	if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("The preset '%s' will be entirely deleted.\nThis operation cannot be undone!\n\n", presetNames[presetIndex].c_str());
+		ImGui::Separator();
 
-			if (ImGui::Button("OK", ImVec2(120, 0)))
-			{
-				_presetManager.removePreset(presetNames[presetIndex]);
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::SetItemDefaultFocus();
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-			ImGui::EndPopup();
+		if (ImGui::Button("OK", ImVec2(120, 0)))
+		{
+			_presetManager.removePreset(presetNames[presetIndex]);
+			ImGui::CloseCurrentPopup();
 		}
+		ImGui::SetItemDefaultFocus();
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}
 }

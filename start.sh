@@ -20,7 +20,6 @@ fi
 make -C $BUILD_DIRECTORY;
 if [ "$?" == 0 ]
 then
-	echo "-------------------- COMPILATION END --------------------";
 	./$BUILD_DIRECTORY/Rythmic-diffusion
 else
 	echo "-------------------- COMPILATION FAILED --------------------";

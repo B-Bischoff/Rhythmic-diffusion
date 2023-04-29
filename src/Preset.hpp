@@ -56,6 +56,7 @@ public:
 
 	void updateAutomaticPresetSwitch();
 	void setAutomaticSwitchDelay(const float& switchDelay);
+	void startAutomaticPresetSwitch();
 	void stopAutomaticPresetSwitch();
 	bool getAutomaticPresetSwitchState() const;
 	std::string getCurrentPreset() const;
