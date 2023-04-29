@@ -183,11 +183,15 @@ std::vector<float>& AudioPlayer::getAudioData()
 
 double AudioPlayer::getCurrentTimestamp() const
 {
+	if (!_streamOpened)
+		return 0;
 	return _frameRead;
 }
 
 unsigned long AudioPlayer::getWavFileDuration()
 {
+	if (!_streamOpened)
+		return 0;
 	return input.getSize();
 }
 

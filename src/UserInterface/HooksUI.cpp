@@ -11,55 +11,71 @@ void HooksUI::print()
 
 	// Clear hooks
 	if (ImGui::Button("clear hooks"))
-		_adapter.clearHooks();
+		ImGui::OpenPopup("Clear hooks?");
+
+	if (ImGui::BeginPopupModal("Clear hooks?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Active hooks will be cleared.\nThis operation cannot be undone!\n\n");
+		ImGui::Separator();
+		if (ImGui::Button("OK", ImVec2(120, 0)))
+		{
+			_adapter.clearHooks();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SetItemDefaultFocus();
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}
 
 	static int audioTrigger = 0;
-	ImGui::Combo("audio trigger", &audioTrigger, "bass\0snare\0lead\0");
+	ImGui::Combo("audio input", &audioTrigger, "bass\0snare\0lead\0");
 
-	static int propertie = 0;
+	static int property = 0;
 	const int ITEMS_NUMBER = 4 + (int)_RDSimulator.getInitialConditionsShapes().size();
 	const char* items[] = { "RdA", "RdB", "Feed", "Kill", "Shape 0", "Shape 1", "Shape 2", "Shape 3",
 		"Shape 4", "Shape 5", "Shape 6", "Shape 7", "Shape 8", "Shape 9", "Shape 10", "Shape 11", "Shape 12", "Shape 13", "Shape 14", "Shape 15", "Shape 16" };
 
-	ImGui::Combo("propertie", &propertie, items, ITEMS_NUMBER);
+	ImGui::Combo("output", &property, items, ITEMS_NUMBER);
 
-	static int propertieIndex = 0;
+	static int propertyIndex = 0;
 
-	if (propertie <= 3) // Rd parameter
+	if (property <= 3) // Rd parameter
 	{
 		// Number does not have any 'subproperties'
-		if (_RDSimulator.getParameterType(propertie) != Number)
+		if (_RDSimulator.getParameterType(property) != Number)
 		{
 			// Noise options
-			std::string str = "hook propertie index";
+			std::string str = "noise property";
 			const char* noiseElements = "strength\0scale\0offset X\0offset Y\0time multiplier\0base value\0";
-			ImGui::Combo(str.c_str(), &propertieIndex, noiseElements);
+			ImGui::Combo(str.c_str(), &propertyIndex, noiseElements);
 		}
 		else
-			propertieIndex = 0;
+			propertyIndex = 0;
 	}
 	else // Shape
 	{
-		std::string str = "shape propertie index";
+		std::string str = "shape property";
 		const char* shapeElements = "radius\0border\0angle\0offset X\0offset Y\0";
-		ImGui::Combo(str.c_str(), &propertieIndex, shapeElements);
+		ImGui::Combo(str.c_str(), &propertyIndex, shapeElements);
 	}
 
 	static int actionMode = 0;
-	ImGui::Combo("action mode", &actionMode, "add\0subtract\0boolean\0");
+	ImGui::Combo("operation", &actionMode, "add\0subtract\0boolean\0");
 
-	glm::vec2 valueRange = getSliderRangesFromHookPropertie(propertie, propertieIndex);
+	glm::vec2 valueRange = getSliderRangesFromHookPropertie(property, propertyIndex);
 	static float initialValue = 0.0;
 	ImGui::SliderFloat("intial value", &initialValue, valueRange[0], valueRange[1],  "%.5f");
 
 	static float value = 0.0;
-	ImGui::SliderFloat("value", &value, valueRange[0], valueRange[1],  "%.5f");
+	ImGui::SliderFloat("calculation value", &value, valueRange[0], valueRange[1],  "%.5f");
 
 	if (ImGui::Button("add hook"))
-		_adapter.createHook((AudioTrigger)audioTrigger, propertie, propertieIndex, (ActionMode)actionMode, initialValue, value);
+		_adapter.createHook((AudioTrigger)audioTrigger, property, propertyIndex, (ActionMode)actionMode, initialValue, value);
 
 	ImGui::Text("\n");
 	ImGui::Separator();
+	ImGui::Text("Existing hooks");
 	ImGui::Text("\n");
 
 	// Print existing hooks
@@ -70,32 +86,32 @@ void HooksUI::print()
 		std::string str;
 
 		int hookAudioTrigger = hooks[i].audioTrigger;
-		str = "hook audio trigger " + std::to_string(i);
+		str = "audio input" + std::to_string(i);
 		if (ImGui::Combo(str.c_str(), &hookAudioTrigger, "bass\0snare\0lead\0"))
 			hooks[i].audioTrigger = (AudioTrigger)hookAudioTrigger;
 
 		int hookPropertie = hooks[i].reactionPropertie;
-		str = "hook propertie " + std::to_string(i);
+		str = "output " + std::to_string(i);
 		if (ImGui::Combo(str.c_str(), &hookPropertie, items, ITEMS_NUMBER))
 			hooks[i].reactionPropertie = hookPropertie;
 
 		displayPropertieIndex(hooks[i], i);
 
 		int hookActionMode = hooks[i].actionMode;
-		str = "hook action mode " + std::to_string(i);
+		str = "operation " + std::to_string(i);
 		if (ImGui::Combo(str.c_str(), &hookActionMode, "add\0subtract\0boolean\0"))
 			hooks[i].actionMode = (ActionMode)hookActionMode;
 
 		glm::vec2 sliderValue = getSliderRangesFromHookPropertie(hooks[i].reactionPropertie, hooks[i].propertieIndex);
 
 		float hookInitialValue = hooks[i].simulationInitialValue;
-		str = "hook initial value " + std::to_string(i);
+		str = "initial value " + std::to_string(i);
 		if (ImGui::SliderFloat(str.c_str(), &hookInitialValue, sliderValue[0], sliderValue[1], "%.5f"))
 			hooks[i].simulationInitialValue = hookInitialValue;
 
 
 		float hookValue = hooks[i].value;
-		str = "hook value " + std::to_string(i);
+		str = "calculation value " + std::to_string(i);
 		if (ImGui::SliderFloat(str.c_str(), &hookValue, sliderValue[0], sliderValue[1], "%.5f"))
 			hooks[i].value = hookValue;
 
@@ -117,24 +133,24 @@ void HooksUI::displayPropertieIndex(AdapterHook& hook, const int& i)
 			return;
 
 		// Noise options
-		std::string str = "hook propertie index " + std::to_string(i);
+		std::string str = "noise property " + std::to_string(i);
 		const char* noiseElements = "strength\0scale\0offset X\0offset Y\0time multiplier\0base value\0";
 		ImGui::Combo(str.c_str(), &hook.propertieIndex, noiseElements);
 	}
 	else // Shape
 	{
-		std::string str = "shape propertie index " + std::to_string(i);
+		std::string str = "shape property " + std::to_string(i);
 		const char* shapeElements = "radius\0border\0angle\0offset X\0offset Y\0";
 		ImGui::Combo(str.c_str(), &hook.propertieIndex, shapeElements);
 	}
 }
 
-glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int& propertieIndex) const
+glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int& propertyIndex) const
 {
 	if (index <= 3) // RD parameters
 	{
 		InputParameterType parameterType = _RDSimulator.getParameterType(index);
-		if (parameterType == Number || propertieIndex == 0 || propertieIndex == 5) // strength
+		if (parameterType == Number || propertyIndex == 0 || propertyIndex == 5) // strength
 		{
 			switch (index) {
 				case 0: return _slidersRanges.at("RDA");
@@ -146,7 +162,7 @@ glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int&
 		}
 		else // Noise property
 		{
-			switch (propertieIndex) {
+			switch (propertyIndex) {
 				case 0: return _slidersRanges.at("NoiseScale");
 				case 1: return _slidersRanges.at("NoiseOffset");
 				case 2: return _slidersRanges.at("NoiseOffset");
@@ -156,7 +172,7 @@ glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int&
 	}
 	else // Shapes
 	{
-		switch (propertieIndex) {
+		switch (propertyIndex) {
 			case 0: return _slidersRanges.at("ShapesRadius");
 			case 1: return _slidersRanges.at("ShapesBorder");
 			case 2: return _slidersRanges.at("ShapesAngle");

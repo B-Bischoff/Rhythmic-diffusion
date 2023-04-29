@@ -191,21 +191,38 @@ void Preset::updateAutomaticPresetSwitch()
 		return;
 
 	// temporary four three manual switch
-	//static int index = 0;
+	static int index = 0;
 
 	//// 40 30 35 30 20 25 30 xx
-	//if (index == 0) _presetSwitchDelay = 40;
-	//else if (index == 1) _presetSwitchDelay = 30;
-	//else if (index == 2) _presetSwitchDelay = 35;
-	//else if (index == 3) _presetSwitchDelay = 30;
-	//else if (index == 4) _presetSwitchDelay = 20;
-	//else if (index == 5) _presetSwitchDelay = 25;
-	//else if (index == 6) _presetSwitchDelay = 31;
-	//else if (index == 7) _presetSwitchDelay = 60;
+	// mush le wanski
+	//if (index == 0) _presetSwitchDelay = 22;
+	//else if (index == 1) _presetSwitchDelay = 23;
+	//else if (index == 2) _presetSwitchDelay = 23;
+	//else if (index == 3) _presetSwitchDelay = 23;
+	//else if (index == 4) _presetSwitchDelay = 45;
+	//else if (index == 5) _presetSwitchDelay = 46;
+	//else if (index == 6) _presetSwitchDelay = 45;
+	//else if (index == 7) _presetSwitchDelay = 23;
+	//else if (index == 8) _presetSwitchDelay = 45;
+	//else if (index == 9) _presetSwitchDelay = 13;
+	//else if (index == 10) _presetSwitchDelay = 32;
+	//else if (index == 11) _presetSwitchDelay = 45;
+	//else if (index == 12) _presetSwitchDelay = 90;
 
-	//const std::string presetName = "0four-three-" + std::to_string(index);
-	//index++;
-	//applyPreset(presetName);
+	if (index == 0) _presetSwitchDelay = 40;
+	else if (index == 1) _presetSwitchDelay = 30;
+	else if (index == 2) _presetSwitchDelay = 35;
+	else if (index == 3) _presetSwitchDelay = 30;
+	else if (index == 4) _presetSwitchDelay = 20;
+	else if (index == 5) _presetSwitchDelay = 25;
+	else if (index == 6) _presetSwitchDelay = 27;
+	else if (index == 7) _presetSwitchDelay = 80;
+
+	const std::string presetName = "four-three-" + std::to_string(index);
+	index++;
+	applyPreset(presetName);
+
+	std::cout << "applied " << presetName << std::endl;
 
 	std::map<std::string, PresetSettings>::iterator it = _presets.find(_currentPreset);
 	if (it == _presets.end())

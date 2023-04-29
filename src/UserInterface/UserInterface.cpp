@@ -1,13 +1,14 @@
 #include "./UserInterface.hpp"
 
-UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter, Preset& presetManager)
+UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int& winHeight, const int& uiWitdth, ReactionDiffusionSimulator& RDSimulator, AudioPlayer& audioPlayer, AudioAnalyzer& audioAnalyzer, Adapter& adapter, Preset& presetManager, float& maxFps, const float& fps)
 	: _window(window), WIN_WIDTH(winWidth), WIN_HEIGHT(winHeight), UI_WIDTH(uiWitdth), _RDSimulator(RDSimulator), _audioPlayer(audioPlayer), _audioAnalyzer(audioAnalyzer), _adapter(adapter), _presetManager(presetManager),
 	_audioPlayerUI(_fileBrowser, _audioPlayer, _audioAnalyzer),
 	_hooksUI(_RDSimulator, _adapter, _slidersRanges),
 	_initialConditionsUI(_RDSimulator, _slidersRanges),
 	_presetUI(_RDSimulator, _presetManager),
 	_RDOptionsUI(_RDSimulator, _slidersRanges),
-	_gradientUI(_RDSimulator, _gradient)
+	_gradientUI(_RDSimulator, _gradient),
+	_maxFps(maxFps), _fps(fps)
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 	const char* glsl_version = "#version 100";
@@ -27,8 +28,8 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 
 	_slidersRanges["RDA"] = { 0.0, 1.0 };
 	_slidersRanges["RDB"] = { 0.0, 1.0 };
-	_slidersRanges["FeedRate"] = { 0.0, 0.06 };
-	_slidersRanges["KillRate"] = { 0.0, 0.06 };
+	_slidersRanges["FeedRate"] = { 0.0, 0.07 };
+	_slidersRanges["KillRate"] = { 0.0, 0.07 };
 	_slidersRanges["NoiseScale"] = { 0.0, 1.0 };
 	_slidersRanges["NoiseOffset"] = { -5000.0, 5000.0 };
 	_slidersRanges["ShapesRadius"] = { 0.0, 1000.0 };
@@ -48,6 +49,19 @@ void UserInterface::createNewFrame()
 	ImGui::NewFrame();
 }
 
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered(1 << 12))
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
 void UserInterface::update()
 {
 	const int PANNEL_WIDTH = UI_WIDTH;
@@ -65,7 +79,7 @@ void UserInterface::update()
 
 	ImGui::Begin("Simulation properties", NULL, windowFlag);
 
-	ImGui::Text("\nGeneral properties");
+	ImGui::Text("\nApplication properties");
 
 	static bool isFullscreen = false;
 	if (ImGui::Button("toggle fullscreen"))
@@ -85,17 +99,23 @@ void UserInterface::update()
 			glfwSetWindowMonitor(&_window, NULL, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
 	}
 
-	ImGui::Text("PUT FPS MANAGEMENT HERE\n");
+	ImGui::Text("current fps: %f\n", _fps);
+	ImGui::SliderFloat("Max Frame Per Second", &_maxFps, 30.0, 1000.0);
 
+	ImGui::Text("\n");
+	ImGui::Separator();
+
+	ImGui::Text("\nSimulation properties");
 	// Simulation speed
 	static float speed = 1.0f;
-	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 10.0))
+	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 3.0)) 
 		_RDSimulator.setSimulationSpeed(speed);
+	ImGui::SameLine(); HelpMarker("Coefficient used to modify simulation speed.\n(WARNING) visual artefacts might appears at too high speed");
 
 	// Simulation clear
 	if (ImGui::Button("clear simulation"))
 		_RDSimulator.resetSimulation();
-
+	ImGui::SameLine(); HelpMarker("Clear screen (does not modify simulation settings)");
 
 	ImGui::Text("\n");
 	ImGui::Separator();

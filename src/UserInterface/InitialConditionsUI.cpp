@@ -29,6 +29,7 @@ void InitialConditionsUI::print()
 
 	ImGui::Text("\n");
 	ImGui::Separator();
+	ImGui::Text("Existing shapes");
 	ImGui::Text("\n");
 
 	// Print existing shapes

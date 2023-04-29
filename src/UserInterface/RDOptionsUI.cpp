@@ -58,6 +58,12 @@ void RDOptionsUI::printNoiseFields(const int& i)
 
 	std::string fieldName;
 
+	// Base value
+	fieldName = std::string("Base value " + std::to_string(i));
+	float baseValue = v[5];
+	if (ImGui::SliderFloat(fieldName.c_str(), &baseValue, sliderRange[0], sliderRange[1]))
+		valueChanged = true;
+
 	// Strength factor
 	fieldName = std::string("Strength factor " + std::to_string(i));
 	float strengthFactor = 1.0f;
@@ -91,12 +97,6 @@ void RDOptionsUI::printNoiseFields(const int& i)
 	fieldName = std::string("Time multiplier" + std::to_string(i));
 	float timeMultiplier = v[4];
 	if (ImGui::SliderFloat(fieldName.c_str(), &timeMultiplier, 0.0, 1.0))
-		valueChanged = true;
-
-	// Base value
-	fieldName = std::string("Base value" + std::to_string(i));
-	float baseValue = v[5];
-	if (ImGui::SliderFloat(fieldName.c_str(), &baseValue, sliderRange[0], sliderRange[1]))
 		valueChanged = true;
 
 	if (valueChanged)

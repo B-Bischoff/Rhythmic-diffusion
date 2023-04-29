@@ -38,6 +38,9 @@ private:
 	RDOptionsUI _RDOptionsUI;
 	GradientUI _gradientUI;
 
+	float& _maxFps;
+	const float& _fps;
+
 	// Used to associate field with its min and max slider value (ex: "feedRate" - [0 - 0.06])
 	std::map<std::string, glm::vec2> _slidersRanges;
 
@@ -50,7 +53,10 @@ public:
 			AudioPlayer& audioPlayer,
 			AudioAnalyzer& audioAnalyzer,
 			Adapter& Adapter,
-			Preset& presetManager);
+			Preset& presetManager,
+			float& maxFps,
+			const float& fps
+			);
 	~UserInterface();
 
 	void createNewFrame();

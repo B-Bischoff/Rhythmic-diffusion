@@ -50,61 +50,70 @@ Application::~Application()
 
 void Application::loop()
 {
+	float previousTime = glfwGetTime();
+	float fps = 0.0;
+	float aimedFps = 500;
+
 	AudioPlayer audioPlayer;
 	AudioAnalyzer audioAnalyzer;
 	audioPlayer.setAudioAnalyzer(&audioAnalyzer);
 
-	int fCounter = 0;
-
-
 	ReactionDiffusionSimulator RDSimulator(_window, SCREEN_DIMENSION);
 
 	Adapter adapter(RDSimulator, audioAnalyzer);
-
 	Preset presetManager(RDSimulator, adapter);
+	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter, presetManager, aimedFps, fps);
 
-	UserInterface ui(*_window, SCREEN_DIMENSION.x, SCREEN_DIMENSION.y, 550, RDSimulator, audioPlayer, audioAnalyzer, adapter, presetManager);
 	RDSimulator.setUIGradient(ui.getGradient());
-
-	float deltaTime = 0.0f;
-	float lastFrame = 0.0f;
-
 	RDSimulator.setSimulationSpeed(1.0);
 	RDSimulator.setParameterValue(0, std::vector<float>(1, 0.387));
 	RDSimulator.setParameterValue(1, std::vector<float>(1, 0.276));
 	RDSimulator.setParameterValue(2, std::vector<float>(1, 0.013));
 	RDSimulator.setParameterValue(3, std::vector<float>(1, 0.038));
+	RDSimulator.addInitialConditionsShape(InitialConditionsShape(Circle, 200, 10, 0, glm::vec2(0)));
+	std::vector<glm::vec4> initGradient = { glm::vec4(0, 0, 0.15, 0), glm::vec4(1, 1, 1, 1) };
+	RDSimulator.setPostProcessingGradient(initGradient, 3);
 
 	// Change this to true to autoplay
 	bool isFirstFrame = false;
+	//presetManager.setAutomaticSwitchDelay(40);
+	//RDSimulator.setSimulationSpeed(0.9);
 
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
+		float currentTime = glfwGetTime();
+
+		if (currentTime - previousTime < 1.0 / aimedFps)
+		{
+			stk::Stk::sleep(1.0 / aimedFps);
+			continue;
+		}
+
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ui.createNewFrame();
 
-		printFps(deltaTime, lastFrame, fCounter);
-
 		if (isFirstFrame)
 		{
 			isFirstFrame = false;
-			audioPlayer.playWavFile("/home/brice/Downloads/four-three.wav");
+			//audioPlayer.playWavFile("/home/brice/Downloads/four-three.wav");
 			stk::Stk::sleep(500);
 			audioPlayer.togglePause();
 		}
 
-		ui.update();
-
 		adapter.update();
+		ui.update();
 
 		presetManager.updateAutomaticPresetSwitch();
 
 		RDSimulator.processSimulation();
-		RDSimulator.printRendering();
 
+		RDSimulator.printRendering();
 		ui.render();
+
+		fps = 1.0 / (currentTime - previousTime);
+		previousTime = currentTime;
 
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
@@ -113,18 +122,4 @@ void Application::loop()
 	audioPlayer.stopPlaying();
 
 	glfwTerminate();
-}
-
-void Application::printFps(float& deltaTime, float& lastFrame, int& fCounter)
-{
-	float currentFrame = glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
-	if(fCounter > 500)
-	{
-		std::cout << "FPS: " << 1 / deltaTime << std::endl;
-		fCounter = 0;
-	}
-	else
-		fCounter++;
 }
