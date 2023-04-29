@@ -81,19 +81,26 @@ void UserInterface::update()
 
 	ImGui::Text("\nApplication properties");
 
-	static bool isFullscreen = false;
+	static bool isFullscreen = true;
 	if (ImGui::Button("toggle fullscreen"))
 	{
 		isFullscreen = !isFullscreen;
 		if (isFullscreen)
 		{
-			GLFWmonitor* primary = glfwGetPrimaryMonitor();
-			if (!primary)
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+			if (!monitor)
 			{
 				std::cerr << "Could not get monitor" << std::endl;
 				exit(1);
 			}
-			glfwSetWindowMonitor(&_window, primary, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		 
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+			std::cout << mode->width << " " << mode->height << std::endl;
+			glfwSetWindowMonitor(&_window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 		}
 		else
 			glfwSetWindowMonitor(&_window, NULL, 0, 0, WIN_WIDTH, WIN_HEIGHT, 0);
