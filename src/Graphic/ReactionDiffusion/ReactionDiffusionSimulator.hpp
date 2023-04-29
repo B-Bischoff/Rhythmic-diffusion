@@ -20,7 +20,6 @@ private:
 
 	Shader _shader;
 	ComputeShader _diffusionReactionShader;
-	ComputeShader _colorOutputShader;
 
 	InitialConditions _initialConditions;
 	InputParameter _diffusionRateAShader, _diffusionRateBShader, _feedRateShader, _killRateShader;

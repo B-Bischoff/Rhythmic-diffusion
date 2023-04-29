@@ -32,8 +32,8 @@ UserInterface::UserInterface(GLFWwindow& window, const int& winWidth, const int&
 	_slidersRanges["KillRate"] = { 0.0, 0.07 };
 	_slidersRanges["NoiseScale"] = { 0.0, 1.0 };
 	_slidersRanges["NoiseOffset"] = { -5000.0, 5000.0 };
-	_slidersRanges["ShapesRadius"] = { 0.0, 1000.0 };
-	_slidersRanges["ShapesBorder"] = { 0.0, 1000.0 };
+	_slidersRanges["ShapesRadius"] = { 0.0, 2000.0 };
+	_slidersRanges["ShapesBorder"] = { 0.0, 2000.0 };
 	_slidersRanges["ShapesAngle"] = { -360.0, 360.0 };
 	_slidersRanges["ShapesOffset"] = { -2000.0, 2000.0 };
 }
@@ -108,9 +108,9 @@ void UserInterface::update()
 	ImGui::Text("\nSimulation properties");
 	// Simulation speed
 	static float speed = 1.0f;
-	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 3.0)) 
+	if (ImGui::SliderFloat("simulation speed", &speed, 0.00f, 3.0))
 		_RDSimulator.setSimulationSpeed(speed);
-	ImGui::SameLine(); HelpMarker("Coefficient used to modify simulation speed.\n(WARNING) visual artefacts might appears at too high speed");
+	ImGui::SameLine(); HelpMarker("Coefficient used to modify simulation speed without consuming more hardware ressources.\n(WARNING) visual artefacts might appears at too high speed");
 
 	// Simulation clear
 	if (ImGui::Button("clear simulation"))

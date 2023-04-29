@@ -5,18 +5,38 @@ InitialConditionsUI::InitialConditionsUI(ReactionDiffusionSimulator& RDSimulator
 {
 }
 
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered(1 << 12))
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
+
 void InitialConditionsUI::print()
 {
 	ImGui::Text("\n");
 	static int shape = 0;
 	const char* shapesElements = "circle\0triangle\0hexagon\0square\0rectangle\0";
-	ImGui::Combo("shape shape", &shape, shapesElements);
+	ImGui::Combo("shape type", &shape, shapesElements);
 
 	static float radius = 0;
-	ImGui::SliderFloat("shape radius", &radius, _slidersRanges.at("ShapesRadius")[0], _slidersRanges.at("ShapesRadius")[1]);
+	const std::string radiusString = (shape == 4) ? "shape width" : "shape radius";
+	ImGui::SliderFloat(radiusString.c_str(), &radius, _slidersRanges.at("ShapesRadius")[0], _slidersRanges.at("ShapesRadius")[1]);
 
 	static float borderSize = 0;
-	ImGui::SliderFloat("shape border", &borderSize, _slidersRanges.at("ShapesBorder")[0], _slidersRanges.at("ShapesBorder")[1]);
+	const std::string borderString = (shape == 4) ? "shape height" : "shape border size";
+	ImGui::SliderFloat(borderString.c_str(), &borderSize, _slidersRanges.at("ShapesBorder")[0], _slidersRanges.at("ShapesBorder")[1]);
+	if (shape != 4)
+	{
+		ImGui::SameLine(); HelpMarker("Thickness of the border in pixels.\nSet this value to 0 in order to create a filled shape.");
+	}
 
 	static float angle = 0;
 	ImGui::SliderFloat("shape angle", &angle, _slidersRanges.at("ShapesAngle")[0], _slidersRanges.at("ShapesAngle")[1]);
@@ -46,12 +66,12 @@ void InitialConditionsUI::print()
 			shapes[i].shape = (Shape)shapeShape;
 
 		float shapeRadius = shapes[i].radius;
-		str = "radius " + std::to_string(i);
+		str = shapeShape == 4 ? "width " + std::to_string(i) : "radius " + std::to_string(i);
 		if (ImGui::SliderFloat(str.c_str(), &shapeRadius, _slidersRanges.at("ShapesRadius")[0], _slidersRanges.at("ShapesRadius")[1]))
 			shapes[i].radius = shapeRadius;
 
 		float shapeBorder = shapes[i].borderSize;
-		str = "border " + std::to_string(i);
+		str = shapeShape == 4 ? "height " + std::to_string(i) : "border size " + std::to_string(i);
 		if (ImGui::SliderFloat(str.c_str(), &shapeBorder, _slidersRanges.at("ShapesBorder")[0], _slidersRanges.at("ShapesBorder")[1]))
 			shapes[i].borderSize = shapeBorder;
 

@@ -58,7 +58,12 @@ void ReactionDiffusionSimulator::initShaders()
 		exit (1);
 	}
 
-	_diffusionReactionShader = ComputeShader(pathPrefix + "src/shaders/reactionDiffusion/grayScott.comp");
+	try {
+		_diffusionReactionShader = ComputeShader(pathPrefix + "src/shaders/reactionDiffusion/grayScott.comp");
+	} catch (std::invalid_argument& e) {
+		std::cerr << e.what() << std::endl;
+		exit (1);
+	}
 
 	std::vector<std::string> initialConditionsShadersfiles {
 		pathPrefix + "src/shaders/initialConditions/glslSpec.comp", // Specs must be the first compiled file
@@ -69,9 +74,12 @@ void ReactionDiffusionSimulator::initShaders()
 		pathPrefix + "src/shaders/initialConditions/rectangle.comp",
 		pathPrefix + "src/shaders/initialConditions/initialConditionsMain.comp", // Main must be the last compiled file
 	};
-	_initialConditions = InitialConditions(initialConditionsShadersfiles);
-
-	_colorOutputShader = ComputeShader(pathPrefix + "src/shaders/display.cs");
+	try {
+		_initialConditions = InitialConditions(initialConditionsShadersfiles);
+	} catch (std::invalid_argument& e) {
+		std::cerr << e.what() << std::endl;
+		exit (1);
+	}
 
 	std::vector<std::string> inputParametersShadersfiles {
 		pathPrefix + "src/shaders/parameters/glslParametersSpec.comp", // Specs must be the first compiled file
@@ -80,9 +88,13 @@ void ReactionDiffusionSimulator::initShaders()
 		pathPrefix + "src/shaders/parameters/voronoi.comp",
 		pathPrefix + "src/shaders/parameters/parametersMain.comp", // Main must be the last compiled file
 	};
-	_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);
-
-	_postProcessing = PostProcessing(&_finalTexture, pathPrefix + "src/shaders/display.cs");
+	try {
+		_inputParameter = InputParameter(&_parametersTexture, inputParametersShadersfiles);
+		_postProcessing = PostProcessing(&_finalTexture, pathPrefix + "src/shaders/display.comp");
+	} catch (std::invalid_argument& e) {
+		std::cerr << e.what() << std::endl;
+		exit (1);
+	}
 }
 
 void ReactionDiffusionSimulator::processSimulation()
