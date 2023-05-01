@@ -7,7 +7,7 @@ PRESET_DIRECTORY="presets/";
 if [ ! -d $BUILD_DIRECTORY ]
 then
 	mkdir $BUILD_DIRECTORY;
-	cmake -S . -B $BUILD_DIRECTORY
+	cmake -S . -B $BUILD_DIRECTORY -DCMAKE_BUILD_TYPE=Release
 fi
 
 # Create application preset directory
