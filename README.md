@@ -21,6 +21,7 @@ A documentation on how the project was made is currently beeing done and will so
 3. [Examples](#examples)
     1. [All India Radio - Four Three](#all-india-radio---four-three)
     2. [Turing Complete - Wide Instructions](#turing-complete---wide-instructions)
+    3. [Le Wanski - M.U.S.H](#le-wanski---mush)
 
 ## Downloads and installation
 
@@ -116,10 +117,13 @@ The load of existing presets is only done at the application startup.
 
 ## Examples
 
-Thanks to the agreement of those wonderful artists here are some demonstrations of the project.
+Thanks to the agreement of those wonderful artists, here are some demonstrations of the project.
 
-### All India Radio - Four Three  
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/C7v6x1xhZ-E/0.jpg)](https://www.youtube.com/watch?v=C7v6x1xhZ-E)
+### [All India Radio - Four Three](https://www.youtube.com/watch?v=3SQe0BpSejE)  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3SQe0BpSejE/0.jpg)](https://www.youtube.com/watch?v=3SQe0BpSejE)
 
-### Turing Complete - Wide Instructions  
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/bu7CsP8l2sI/0.jpg)](https://www.youtube.com/watch?v=bu7CsP8l2sI)  
+### [Turing Complete - Wide Instructions](https://www.youtube.com/watch?v=91rTficMgYI)  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/91rTficMgYI/0.jpg)](https://www.youtube.com/watch?v=91rTficMgYI)  
+
+### [Le Wanski - M.U.S.H](https://www.youtube.com/watch?v=8RGCyEbmk78)  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8RGCyEbmk78/0.jpg)](https://www.youtube.com/watch?v=8RGCyEbmk78)  
