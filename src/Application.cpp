@@ -23,7 +23,7 @@ Application::Application(const int& width, const int& height)
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
- 
+
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -47,6 +47,17 @@ Application::Application(const int& width, const int& height)
 		std::cin.get();
 		glfwTerminate();
 		exit(1);
+	}
+
+	// Application icon
+	GLFWimage icons[1];
+	icons[0].pixels = stbi_load("./icon.png", &icons[0].width, &icons[0].height, 0, 4);
+	if (icons[0].pixels == NULL)
+		std::cout << "Failed to load icon" << std::endl;
+	else
+	{
+		glfwSetWindowIcon(_window, 1, icons);
+		stbi_image_free(icons[0].pixels);
 	}
 
 	loop();
