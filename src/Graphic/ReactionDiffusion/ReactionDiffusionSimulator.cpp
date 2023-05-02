@@ -44,25 +44,23 @@ void ReactionDiffusionSimulator::initTextures()
 
 void ReactionDiffusionSimulator::initShaders()
 {
-#ifdef WIN32
-	const std::string pathPrefix = "../../../";
-#else
-	const std::string pathPrefix = "";
-#endif
+	const std::string pathPrefix = PATH_PREFIX;
 	try {
 		_shader = Shader(pathPrefix + "src/shaders/shader.vert", pathPrefix + "src/shaders/shader.frag");
 	}
 	catch (const std::invalid_argument& e)
 	{
 		std::cerr << "[ReactionDiffusionSimulator] cannot find plane shader" << std::endl;
-		exit (1);
+		std::cin.get();
+		exit(1);
 	}
 
 	try {
 		_diffusionReactionShader = ComputeShader(pathPrefix + "src/shaders/reactionDiffusion/grayScott.comp");
 	} catch (std::invalid_argument& e) {
 		std::cerr << e.what() << std::endl;
-		exit (1);
+		std::cin.get();
+		exit(1);
 	}
 
 	std::vector<std::string> initialConditionsShadersfiles {
@@ -78,7 +76,8 @@ void ReactionDiffusionSimulator::initShaders()
 		_initialConditions = InitialConditions(initialConditionsShadersfiles);
 	} catch (std::invalid_argument& e) {
 		std::cerr << e.what() << std::endl;
-		exit (1);
+		std::cin.get();
+		exit(1);
 	}
 
 	std::vector<std::string> inputParametersShadersfiles {
@@ -93,7 +92,8 @@ void ReactionDiffusionSimulator::initShaders()
 		_postProcessing = PostProcessing(&_finalTexture, pathPrefix + "src/shaders/display.comp");
 	} catch (std::invalid_argument& e) {
 		std::cerr << e.what() << std::endl;
-		exit (1);
+		std::cin.get();
+		exit(1);
 	}
 }
 

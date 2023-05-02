@@ -51,7 +51,9 @@ Application::Application(const int& width, const int& height)
 
 	// Application icon
 	GLFWimage icons[1];
-	icons[0].pixels = stbi_load("./icon.png", &icons[0].width, &icons[0].height, 0, 4);
+	std::string iconPath(PATH_PREFIX);
+	iconPath += "icon.png";
+	icons[0].pixels = stbi_load(iconPath.c_str(), &icons[0].width, &icons[0].height, 0, 4);
 	if (icons[0].pixels == NULL)
 		std::cout << "Failed to load icon" << std::endl;
 	else
@@ -93,11 +95,6 @@ void Application::loop()
 	std::vector<glm::vec4> initGradient = { glm::vec4(0, 0, 0.15, 0), glm::vec4(1, 1, 1, 1) };
 	RDSimulator.setPostProcessingGradient(initGradient, 3);
 
-	// Change this to true to autoplay
-	bool isFirstFrame = false;
-	//presetManager.setAutomaticSwitchDelay(40);
-	//RDSimulator.setSimulationSpeed(0.9);
-
 	while (!glfwWindowShouldClose(_window) && glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		float currentTime = glfwGetTime();
@@ -112,14 +109,6 @@ void Application::loop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ui.createNewFrame();
-
-		if (isFirstFrame)
-		{
-			isFirstFrame = false;
-			//audioPlayer.playWavFile("/home/brice/Downloads/four-three.wav");
-			stk::Stk::sleep(500);
-			audioPlayer.togglePause();
-		}
 
 		adapter.update();
 		ui.update();

@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef WIN32
+#define PATH_PREFIX "../../../"
+#else
+#define PATH_PREFIX "./"
+#endif
+
 // OPENGL LIBRARY
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
