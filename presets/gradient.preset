@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic"/>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.38699999451637268</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.27599999308586121</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.013000000268220901</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.037999998778104782</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>0</shape>
+				<radius>200</radius>
+				<borderSize>10</borderSize>
+				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
+			</value0>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>0</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0</value3>
+			</value0>
+			<value1>
+				<value0>1</value0>
+				<value1>0</value1>
+				<value2>0</value2>
+				<value3>0.25</value3>
+			</value1>
+			<value2>
+				<value0>0</value0>
+				<value1>1</value1>
+				<value2>0</value2>
+				<value3>0.5</value3>
+			</value2>
+			<value3>
+				<value0>0</value0>
+				<value1>0</value1>
+				<value2>1</value2>
+				<value3>0.75</value3>
+			</value3>
+			<value4>
+				<value0>1</value0>
+				<value1>1</value1>
+				<value2>1</value2>
+				<value3>1</value3>
+			</value4>
+		</gradient>
+	</presetSettings>
+</cereal>
+

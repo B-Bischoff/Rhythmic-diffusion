@@ -36,7 +36,7 @@
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.89999997615814209</value0>
+					<value0>0.20000000298023224</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
@@ -53,7 +53,7 @@
 					<value2>0</value2>
 					<value3>0</value3>
 					<value4>0</value4>
-					<value5>0</value5>
+					<value5>0.030999999493360519</value5>
 					<value6>0.029999999329447746</value6>
 				</parameters>
 				<type>2</type>
@@ -103,33 +103,33 @@
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-				<value0>0.010013115592300892</value0>
-				<value1>-3.6238411667000037e-06</value1>
-				<value2>0.11111780256032944</value2>
+				<value0>0.010015898384153843</value0>
+				<value1>-3.6248482047085417e-06</value1>
+				<value2>0.11114868521690369</value2>
 				<value3>0</value3>
 			</value0>
 			<value1>
-				<value0>0.16415712237358093</value0>
-				<value1>0.023848660290241241</value1>
-				<value2>0.34813010692596436</value2>
-				<value3>0.15143723785877228</value3>
+				<value0>0.16392484307289124</value0>
+				<value1>0.023577390238642693</value1>
+				<value2>0.34794896841049194</value2>
+				<value3>0.15120142698287964</value3>
 			</value1>
 			<value2>
-				<value0>0.11326192319393158</value0>
-				<value1>0.78121620416641235</value1>
-				<value2>0.78732126951217651</value2>
-				<value3>0.23314982652664185</value3>
+				<value0>0.11329340189695358</value0>
+				<value1>0.78143328428268433</value1>
+				<value2>0.78754007816314697</value2>
+				<value3>0.23293672502040863</value3>
 			</value2>
 			<value3>
-				<value0>0.88347947597503662</value0>
-				<value1>0.21314270794391632</value1>
-				<value2>0.047545026987791061</value2>
-				<value3>0.34992861747741699</value3>
+				<value0>0.88372498750686646</value0>
+				<value1>0.21320194005966187</value1>
+				<value2>0.047558240592479706</value2>
+				<value3>0.34974795579910278</value3>
 			</value3>
 			<value4>
-				<value0>1.0003786087036133</value0>
-				<value1>1.0003786087036133</value1>
-				<value2>1.0003786087036133</value2>
+				<value0>1.0006566047668457</value0>
+				<value1>1.0006566047668457</value1>
+				<value2>1.0006566047668457</value2>
 				<value3>1</value3>
 			</value4>
 		</gradient>

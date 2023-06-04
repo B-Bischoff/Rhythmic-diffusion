@@ -34,8 +34,8 @@
 					<value2>0</value2>
 					<value3>0</value3>
 					<value4>0</value4>
-					<value5>0</value5>
-					<value6>0.008999999612569809</value6>
+					<value5>0.016000000759959221</value5>
+					<value6>1</value6>
 				</parameters>
 				<type>2</type>
 			</value3>
@@ -54,28 +54,28 @@
 		</shapes>
 		<gradient size="dynamic">
 			<value0>
-				<value0>3.4065565667736303e-42</value0>
-				<value1>-1.0547837017878259e-14</value1>
-				<value2>-8.3629162080621489e-14</value2>
+				<value0>-1.398208496539155e-06</value0>
+				<value1>5.1080623064692077e-10</value1>
+				<value2>-1.5517172869294882e-05</value2>
 				<value3>9.4587646341925152e-43</value3>
 			</value0>
 			<value1>
-				<value0>0.015499194152653217</value0>
-				<value1>-0.00025013979757204652</value1>
-				<value2>0.29111403226852417</value2>
-				<value3>0.10483450442552567</value3>
+				<value0>0.015478473156690598</value0>
+				<value1>-0.00025346633628942072</value1>
+				<value2>0.29110610485076904</value2>
+				<value3>0.10482802987098694</value3>
 			</value1>
 			<value2>
-				<value0>1.0002501010894775</value0>
-				<value1>0</value1>
-				<value2>0</value2>
-				<value3>0.16710688173770905</value3>
+				<value0>1.0003739595413208</value0>
+				<value1>-0.00010909418779192492</value1>
+				<value2>-0.00010994674084940925</value2>
+				<value3>0.16709768772125244</value3>
 			</value2>
 			<value3>
-				<value0>1.0002501010894775</value0>
-				<value1>1.0002501010894775</value1>
-				<value2>1.0002501010894775</value2>
-				<value3>0.24883937835693359</value3>
+				<value0>1.0002663135528564</value0>
+				<value1>1.0003600120544434</value1>
+				<value2>1.0003831386566162</value2>
+				<value3>0.24882529675960541</value3>
 			</value3>
 			<value4>
 				<value0>1.0002501010894775</value0>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic">
+			<value0>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>0</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.69999998807907104</simulationInitialValue>
+				<value>0.40000000596046448</value>
+			</value0>
+			<value1>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>0.030999999493360519</simulationInitialValue>
+				<value>0.008999999612569809</value>
+			</value1>
+			<value2>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>5</reactionPropertie>
+				<propertieIndex>3</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>-300</simulationInitialValue>
+				<value>300</value>
+			</value2>
+			<value3>
+				<audioTrigger>0</audioTrigger>
+				<reactionPropertie>6</reactionPropertie>
+				<propertieIndex>3</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>300</simulationInitialValue>
+				<value>300</value>
+			</value3>
+		</hooks>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.48094436526298523</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.22287000715732574</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.0099999997764825821</value0>
+					<value1>0.037999998778104782</value1>
+					<value2>0</value2>
+					<value3>0</value3>
+					<value4>0</value4>
+					<value5>0.004999999888241291</value5>
+					<value6>0</value6>
+				</parameters>
+				<type>1</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.030999999493360519</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>4</shape>
+				<radius>10000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
+			</value0>
+			<value1>
+				<shape>4</shape>
+				<radius>10000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>90</rotationAngle>
+				<offset>
+					<value0>-300</value0>
+					<value1>0</value1>
+				</offset>
+			</value1>
+			<value2>
+				<shape>4</shape>
+				<radius>10000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>90</rotationAngle>
+				<offset>
+					<value0>300</value0>
+					<value1>0</value1>
+				</offset>
+			</value2>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>-4.7968201215553563e-06</value0>
+				<value1>0.01137097179889679</value1>
+				<value2>0.090104438364505768</value2>
+				<value3>0</value3>
+			</value0>
+			<value1>
+				<value0>0.1272624135017395</value0>
+				<value1>0.15445102751255035</value1>
+				<value2>0.5045045018196106</value2>
+				<value3>0.12813594937324524</value3>
+			</value1>
+			<value2>
+				<value0>0.63063061237335205</value0>
+				<value1>0.10983957350254059</value1>
+				<value2>0.4101155698299408</value2>
+				<value3>0.30511116981506348</value3>
+			</value2>
+			<value3>
+				<value0>0.80511987209320068</value0>
+				<value1>0.060346357524394989</value1>
+				<value2>0.16770103573799133</value2>
+				<value3>0.41229522228240967</value3>
+			</value3>
+			<value4>
+				<value0>1.0005977153778076</value0>
+				<value1>1.0005849599838257</value1>
+				<value2>1.0006002187728882</value2>
+				<value3>1</value3>
+			</value4>
+		</gradient>
+	</presetSettings>
+</cereal>
+

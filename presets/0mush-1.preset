@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic">
+			<value0>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>3</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>1</actionMode>
+				<simulationInitialValue>0.045000001788139343</simulationInitialValue>
+				<value>0.010029999539256096</value>
+			</value0>
+			<value1>
+				<audioTrigger>2</audioTrigger>
+				<reactionPropertie>2</reactionPropertie>
+				<propertieIndex>0</propertieIndex>
+				<actionMode>0</actionMode>
+				<simulationInitialValue>0.014069999568164349</simulationInitialValue>
+				<value>0.011060000397264957</value>
+			</value1>
+		</hooks>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.35190999507904053</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.30206000804901123</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.021291546523571014</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.03845098614692688</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>4</shape>
+				<radius>2000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
+			</value0>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>0.034940324723720551</value0>
+				<value1>0.0005230453098192811</value1>
+				<value2>0.17417418956756592</value2>
+				<value3>0</value3>
+			</value0>
+			<value1>
+				<value0>0.16765706241130829</value0>
+				<value1>0.007241471204906702</value1>
+				<value2>0.21921920776367188</value2>
+				<value3>0.13035018742084503</value3>
+			</value1>
+			<value2>
+				<value0>0.51051050424575806</value0>
+				<value1>6.6226002459757183e-09</value1>
+				<value2>0.15637286007404327</value2>
+				<value3>0.25097274780273438</value3>
+			</value2>
+			<value3>
+				<value0>0.63063061237335205</value0>
+				<value1>0.62494927644729614</value1>
+				<value2>0</value2>
+				<value3>0.39494162797927856</value3>
+			</value3>
+			<value4>
+				<value0>0.50148177146911621</value0>
+				<value1>0.018033223226666451</value1>
+				<value2>0.16611681878566742</value2>
+				<value3>0.99221545457839966</value3>
+			</value4>
+		</gradient>
+	</presetSettings>
+</cereal>
+

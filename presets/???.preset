@@ -5,25 +5,25 @@
 		<parameters size="dynamic">
 			<value0>
 				<parameters size="dynamic">
-					<value0>0.38699999451637268</value0>
+					<value0>0</value0>
 				</parameters>
 				<type>0</type>
 			</value0>
 			<value1>
 				<parameters size="dynamic">
-					<value0>0.27599999308586121</value0>
+					<value0>0.026389999315142632</value0>
 				</parameters>
 				<type>0</type>
 			</value1>
 			<value2>
 				<parameters size="dynamic">
-					<value0>0.013000000268220901</value0>
+					<value0>0.016009999439120293</value0>
 				</parameters>
 				<type>0</type>
 			</value2>
 			<value3>
 				<parameters size="dynamic">
-					<value0>0.037999998778104782</value0>
+					<value0>0.043519999831914902</value0>
 				</parameters>
 				<type>0</type>
 			</value3>
@@ -31,7 +31,7 @@
 		<shapes size="dynamic">
 			<value0>
 				<shape>0</shape>
-				<radius>0</radius>
+				<radius>50</radius>
 				<borderSize>0</borderSize>
 				<rotationAngle>0</rotationAngle>
 				<offset>
@@ -44,15 +44,33 @@
 			<value0>
 				<value0>0</value0>
 				<value1>0</value1>
-				<value2>0</value2>
+				<value2>-5.089223850518465e-05</value2>
 				<value3>0</value3>
 			</value0>
 			<value1>
 				<value0>1</value0>
-				<value1>1</value1>
-				<value2>1</value2>
-				<value3>1</value3>
+				<value1>-0.00033903840812854469</value1>
+				<value2>-0.00033903840812854469</value2>
+				<value3>0.24974572658538818</value3>
 			</value1>
+			<value2>
+				<value0>0</value0>
+				<value1>1.0003390312194824</value1>
+				<value2>0</value2>
+				<value3>0.49983048439025879</value3>
+			</value2>
+			<value3>
+				<value0>0</value0>
+				<value1>0</value1>
+				<value2>1.0003390312194824</value2>
+				<value3>0.74991524219512939</value3>
+			</value3>
+			<value4>
+				<value0>1.0003390312194824</value0>
+				<value1>1.0003390312194824</value1>
+				<value2>1.0003390312194824</value2>
+				<value3>1</value3>
+			</value4>
 		</gradient>
 	</presetSettings>
 </cereal>

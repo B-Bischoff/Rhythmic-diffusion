@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<presetSettings>
+		<hooks size="dynamic"/>
+		<parameters size="dynamic">
+			<value0>
+				<parameters size="dynamic">
+					<value0>0.35190999507904053</value0>
+				</parameters>
+				<type>0</type>
+			</value0>
+			<value1>
+				<parameters size="dynamic">
+					<value0>0.30206000804901123</value0>
+				</parameters>
+				<type>0</type>
+			</value1>
+			<value2>
+				<parameters size="dynamic">
+					<value0>0.014600000344216824</value0>
+				</parameters>
+				<type>0</type>
+			</value2>
+			<value3>
+				<parameters size="dynamic">
+					<value0>0.04521000012755394</value0>
+				</parameters>
+				<type>0</type>
+			</value3>
+		</parameters>
+		<shapes size="dynamic">
+			<value0>
+				<shape>4</shape>
+				<radius>2000</radius>
+				<borderSize>1</borderSize>
+				<rotationAngle>0</rotationAngle>
+				<offset>
+					<value0>0</value0>
+					<value1>0</value1>
+				</offset>
+			</value0>
+		</shapes>
+		<gradient size="dynamic">
+			<value0>
+				<value0>0.034940324723720551</value0>
+				<value1>0.0005230453098192811</value1>
+				<value2>0.17417418956756592</value2>
+				<value3>0</value3>
+			</value0>
+			<value1>
+				<value0>0.16765706241130829</value0>
+				<value1>0.007241471204906702</value1>
+				<value2>0.21921920776367188</value2>
+				<value3>0.13035018742084503</value3>
+			</value1>
+			<value2>
+				<value0>0.51051050424575806</value0>
+				<value1>-7.3565432174779732e-13</value1>
+				<value2>0.15637286007404327</value2>
+				<value3>0.25097274780273438</value3>
+			</value2>
+			<value3>
+				<value0>0.63137257099151611</value0>
+				<value1>0.62352943420410156</value1>
+				<value2>0</value2>
+				<value3>0.39494162797927856</value3>
+			</value3>
+			<value4>
+				<value0>0.50150150060653687</value0>
+				<value1>0.018072118982672691</value1>
+				<value2>0.16614985466003418</value2>
+				<value3>0.99221545457839966</value3>
+			</value4>
+		</gradient>
+	</presetSettings>
+</cereal>
+
