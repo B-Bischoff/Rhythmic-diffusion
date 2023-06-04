@@ -4,9 +4,11 @@ The goal of this project is to generate visuals based on music rhythm.
 It can be decomposed in two parts:
 
 - The graphic part, which is based on the Gray-Scott reaction-diffusion model is responsible for creating those atypical visuals.  
-- The audio part extracts frequency informations from the music and uses it to control the reaction-difusion settings in real-time.
+- The audio part extracts frequency informations from the music and uses it to control the reaction-diffusion settings in real-time.
 
-A documentation on how the project was made is currently beeing done and will soon arrive.
+A documentation on how the project was made, is currently beeing done and will soon arrive.
+
+![preview](https://user-images.githubusercontent.com/79707661/235739735-a2b2527c-0722-4084-8644-2e8d066e3102.png)
 
 ## Table of contents
 1. [Downloads and installation](#downloads-and-installation)
@@ -26,7 +28,9 @@ A documentation on how the project was made is currently beeing done and will so
 ## Downloads and installation
 
 ### Windows
-[TO COMPLETE] release (executable or installer?) or open the cmake project in visual studio
+You can find a release containing the application zipped, pre-compiled and ready to use.  
+It is also possible to import the project in visual studio as a "Cmake Solution".
+
 ### Linux
 Make sure CMake, Git and GCC are installed by typing ```sudo apt install cmake git g++```
 
@@ -55,7 +59,7 @@ The equation is based on those four parameters wich can be tweaked with the user
 -  feed rate
 -  kill rate
 
-It may be a lot to start with. What I advise is to set diffusion rate A to 1.0, the diffusion rate B to 0.5 and simply play with the feed and kill rate to understand how the changes affects the simulation.
+It may be a lot to start with. What I advise is to set diffusion rate A to 1.0, the diffusion rate B to 0.5 and simply tweak the feed and kill rate to understand how the changes affects the simulation.
  
 Even tough those four values can create a variety of patterns, things can be pushed further with the use of noises.  
 
@@ -66,12 +70,12 @@ Noises have the following properties:
 -  Base value : the minimum value applied to the whole simulation (exactly the same thing than the "number" type allowed to do).
 -  Strength factor : the value added when the area is in the white area of the noise.
 -  Scale : the lower the scale, the bigger the noise pattern will be.
--  Offset : two values to move the along the X and Y axis.
+-  Offset : two values to move the noise along the X and Y axis.
 -  Scale moving & Time multiplier : if the scale moving is ticked, the scale will change over time. The speed can be controlled with the time multiplier value.
 
 ### Audio player
 To play audio in the application, you will need to select a WAV file using the filebrowser (located in the audio player section).
-There are many sites to convert mp3 (or other) audio file to WAV. I would recommand [convertio](https://convertio.co/mp3-wav/).
+There are many sites to convert mp3 (or other format) audio file to WAV. I would recommand [convertio](https://convertio.co/mp3-wav/).
 
 If during file playback, the audio becomes absolute noises, pause the playback a few seconds and resume it.
 
@@ -109,7 +113,7 @@ The boolean mode only switches from the initial value to the calculation value w
 
 ### Presets
 
-To avoid having to remember every numbers and parameters off the simulation there is a preset system.  
+To avoid having to remember every numbers and parameters of the simulation there is a preset system.  
 A preset will save every settings of the simulation including : reaction diffusion properties, shapes, hooks and gradient
 
 Each preset is saved under an XML type file in the "presets" folder located at the root of the project.  
