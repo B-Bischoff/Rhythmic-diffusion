@@ -36,7 +36,10 @@ void HooksUI::print()
 	const char* items[] = { "RdA", "RdB", "Feed", "Kill", "Shape 0", "Shape 1", "Shape 2", "Shape 3",
 		"Shape 4", "Shape 5", "Shape 6", "Shape 7", "Shape 8", "Shape 9", "Shape 10", "Shape 11", "Shape 12", "Shape 13", "Shape 14", "Shape 15", "Shape 16" };
 
-	ImGui::Combo("output", &property, items, ITEMS_NUMBER);
+	static bool shouldUpdateDisplayedInitialValue = true;
+
+	if (ImGui::Combo("output", &property, items, ITEMS_NUMBER))
+		shouldUpdateDisplayedInitialValue = true;
 
 	static int propertyIndex = 0;
 
@@ -48,7 +51,8 @@ void HooksUI::print()
 			// Noise options
 			std::string str = "noise property";
 			const char* noiseElements = "strength\0scale\0offset X\0offset Y\0time multiplier\0base value\0";
-			ImGui::Combo(str.c_str(), &propertyIndex, noiseElements);
+			if (ImGui::Combo(str.c_str(), &propertyIndex, noiseElements))
+				shouldUpdateDisplayedInitialValue = true;
 		}
 		else
 			propertyIndex = 0;
@@ -57,14 +61,20 @@ void HooksUI::print()
 	{
 		std::string str = "shape property";
 		const char* shapeElements = "radius\0border\0angle\0offset X\0offset Y\0";
-		ImGui::Combo(str.c_str(), &propertyIndex, shapeElements);
+		if (ImGui::Combo(str.c_str(), &propertyIndex, shapeElements))
+			shouldUpdateDisplayedInitialValue = true;
 	}
 
 	static int actionMode = 0;
 	ImGui::Combo("operation", &actionMode, "add\0subtract\0boolean\0");
 
 	glm::vec2 valueRange = getSliderRangesFromHookPropertie(property, propertyIndex);
-	static float initialValue = 0.0;
+	static float initialValue = getValueFromSimulation(property, propertyIndex);
+	if (shouldUpdateDisplayedInitialValue)
+	{
+		initialValue = getValueFromSimulation(property, propertyIndex);
+		shouldUpdateDisplayedInitialValue = false;
+	}
 	ImGui::SliderFloat("intial value", &initialValue, valueRange[0], valueRange[1],  "%.5f");
 
 	static float value = 0.0;
@@ -183,4 +193,21 @@ glm::vec2 HooksUI::getSliderRangesFromHookPropertie(const int& index, const int&
 
 	// temp
 	return glm::vec2(0);
+}
+
+float HooksUI::getValueFromSimulation(const int& reactionProperty, const int& propertyIndex)
+{
+	if (reactionProperty <= 3)
+		return _RDSimulator.getParameterValue(reactionProperty).at(propertyIndex);
+
+	InitialConditionsShape& shape = _RDSimulator.getInitialConditionsShapes().at(reactionProperty - 4);
+	switch(propertyIndex)
+	{
+		case 0: return shape.radius;
+		case 1: return shape.borderSize;
+		case 2: return shape.rotationAngle;
+		case 3: return shape.offset.x;
+		case 4: return shape.offset.y;
+	}
+	return 0;
 }

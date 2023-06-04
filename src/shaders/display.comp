@@ -14,14 +14,6 @@ uniform vec4 gradient[10];
 uniform int colorNumber;
 uniform vec4 visualizeChannels;
 
-float invLerp(vec4 from, vec4 to, vec4 value)
-{
-	float diffX = (value.x - from.x) / (to.x - from.x);
-	float diffY = (value.y - from.y) / (to.y - from.y);
-	float diffZ = (value.z - from.z) / (to.z - from.z);
-	return (diffX + diffY + diffZ) / 3;
-}
-
 vec4 visualizeParamTexture(vec4 paramPixel);
 
 int findColors(float t)
@@ -34,6 +26,34 @@ int findColors(float t)
 
 void main()
 {
+/*
+// PORTFOLIO GRADIENT DEMO
+ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
+vec4 existingPixel = imageLoad(inTexture, pixel_coords);
+float concentration = existingPixel.b;
+
+const int colorNumber = 5;
+vec4[colorNumber] gradient = {
+  vec4(0, 0, 0, 0), // Black
+  vec4(1, 0, 0, 0.25), // Red
+  vec4(0, 1, 0, 0.5), // Green
+  vec4(0, 0, 1, 0.75), // Blue
+  vec4(1, 1, 1, 1)  // white
+};
+
+// Find colors index
+int i = 0;
+while (concentration >= gradient[i].w && i < colorNumber - 1)
+	i++;
+
+float t = (concentration - gradient[i - 1].w) / (gradient[i].w - gradient[i - 1].w);
+vec3 rgb = mix(vec3(gradient[i - 1].xyz), vec3(gradient[i].xyz), t);
+
+existingPixel = vec4(rgb, 1.0);
+
+imageStore(outTexture, pixel_coords, existingPixel);
+*/
+
 	ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
 	vec4 existingPixel = imageLoad(inTexture, pixel_coords);
 

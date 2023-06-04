@@ -15,6 +15,7 @@ private:
 
 	const std::map<std::string, glm::vec2>& _slidersRanges;
 
+	float getValueFromSimulation(const int& reactionProperty, const int& propertyIndex);
 	void displayPropertieIndex(AdapterHook& hook, const int& i);
 	glm::vec2 getSliderRangesFromHookPropertie(const int& index, const int& propertieIndex) const;
 
