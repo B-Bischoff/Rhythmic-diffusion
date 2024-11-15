@@ -6,7 +6,7 @@ It can be decomposed in two parts:
 - The graphic part, which is based on the Gray-Scott reaction-diffusion model is responsible for creating those atypical visuals.  
 - The audio part extracts frequency informations from the music and uses it to control the reaction-diffusion settings in real-time.
 
-A documentation on how the project was made, is currently beeing done and will soon arrive.
+A documentation on how the project was made is available at : https://www.b-bischoff.fr/rhythmic-diffusion
 
 ![preview](https://user-images.githubusercontent.com/79707661/235739735-a2b2527c-0722-4084-8644-2e8d066e3102.png)
 
